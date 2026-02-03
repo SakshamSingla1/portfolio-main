@@ -16,7 +16,6 @@ const Home: React.FC = () => {
                 setDefaultTheme(response.data.colorTheme);
             }
         } catch (error) {
-            console.error(error);
         }
     };
 
