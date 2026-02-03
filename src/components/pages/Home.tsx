@@ -16,13 +16,9 @@ const Home: React.FC = () => {
                 setDefaultTheme(response.data.colorTheme);
             }
         } catch (error) {
+
         }
     };
-
-    useEffect(() => {
-        console.log(profile);
-        console.log(defaultTheme);
-    }, [profile, defaultTheme]);
     
     useEffect(() => {
         fetchProfile();
