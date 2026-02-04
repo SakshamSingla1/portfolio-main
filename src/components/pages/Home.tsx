@@ -2,31 +2,40 @@ import React, { useState , useEffect } from "react";
 import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 import { useProfileMasterService } from "../../services/useProfileMasterService";
 import { HTTP_STATUS } from "../../utils/constants";
+import type { ProfileMaster } from "../../utils/types";
+import ProfileCard from "../templates/ProfileCard.template";
 
 const Home: React.FC = () => {
-    const { defaultTheme, setDefaultTheme } = useDefaultColorTheme();
+    const { setDefaultTheme , setProfileId } = useDefaultColorTheme();
     const profileMasterService = useProfileMasterService();
-    const [profile, setProfile] = useState<any>(null);
+    const [profileMaster, setProfileMaster] = useState<ProfileMaster | null>(null);
 
     const fetchProfile = async () => {
         try{
             const response = await profileMasterService.get();
             if(response.status === HTTP_STATUS.OK){
-                setProfile(response.data);
-                setDefaultTheme(response.data.colorTheme);
+                setProfileMaster(response.data.data);
             }
         } catch (error) {
-
+            console.error("Error fetching profile:", error);
         }
     };
     
     useEffect(() => {
         fetchProfile();
     }, []);
+
+    useEffect(() => {
+        setDefaultTheme(profileMaster?.colorTheme || null);
+        setProfileId(profileMaster?.profile?.id || null);
+    },[profileMaster])
     
     return (
         <div>
-            <h1>Home</h1>
+            <ProfileCard
+                profile={profileMaster?.profile!}
+                socialLinks={profileMaster?.socialLinks!}
+            />
         </div>
     );
 };
