@@ -129,3 +129,52 @@ export interface Testimonial {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface ProfileRequest {
+    id: string;
+    fullName: string;
+    userName: string;
+    title: string;
+    aboutMe: string;
+    email: string;
+    phone: string;
+    location: string;
+    githubUrl: string;
+    linkedinUrl: string;
+    websiteUrl: string;
+    profileImageUrl?: string;
+    profileImagePublicId?: string;
+    logoUrl?: string;
+    logoPublicId?: string;
+    themeName: string;
+}
+
+export interface ProjectResponse {
+    id: string;
+    projectName: string;
+    projectDescription: string;
+    projectLink: string;
+    projectStartDate: string;
+    projectEndDate: string;
+    workStatus: string;
+    projectImages: ImageValue[];
+    skills: SkillDropdown[];
+}
+
+export interface ImageValue {
+    url: string;
+    publicId?: string;
+}
+
+export interface ProfileMaster {
+    profile : ProfileRequest | null;
+    colorTheme : ColorTheme | null;
+    projects: ProjectResponse[];
+    experiences: ExperienceResponse[];
+    educations: Education[];
+    skills: SkillResponse[];
+    achievements: Achievement[];
+    testimonials: Testimonial[];
+    certifications: Certification[];
+    socialLinks: SocialLinkResponse[];
+}
