@@ -1,6 +1,8 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import type { ProfileRequest, SocialLinkResponse } from "../../utils/types";
 import { useColors, gradients } from "../../utils/theme";
+import CircleWithArc from "../atoms/CircleWithArc/CircleWithArc";
+
 import {
   FaGithub,
   FaLinkedin,
@@ -18,13 +20,9 @@ import {
 } from "react-icons/fa";
 import { SiLeetcode, SiCodeforces, SiCodechef } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
-import { FiChevronDown } from "react-icons/fi";
 import { SocialLinkPlatform } from "../../utils/constants";
 
-interface ProfileCardProps {
-  profile: ProfileRequest;
-  socialLinks: SocialLinkResponse[];
-}
+/* ---------- Helpers ---------- */
 
 const getSocialIcon = (platform: string) => {
   switch (platform) {
@@ -60,10 +58,25 @@ const getSocialIcon = (platform: string) => {
   }
 };
 
+/* ---------- Component ---------- */
+
+interface ProfileCardProps {
+  profile: ProfileRequest;
+  socialLinks: SocialLinkResponse[];
+}
+
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
   const colors = useColors();
   const g = gradients(colors);
-  const [open, setOpen] = useState(false);
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((p) => (p >= 100 ? 0 : p + 0.4));
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="mx-auto w-full pt-12">
@@ -74,11 +87,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
         />
 
         <div
-          className="
-            relative rounded-3xl
-            p-8 sm:p-10
-            transition-all duration-500
-          "
+          className="relative rounded-3xl p-8 sm:p-10"
           style={{
             backgroundColor: colors.neutral900,
             boxShadow: g.hoverGlowSoft,
@@ -86,20 +95,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
         >
           <div className="flex flex-col items-center text-center">
             {profile.profileImageUrl && (
-              <div
-                className="mb-5 rounded-full p-[3px]"
-                style={{ background: g.iconGradient }}
-              >
+              <div className="relative w-[273px] h-[273px] my-6 md:my-0 md:w-[400px] md:h-[400px]">
                 <img
                   src={profile.profileImageUrl}
                   alt={profile.fullName}
-                  className="h-28 w-28 rounded-full object-cover bg-white"
+                  className="rounded-full object-cover mt-3 ml-3"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
                 />
+                <CircleWithArc progress={progress} />
               </div>
             )}
 
             <h1
-              className="text-2xl sm:text-3xl font-semibold tracking-tight"
+              className="text-2xl sm:text-3xl font-semibold"
               style={{ color: colors.neutral50 }}
             >
               {profile.fullName}
@@ -143,50 +155,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
             )}
           </div>
 
-          {profile.aboutMe && (
-            <section className="mt-8 flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={() => setOpen(v => !v)}
-                className="flex items-center justify-between"
-              >
-                <span
-                  className="text-xs uppercase tracking-widest font-semibold"
-                  style={{ color: colors.accent400 }}
-                >
-                  About Me
-                </span>
-
-                <FiChevronDown
-                  size={18}
-                  className={`transition-transform duration-500 ${open ? "rotate-180 translate-y-0.5" : ""
-                    }`}
-                  style={{ color: colors.accent400 }}
-                />
-              </button>
-
-              <div
-                className="overflow-hidden transition-all duration-500 ease-out"
-                style={{
-                  maxHeight: open ? "280px" : "0px",
-                  opacity: open ? 1 : 0,
-                }}
-              >
-                <div
-                  className="mt-2 rounded-2xl p-5 text-sm leading-relaxed"
-                  style={{
-                    backgroundColor: colors.neutral800,
-                    border: `1px solid ${colors.accent500}33`,
-                    color: colors.neutral200,
-                    boxShadow: g.hoverGlowInset,
-                  }}
-                >
-                  {profile.aboutMe}
-                </div>
-              </div>
-            </section>
-          )}
-
           {socialLinks.length > 0 && (
             <>
               <div
@@ -196,24 +164,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
 
               <div className="flex flex-wrap justify-center gap-3">
                 {socialLinks
-                  .filter(link => link.status === "ACTIVE")
+                  .filter((l) => l.status === "ACTIVE")
                   .sort((a, b) => Number(a.order) - Number(b.order))
-                  .map(link => (
+                  .map((link) => (
                     <a
                       key={link.id}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={link.platform}
-                      className="
-              group relative
-              flex items-center gap-3
-              rounded-xl px-4 py-2.5
-              text-sm font-medium
-              transition-all duration-300
-              hover:-translate-y-0.5
-              focus:outline-none
-            "
+                      className="group flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
                       style={{
                         backgroundColor: colors.neutral800,
                         color: colors.neutral200,
@@ -221,20 +180,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                         boxShadow: g.hoverGlowSoft,
                       }}
                     >
-                      {/* Accent top border */}
                       <span
-                        className="absolute inset-x-0 top-0 h-[2px] rounded-t-xl opacity-0 transition-opacity duration-300"
-                        style={{ background: g.iconGradient }}
-                      />
-
-                      {/* Icon */}
-                      <span
-                        className="
-                flex h-8 w-8 items-center justify-center
-                rounded-lg
-                transition-all duration-300
-                group-hover:text-white
-              "
+                        className="flex h-8 w-8 items-center justify-center rounded-lg"
                         style={{
                           backgroundColor: colors.neutral900,
                           color: colors.accent400,
@@ -243,18 +190,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                         {getSocialIcon(link.platform)}
                       </span>
 
-                      {/* Label */}
-                      <span
-                        className="whitespace-nowrap transition-colors duration-300 group-hover:text-white"
-                      >
-                        {link.platform.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase())}
+                      <span>
+                        {link.platform
+                          .replace(/_/g, " ")
+                          .toLowerCase()
+                          .replace(/\b\w/g, (c) => c.toUpperCase())}
                       </span>
                     </a>
                   ))}
               </div>
             </>
           )}
-
         </div>
       </article>
     </section>

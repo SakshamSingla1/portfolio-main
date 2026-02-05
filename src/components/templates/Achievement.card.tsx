@@ -1,13 +1,13 @@
-import React, { memo, useState, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import {
   FiAward,
   FiExternalLink,
   FiCalendar,
-  FiChevronDown,
 } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Achievement } from "../../utils/types";
 import { sanitizeHtml } from "../../utils/helper";
+import { CustomAccordion } from "../atoms/CustomAccordian/CustomAccordian";
 
 interface AchievementProps {
   achievement: Achievement;
@@ -16,7 +16,9 @@ interface AchievementProps {
 const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
   const colors = useColors();
   const g = gradients(colors);
-  const [open, setOpen] = useState(false);
+
+  /** Accordion state */
+  const [expanded, setExpanded] = useState<number[]>([]);
 
   const issuedAt = useMemo(
     () =>
@@ -32,6 +34,7 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
 
   return (
     <article className="relative group rounded-3xl p-[1px]">
+      {/* gradient border */}
       <div
         className="absolute inset-0 rounded-3xl opacity-60 transition-opacity duration-500 group-hover:opacity-100"
         style={{ background: g.cardBorderGradient }}
@@ -49,6 +52,7 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
           boxShadow: g.hoverGlowSoft,
         }}
       >
+        {/* Header */}
         <header className="flex items-center gap-4">
           <div
             className="flex items-center justify-center w-14 h-14 rounded-2xl shrink-0 text-white"
@@ -67,6 +71,7 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
 
         <div className="h-px w-full" style={{ background: g.dividerGradient }} />
 
+        {/* Meta */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <span
@@ -89,38 +94,23 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
           </div>
         </div>
 
+        {/* Description Accordion */}
         {achievement.description && (
-          <section className="flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={() => setOpen(v => !v)}
-              className="flex items-center justify-between"
-            >
-              <span
-                className="text-xs uppercase tracking-widest font-semibold"
-                style={{ color: colors.accent400 }}
-              >
-                Description
-              </span>
-
-              <FiChevronDown
-                size={18}
-                className={`transition-transform duration-500 ${
-                  open ? "rotate-180 translate-y-0.5" : ""
-                }`}
-                style={{ color: colors.accent400 }}
-              />
-            </button>
-
-            <div
-              className="overflow-hidden transition-all duration-500 ease-out"
-              style={{
-                maxHeight: open ? "320px" : "0px",
-                opacity: open ? 1 : 0,
-              }}
-            >
+          <CustomAccordion
+            index={0}
+            expanded={expanded}
+            onChange={(idx) =>
+              setExpanded((prev) =>
+                prev.includes(idx)
+                  ? prev.filter((i) => i !== idx)
+                  : [idx]
+              )
+            }
+            heading="Description"
+            showStatus={false}
+            component={
               <div
-                className="mt-2 rounded-2xl p-5 text-sm leading-relaxed"
+                className="rounded-2xl p-5 text-sm leading-relaxed"
                 style={{
                   backgroundColor: colors.neutral800,
                   border: `1px solid ${colors.accent500}33`,
@@ -130,10 +120,11 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
               >
                 {sanitizeHtml(achievement.description)}
               </div>
-            </div>
-          </section>
+            }
+          />
         )}
 
+        {/* Proof */}
         {achievement.proofUrl && (
           <footer className="mt-auto pt-4">
             <a
