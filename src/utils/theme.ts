@@ -76,3 +76,41 @@ export const useColors = () => {
         warning900: getColor(defaultTheme, "warning900") ?? "#6F370D",
     };
 };
+
+export const gradients = (colors: any) => {
+  return {
+    cardBorderGradient: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
+    iconGradient: `linear-gradient(135deg, ${colors.primary300}, ${colors.accent300})`,
+    dividerGradient: `linear-gradient(to right, ${colors.primary400}, ${colors.accent400})`,
+    badgeGradient: `linear-gradient(135deg, ${colors.primary200}, ${colors.accent200})`,
+    ctaGradient: `linear-gradient(135deg, ${colors.primary500}, ${colors.accent500})`,
+    hoverGlowSoft: `0 20px 60px -30px ${colors.primary400}44, 0 35px 80px -35px ${colors.accent400}55`,
+    hoverGlowMedium: `0 25px 70px -25px ${colors.primary500}55, 0 40px 90px -30px ${colors.accent500}66`,
+    hoverGlowStrong: `0 30px 80px -20px ${colors.primary600}66, 0 50px 120px -30px ${colors.accent600}77`,
+    hoverGlowInset: `inset 0 0 0 1px ${colors.accent400}55, inset 0 0 20px ${colors.accent400}22`,
+    gradientShadow: gradientShadow(colors),
+    label: `linear-gradient(135deg, ${colors.primary300}, ${colors.accent300})`,
+  };
+};
+
+export const shadows = (colors: any) => ({
+  soft: `0 20px 50px -25px ${colors.primary400}55,
+    0 35px 80px -30px ${colors.accent400}66
+  `,
+  medium: `
+    0 25px 60px -20px ${colors.primary500}66,
+    0 45px 100px -30px ${colors.accent500}77
+  `,
+  inset: `
+    inset 0 0 0 1px ${colors.accent400}55,
+    inset 0 0 20px ${colors.accent400}22
+  `,
+});
+
+export const gradientShadow = (colors: any) => ({
+  border: `4px solid linear-gradient(135deg, ${colors.primary500}, ${colors.accent500})`,
+  blur: "40px",
+  opacity: 0.25,
+});
+
+

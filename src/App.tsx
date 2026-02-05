@@ -1,5 +1,4 @@
 import Home from "./components/pages/Home";
-import ContactUs from "./components/pages/ContactUs.page";
 import { useColors } from "./utils/theme";
 
 const AppContent = () => {
@@ -9,11 +8,10 @@ const AppContent = () => {
     <div
       className="min-h-screen transition-colors duration-300"
       style={{
-        backgroundColor: colors.neutral50,
+        backgroundColor: colors.neutral900,
       }}
     >
       <Home />
-      <ContactUs />
     </div>
   );
 };
