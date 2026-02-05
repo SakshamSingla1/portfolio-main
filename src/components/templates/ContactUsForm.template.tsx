@@ -65,7 +65,7 @@ const ContactUsFormTemplate: React.FC = () => {
                     <header className="mb-12">
                         <div
                             className="text-3xl font-semibold tracking-tight"
-                            style={{ color: g.label }}
+                            style={{ color: colors.accent100 }}
                         >
                             Get in touch
                         </div>
