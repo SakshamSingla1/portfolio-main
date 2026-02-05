@@ -139,9 +139,6 @@ export interface ProfileRequest {
     email: string;
     phone: string;
     location: string;
-    githubUrl: string;
-    linkedinUrl: string;
-    websiteUrl: string;
     profileImageUrl?: string;
     profileImagePublicId?: string;
     logoUrl?: string;
