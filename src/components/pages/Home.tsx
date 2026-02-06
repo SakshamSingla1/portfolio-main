@@ -75,7 +75,11 @@ const Home: React.FC = () => {
         <Navbar profile={profileMaster.profile || null} />
       </div>
 
-      <div className={`mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 pt-32 pb-10 ${ isMobile ? "space-y-16" : "space-y-24 lg:space-y-28"}`}>
+      <div
+        className={`mx-auto max-w-8xl px-12 pt-32 pb-10 ${
+          isMobile ? "space-y-16" : "space-y-28"
+        }`}
+      >
         {profileMaster.profile && (
           <Section id="hero" title="" head>
             <ProfileCard
@@ -87,7 +91,7 @@ const Home: React.FC = () => {
 
         {profileMaster.profile?.aboutMe && (
           <Section id="about-me" title="About Me">
-            <div className="mx-auto max-w-3xl">
+            <div className="mx-auto max-w-8xl">
               <AboutMeCard profile={profileMaster.profile} />
             </div>
           </Section>
@@ -98,7 +102,7 @@ const Home: React.FC = () => {
             id="skills"
             title="Skills"
             gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
+              isMobile ? "grid-cols-2" : "grid-cols-4"
             }`}
           >
             {profileMaster.skills.map(skill => (
@@ -122,7 +126,7 @@ const Home: React.FC = () => {
             id="projects"
             title="Projects"
             gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+              isMobile ? "grid-cols-1" : "grid-cols-3"
             }`}
           >
             {profileMaster.projects.map(project => (
@@ -136,7 +140,7 @@ const Home: React.FC = () => {
             id="achievements"
             title="Achievements"
             gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+              isMobile ? "grid-cols-1" : "grid-cols-3"
             }`}
           >
             {profileMaster.achievements.map(a => (
@@ -150,7 +154,7 @@ const Home: React.FC = () => {
             id="certifications"
             title="Certifications"
             gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+              isMobile ? "grid-cols-1" : "grid-cols-3"
             }`}
           >
             {profileMaster.certifications.map(cert => (
@@ -164,7 +168,7 @@ const Home: React.FC = () => {
             id="education"
             title="Education"
             gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+              isMobile ? "grid-cols-1" : "grid-cols-3"
             }`}
           >
             {profileMaster.educations.map(edu => (
@@ -178,7 +182,7 @@ const Home: React.FC = () => {
             id="testimonials"
             title="Testimonials"
             gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+              isMobile ? "grid-cols-1" : "grid-cols-3"
             }`}
           >
             {profileMaster.testimonials.map(t => (
