@@ -141,6 +141,8 @@ export interface ProfileRequest {
     location: string;
     profileImageUrl?: string;
     profileImagePublicId?: string;
+    aboutMeImageUrl?: string;
+    aboutMeImagePublicId?: string;
     logoUrl?: string;
     logoPublicId?: string;
     themeName: string;
@@ -150,6 +152,7 @@ export interface ProjectResponse {
     id: string;
     projectName: string;
     projectDescription: string;
+    githubRepositories: string[];
     projectLink: string;
     projectStartDate: string;
     projectEndDate: string;
