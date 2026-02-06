@@ -1,13 +1,11 @@
-import React, { memo, useState, useMemo } from "react";
-import {
-  FiAward,
-  FiExternalLink,
-  FiCalendar,
-  FiChevronDown,
-} from "react-icons/fi";
+import React, { memo, useMemo, useState } from "react";
+import { FiAward, FiCalendar } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Achievement } from "../../utils/types";
 import { sanitizeHtml } from "../../utils/helper";
+import { useIsMobile } from "../../hooks/useIsMobile";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import FullscreenImageViewer from "../atoms/FullScreenImagePreviewer/FullScreenImagePreviewer";
 
 interface AchievementProps {
   achievement: Achievement;
@@ -16,7 +14,9 @@ interface AchievementProps {
 const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
   const colors = useColors();
   const g = gradients(colors);
-  const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const [openPreview, setOpenPreview] = useState(false);
 
   const issuedAt = useMemo(
     () =>
@@ -31,130 +31,109 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
   );
 
   return (
-    <article className="relative group rounded-3xl p-[1px]">
-      <div
-        className="absolute inset-0 rounded-3xl opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: g.cardBorderGradient }}
-      />
+    <>
+      <div className="relative rounded-3xl p-[1px]">
+        <div
+          className="absolute inset-0 rounded-3xl opacity-60"
+          style={{ background: g.cardBorderGradient }}
+        />
 
-      <div
-        className="
-          relative flex flex-col gap-6
-          rounded-3xl p-7
-          transition-all duration-500
-          group-hover:-translate-y-1
-        "
-        style={{
-          backgroundColor: colors.neutral900,
-          boxShadow: g.hoverGlowSoft,
-        }}
-      >
-        <header className="flex items-center gap-4">
-          <div
-            className="flex items-center justify-center w-14 h-14 rounded-2xl shrink-0 text-white"
-            style={{ background: g.iconGradient }}
-          >
-            <FiAward size={22} />
-          </div>
-
-          <h2
-            className="text-lg font-semibold tracking-tight leading-snug"
-            style={{ color: colors.neutral50 }}
-          >
-            {achievement.title}
-          </h2>
-        </header>
-
-        <div className="h-px w-full" style={{ background: g.dividerGradient }} />
-
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <span
-              className="text-xs uppercase tracking-widest font-semibold"
-              style={{ color: colors.neutral400 }}
-            >
-              Issued by
-            </span>
-            <span
-              className="text-sm font-medium"
-              style={{ color: colors.neutral200 }}
-            >
-              {achievement.issuer}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <FiCalendar size={14} style={{ color: colors.accent400 }} />
-            <span style={{ color: colors.neutral200 }}>{issuedAt}</span>
-          </div>
-        </div>
-
-        {achievement.description && (
-          <section className="flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={() => setOpen(v => !v)}
-              className="flex items-center justify-between"
-            >
-              <span
-                className="text-xs uppercase tracking-widest font-semibold"
-                style={{ color: colors.accent400 }}
-              >
-                Description
-              </span>
-
-              <FiChevronDown
-                size={18}
-                className={`transition-transform duration-500 ${
-                  open ? "rotate-180 translate-y-0.5" : ""
-                }`}
-                style={{ color: colors.accent400 }}
-              />
-            </button>
-
+        <div
+          className="relative rounded-3xl overflow-hidden flex flex-col"
+          style={{
+            backgroundColor: colors.neutral900,
+            boxShadow: g.hoverGlowSoft,
+          }}
+        >
+          {achievement.proofUrl && (
             <div
-              className="overflow-hidden transition-all duration-500 ease-out"
-              style={{
-                maxHeight: open ? "320px" : "0px",
-                opacity: open ? 1 : 0,
-              }}
+              onClick={() => setOpenPreview(true)}
+              className="relative px-4 pt-4 cursor-pointer"
             >
               <div
-                className="mt-2 rounded-2xl p-5 text-sm leading-relaxed"
+                className="relative overflow-hidden rounded-2xl"
+                style={{
+                  backgroundColor: colors.neutral800,
+                  border: `1px solid ${colors.accent500}22`,
+                }}
+              >
+                <img
+                  src={achievement.proofUrl}
+                  alt={achievement.title}
+                  className="w-full h-40 object-cover"
+                />
+
+                <div
+                  className="absolute top-3 left-3 flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium"
+                  style={{
+                    backgroundColor: `${colors.neutral900}DD`,
+                    color: colors.accent400,
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  <FiAward size={12} />
+                  Achievement
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div
+            className={`flex flex-col ${
+              isMobile ? "p-5 gap-3" : "p-6 gap-4"
+            }`}
+          >
+            <ReadMoreText
+              text={achievement.title}
+              limit={70}
+              mobileLimit={46}
+              className="font-semibold text-base"
+            />
+
+            <div className="flex flex-col gap-1.5 text-sm">
+              <div className="flex items-center gap-2">
+                <FiAward size={14} style={{ color: colors.accent400 }} />
+                <span style={{ color: colors.neutral400 }}>
+                  {achievement.issuer}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs">
+                <FiCalendar size={13} style={{ color: colors.accent500 }} />
+                <span style={{ color: colors.neutral300 }}>
+                  Achieved {issuedAt}
+                </span>
+              </div>
+            </div>
+
+            {achievement.description && (
+              <div
+                className="rounded-2xl p-4 text-sm"
                 style={{
                   backgroundColor: colors.neutral800,
                   border: `1px solid ${colors.accent500}33`,
-                  color: colors.neutral200,
-                  boxShadow: g.hoverGlowInset,
                 }}
               >
-                {sanitizeHtml(achievement.description)}
+                <ReadMoreText
+                  text={sanitizeHtml(achievement.description)}
+                  limit={160}
+                  mobileLimit={110}
+                />
               </div>
-            </div>
-          </section>
-        )}
-
-        {achievement.proofUrl && (
-          <footer className="mt-auto pt-4">
-            <a
-              href={achievement.proofUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center gap-2
-                text-sm font-medium
-                transition-all duration-300
-                hover:translate-x-0.5
-              "
-              style={{ color: colors.accent400 }}
-            >
-              View credential
-              <FiExternalLink size={14} />
-            </a>
-          </footer>
-        )}
+            )}
+          </div>
+        </div>
       </div>
-    </article>
+
+      {achievement.proofUrl && (
+        <FullscreenImageViewer
+          open={openPreview}
+          imageUrl={achievement.proofUrl}
+          alt={achievement.title}
+          onClose={() => setOpenPreview(false)}
+        />
+      )}
+    </>
   );
 };
 

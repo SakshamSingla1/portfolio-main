@@ -2,6 +2,8 @@ import React, { memo } from "react";
 import { useColors, gradients } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
 import { sanitizeHtml } from "../../utils/helper";
+import { useIsMobile } from "../../hooks/useIsMobile";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface AboutMeCardProps {
   profile: ProfileRequest;
@@ -10,65 +12,39 @@ interface AboutMeCardProps {
 const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
   const colors = useColors();
   const g = gradients(colors);
+  const isMobile = useIsMobile();
 
   if (!profile.aboutMe) return null;
 
   return (
     <section className="mx-auto w-full">
       <article className="relative rounded-3xl p-[1px]">
-        {/* Gradient border */}
+        <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }}/>
         <div
-          className="absolute inset-0 rounded-3xl opacity-60"
-          style={{ background: g.cardBorderGradient }}
-        />
-
-        <div
-          className="
-            relative rounded-3xl
-            p-8 sm:p-10
-            grid gap-8
-            md:grid-cols-[220px_1fr]
-            items-start
-          "
+          className={`relative rounded-3xl grid ${isMobile ? "grid-cols-1 p-8" : "grid-cols-[220px_1fr] p-10"} gap-8 items-start`}
           style={{
             backgroundColor: colors.neutral900,
             boxShadow: g.hoverGlowSoft,
           }}
         >
-          {/* Image */}
-          <div className="flex justify-center md:justify-start">
-            {profile.profileImageUrl && (
-              <div
-                className="rounded-2xl p-[3px]"
-                style={{ background: g.iconGradient }}
-              >
-                <img
-                  src={profile.profileImageUrl}
-                  alt={profile.fullName}
-                  className="
-                    h-44 w-44
-                    rounded-2xl
-                    object-cover
-                  "
-                />
+          {profile.profileImageUrl && (
+            <div className={`flex ${isMobile ? "justify-center" : "justify-start"}`}>
+              <div className="rounded-2xl p-[3px]" style={{ background: g.iconGradient }}>
+                <img src={profile.profileImageUrl} alt={profile.fullName} className="h-44 w-44 rounded-2xl object-cover" />
               </div>
-            )}
-          </div>
-
-          {/* About text */}
-          <div className="max-w-2xl text-left">
-            <h3
-              className="mb-3 text-xs uppercase tracking-widest font-semibold"
-              style={{ color: colors.accent400 }}
-            >
+            </div>
+          )}
+          <div className={`${isMobile ? "text-center" : "text-left"} max-w-2xl`}>
+            <h3 className="mb-3 text-xs uppercase tracking-widest font-semibold" style={{ color: colors.accent400 }}>
               About Me
             </h3>
-
-            <p
-              className="text-sm sm:text-base leading-relaxed"
-              style={{ color: colors.neutral200 }}
-            >
-              {sanitizeHtml(profile.aboutMe)}
+            <p className="text-sm leading-relaxed" style={{ color: colors.neutral200 }}>
+              <ReadMoreText
+                text={sanitizeHtml(profile.aboutMe)}
+                limit={160}
+                mobileLimit={120}
+                className=""
+              />
             </p>
           </div>
         </div>
