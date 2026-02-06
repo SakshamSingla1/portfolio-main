@@ -41,7 +41,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
 
     return (
         <div
-            className="relative w-full overflow-hidden rounded-2xl"
+            className="relative w-full overflow-hidden rounded-3xl"
             style={{ backgroundColor: colors.neutral900 }}
         >
             <img
@@ -68,7 +68,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             <div className="absolute inset-x-0 bottom-0">
                 <div className="h-32" />
                 <div
-                    className="absolute inset-x-1 bottom-1 rounded-2xl p-4"
+                    className="absolute inset-x-1 bottom-1 rounded-3xl p-4"
                     style={{
                         backgroundColor: "rgba(18,18,18,0.55)",
                         backdropFilter: "blur(2px)",
