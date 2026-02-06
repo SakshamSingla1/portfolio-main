@@ -52,7 +52,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             timeline={duration}
                             skills={project.skills}
                             link={project.projectLink}
-                            height={isMobile ? 220 : 280}
+                            height={280}
                             onImageClick={url => setPreview(url)}
                         />
                     )}
