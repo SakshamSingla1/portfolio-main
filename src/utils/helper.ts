@@ -1,3 +1,4 @@
+import { DEGREE_OPTIONS } from "./constants";
 import type { ColorTheme } from "./types";
 
 export const replaceUrlParams = (url: string, params: Record<string, any>) => {
@@ -31,3 +32,7 @@ export const toTitleCase = (value?: string | null) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
+
+export const getEducationLabel = (degree: string) => {
+    return DEGREE_OPTIONS.find(option => option.value === degree)?.label || degree;
+}

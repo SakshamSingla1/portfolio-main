@@ -45,7 +45,7 @@ const ContactUsFormTemplate: React.FC = () => {
     });
 
     return (
-        <section className="relative py-20">
+        <section className="relative">
             <article className="relative group rounded-3xl p-[1px]">
                 <div
                     className="absolute inset-0 rounded-3xl opacity-60"
@@ -63,18 +63,6 @@ const ContactUsFormTemplate: React.FC = () => {
                     }}
                 >
                     <header className="mb-12">
-                        <div
-                            className="text-3xl font-semibold tracking-tight"
-                            style={{ color: colors.accent100 }}
-                        >
-                            Get in touch
-                        </div>
-
-                        <div
-                            className="mt-3 h-[3px] w-20 rounded-full"
-                            style={{ background: g.dividerGradient }}
-                        />
-
                         <p
                             className="mt-5 max-w-xl text-sm leading-relaxed"
                             style={{ color: colors.neutral400 }}

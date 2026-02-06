@@ -175,3 +175,15 @@ export interface ProfileMaster {
     certifications: Certification[];
     socialLinks: SocialLinkResponse[];
 }
+
+export type Option = {
+    value: string;
+    label: string;
+}
+
+export const Status = {
+    ACTIVE: "ACTIVE",
+    INACTIVE: "INACTIVE",
+    BLOCKED: "BLOCKED",
+    DELETED: "DELETED",
+}

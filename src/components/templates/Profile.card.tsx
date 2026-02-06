@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useState } from "react";
-import type { ProfileRequest, SocialLinkResponse } from "../../utils/types";
+import { Status, type ProfileRequest, type SocialLinkResponse } from "../../utils/types";
 import { useColors, gradients } from "../../utils/theme";
 import CircleWithArc from "../atoms/CircleWithArc/CircleWithArc";
-
 import {
   FaGithub,
   FaLinkedin,
@@ -21,8 +20,9 @@ import {
 import { SiLeetcode, SiCodeforces, SiCodechef } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
 import { SocialLinkPlatform } from "../../utils/constants";
-
-/* ---------- Helpers ---------- */
+import { useMediaQuery } from "@mui/material";
+import usePublicResumeService from "../../services/usePublicResumeService";
+import Button from "../atoms/Button/Button";
 
 const getSocialIcon = (platform: string) => {
   switch (platform) {
@@ -58,8 +58,6 @@ const getSocialIcon = (platform: string) => {
   }
 };
 
-/* ---------- Component ---------- */
-
 interface ProfileCardProps {
   profile: ProfileRequest;
   socialLinks: SocialLinkResponse[];
@@ -68,103 +66,145 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
   const colors = useColors();
   const g = gradients(colors);
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const publicResumeService = usePublicResumeService();
+
+  const imageSize = isMobile ? 220 : 300;
 
   const [progress, setProgress] = useState(0);
 
+  const handleViewResume = async () => {
+    const url = publicResumeService.getViewResumeUrl(profile.userName);
+    window.open(url, "_blank");
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((p) => (p >= 100 ? 0 : p + 0.4));
-    }, 100);
+      setProgress((p) => (p >= 100 ? 0 : p + 0.35));
+    }, 80);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="mx-auto w-full pt-12">
-      <article className="relative group rounded-3xl p-[1px]">
+    <div className="mx-auto w-full max-w-6xl">
+      <div className="relative rounded-3xl p-[1px]">
         <div
-          className="absolute inset-0 rounded-3xl opacity-60 transition-opacity duration-500"
+          className="absolute inset-0 rounded-3xl opacity-60"
           style={{ background: g.cardBorderGradient }}
         />
 
         <div
-          className="relative rounded-3xl p-8 sm:p-10"
+          className="relative rounded-3xl p-8"
           style={{
             backgroundColor: colors.neutral900,
             boxShadow: g.hoverGlowSoft,
           }}
         >
-          <div className="flex flex-col items-center text-center">
+          {/* MAIN LAYOUT */}
+          <div
+            className={`flex gap-10 ${isMobile ? "flex-col items-center" : "flex-row items-start"}`}
+          >
+            {/* AVATAR */}
             {profile.profileImageUrl && (
-              <div className="relative w-[273px] h-[273px] my-6 md:my-0 md:w-[400px] md:h-[400px]">
+              <CircleWithArc progress={progress} size={imageSize} padding={16}>
                 <img
                   src={profile.profileImageUrl}
                   alt={profile.fullName}
-                  className="rounded-full object-cover mt-3 ml-3"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
+                  className="w-full h-full object-cover"
                 />
-                <CircleWithArc progress={progress} />
-              </div>
+              </CircleWithArc>
             )}
 
-            <h1
-              className="text-2xl sm:text-3xl font-semibold"
-              style={{ color: colors.neutral50 }}
+            {/* CONTENT */}
+            <div
+              className={`flex-1 ${isMobile ? "text-center" : "text-left"}`}
             >
-              {profile.fullName}
-            </h1>
+              <h1
+                className="text-3xl font-semibold"
+                style={{ color: colors.neutral50 }}
+              >
+                {profile.fullName}
+              </h1>
 
-            <p
-              className="mt-1 text-sm sm:text-base font-medium"
-              style={{ color: colors.accent300 }}
-            >
-              {profile.title}
-            </p>
-          </div>
-
-          <div
-            className="mt-7 grid gap-3 sm:grid-cols-2 text-sm"
-            style={{ color: colors.neutral200 }}
-          >
-            {profile.location && (
-              <div className="flex items-center gap-2">
-                <FaMapMarkerAlt size={14} style={{ color: colors.accent400 }} />
-                <span>{profile.location}</span>
-              </div>
-            )}
-
-            {profile.email && (
-              <div className="flex items-center gap-2">
-                <FaEnvelope size={14} style={{ color: colors.accent400 }} />
-                <a href={`mailto:${profile.email}`} className="hover:underline">
-                  {profile.email}
-                </a>
-              </div>
-            )}
-
-            {profile.phone && (
-              <div className="flex items-center gap-2">
-                <FaPhoneAlt size={14} style={{ color: colors.accent400 }} />
-                <a href={`tel:${profile.phone}`} className="hover:underline">
-                  {profile.phone}
-                </a>
-              </div>
-            )}
-          </div>
-
-          {socialLinks.length > 0 && (
-            <>
+              <p
+                className="mt-2 text-base font-medium"
+                style={{ color: colors.accent300 }}
+              >
+                {profile.title}
+              </p>
               <div
-                className="my-8 h-px"
-                style={{ background: g.dividerGradient }}
-              />
+                className={`mt-6 ${isMobile ? "grid grid-cols-1 gap-4 justify-center" : "grid grid-cols-2 gap-4 justify-start"}`}
+                style={{
+                  color: colors.neutral200,
+                }}
+              >
+                {profile.location && (
+                  <span className="flex items-center gap-2">
+                    <FaMapMarkerAlt style={{ color: colors.accent400 }} />
+                    {profile.location}
+                  </span>
+                )}
 
-              <div className="flex flex-wrap justify-center gap-3">
+                {profile.email && (
+                  <div
+                    onClick={() =>
+                      window.open(`mailto:${profile.email}`, "_blank")
+                    }
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <FaEnvelope style={{ color: colors.accent400 }} />
+                    {profile.email}
+                  </div>
+                )}
+
+                {profile.phone && (
+                  <div
+                    onClick={() =>
+                      window.open(`tel:${profile.phone}`, "_blank")
+                    }
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <FaPhoneAlt style={{ color: colors.accent400 }} />
+                    {profile.phone}
+                  </div>
+                )}
+              </div>
+
+              {/* CTA */}
+              <div className={`mt-8 flex gap-4 ${isMobile ? "justify-center" : "justify-start"}`}>
+                {profile.userName && (
+                  <Button
+                    label="View Resume"
+                    variant="primaryContained"
+                    onClick={() => {
+                      handleViewResume();
+                    }}
+                  />
+                )}
+
+                {profile.email && (
+                  <Button
+                    label="Contact Me"
+                    variant="primaryContained"
+                    onClick={() => {
+                      window.open(`mailto:${profile.email}`, "_blank");
+                    }}
+                  />
+                )}
+              </div>
+
+              {/* DIVIDER */}
+              {socialLinks.length > 0 && (
+                <div
+                  className="my-8 h-px"
+                  style={{ background: g.dividerGradient }}
+                />
+              )}
+
+              {/* SOCIAL ICONS */}
+              <div className={`flex flex-wrap gap-3 ${isMobile ? "justify-center" : "justify-start"}`}>
                 {socialLinks
-                  .filter((l) => l.status === "ACTIVE")
+                  .filter((l) => l.status === Status.ACTIVE)
                   .sort((a, b) => Number(a.order) - Number(b.order))
                   .map((link) => (
                     <a
@@ -172,38 +212,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
+                      title={link.platform}
+                      className="flex h-12 w-12 items-center justify-center rounded-xl"
                       style={{
                         backgroundColor: colors.neutral800,
-                        color: colors.neutral200,
-                        border: `1px solid ${colors.accent500}22`,
-                        boxShadow: g.hoverGlowSoft,
+                        border: `1px solid ${colors.accent500}33`,
+                        color: colors.accent400,
                       }}
                     >
-                      <span
-                        className="flex h-8 w-8 items-center justify-center rounded-lg"
-                        style={{
-                          backgroundColor: colors.neutral900,
-                          color: colors.accent400,
-                        }}
-                      >
-                        {getSocialIcon(link.platform)}
-                      </span>
-
-                      <span>
-                        {link.platform
-                          .replace(/_/g, " ")
-                          .toLowerCase()
-                          .replace(/\b\w/g, (c) => c.toUpperCase())}
-                      </span>
+                      {getSocialIcon(link.platform)}
                     </a>
                   ))}
               </div>
-            </>
-          )}
+            </div>
+          </div>
         </div>
-      </article>
-    </section>
+      </div>
+    </div>
   );
 };
 

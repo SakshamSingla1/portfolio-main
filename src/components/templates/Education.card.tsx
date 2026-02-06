@@ -7,7 +7,7 @@ import {
   FiAward,
 } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
-import { sanitizeHtml } from "../../utils/helper";
+import { getEducationLabel, sanitizeHtml } from "../../utils/helper";
 import { type Education } from "../../utils/types";
 
 interface EducationCardProps {
@@ -62,7 +62,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education }) => {
               className="text-xl font-semibold tracking-tight leading-snug"
               style={{ color: colors.neutral50 }}
             >
-              {education.degree}
+              {getEducationLabel(education.degree)}
             </h2>
 
             <span
@@ -104,7 +104,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education }) => {
               }}
             >
               <FiAward size={14} />
-              Academic Performance: {education.grade}
+              {education.grade}
             </div>
           )}
         </div>

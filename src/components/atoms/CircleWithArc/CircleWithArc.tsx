@@ -1,52 +1,52 @@
-"use client";
-
-import React, { useRef, useId, useEffect } from "react";
+import React, { type ReactNode, useEffect, useId, useRef } from "react";
 import { useMediaQuery } from "@mui/material";
 import { useColors } from "../../../utils/theme";
 
 interface CircleWithArcProps {
   progress: number;
-  size?: number;
+  size: number;        // image size
+  padding?: number;    // p-4 = 16
+  children: ReactNode; // image component from card
 }
 
 const CircleWithArc: React.FC<CircleWithArcProps> = ({
   progress,
   size,
+  padding = 16,
+  children,
 }) => {
   const colors = useColors();
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   const gradientId = useId();
   const glowId = useId();
 
-  const containerSize = size ?? (isMobile ? 273: 400);
   const strokeWidth = isMobile ? 2 : 3;
   const glowWidth = strokeWidth * 2.5;
-  const gap = isMobile ? 10 : 14;
 
-  const radius = containerSize / 2 + gap;
+  const imageRadius = size / 2;
+  const radius = imageRadius + padding + strokeWidth / 2;
+
+  const svgSize = size + padding * 2 + strokeWidth * 2;
+  const center = svgSize / 2;
+
   const circumference = 2 * Math.PI * radius;
-  const center = containerSize / 2 + gap;
+  const dashOffset = circumference - (progress / 100) * circumference;
 
   const pathRef = useRef<SVGCircleElement>(null);
-  const prevProgressRef = useRef(progress);
-  const disableTransitionRef = useRef(false);
+  const prevProgress = useRef(progress);
+  const disableTransition = useRef(false);
 
-  /* ---------- Detect reset ---------- */
   useEffect(() => {
-    if (progress < prevProgressRef.current) {
-      // progress reset detected
-      disableTransitionRef.current = true;
-
-      // re-enable animation next frame
+    if (progress < prevProgress.current) {
+      disableTransition.current = true;
       requestAnimationFrame(() => {
-        disableTransitionRef.current = false;
+        disableTransition.current = false;
       });
     }
-
-    prevProgressRef.current = progress;
+    prevProgress.current = progress;
   }, [progress]);
 
-  /* ---------- Dot position ---------- */
   let dotX = center;
   let dotY = center;
 
@@ -57,104 +57,113 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
     dotY = point.y;
   }
 
-  const dashOffset =
-    circumference - (progress / 100) * circumference;
-
-  const transitionStyle = disableTransitionRef.current
+  const transition = disableTransition.current
     ? "none"
     : "stroke-dashoffset 120ms linear";
 
   return (
-    <svg
-      width={containerSize + gap * 2}
-      height={containerSize + gap * 2}
-      viewBox={`0 0 ${containerSize + gap * 2} ${containerSize + gap * 2}`}
-      className="absolute inset-0 pointer-events-none"
+    <div
+      className="relative flex items-center justify-center"
+      style={{ width: svgSize, height: svgSize }}
     >
-      {/* ---------- defs ---------- */}
-      <defs>
-        <linearGradient
-          id={gradientId}
-          gradientUnits="userSpaceOnUse"
-          x1={0}
-          y1={0}
-          x2={containerSize + gap * 2}
-          y2={containerSize + gap * 2}
-        >
-          <stop offset="0%" stopColor={colors.primary300} />
-          <stop offset="20%" stopColor={colors.primary400} />
-          <stop offset="40%" stopColor={colors.primary500} />
-          <stop offset="60%" stopColor={colors.accent300} />
-          <stop offset="80%" stopColor={colors.accent400} />
-          <stop offset="100%" stopColor={colors.accent500} />
-        </linearGradient>
+      {/* ---------- Image Slot ---------- */}
+      <div
+        className="relative z-10 rounded-full overflow-hidden"
+        style={{ width: size, height: size }}
+      >
+        {children}
+      </div>
 
-        <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="6" />
-        </filter>
-      </defs>
+      {/* ---------- Arc ---------- */}
+      <svg
+        width={svgSize}
+        height={svgSize}
+        viewBox={`0 0 ${svgSize} ${svgSize}`}
+        className="absolute inset-0 pointer-events-none"
+      >
+        <defs>
+          <linearGradient
+            id={gradientId}
+            gradientUnits="userSpaceOnUse"
+            x1={0}
+            y1={0}
+            x2={svgSize}
+            y2={svgSize}
+          >
+            <stop offset="0%" stopColor={colors.primary300} />
+            <stop offset="40%" stopColor={colors.primary500} />
+            <stop offset="100%" stopColor={colors.accent500} />
+          </linearGradient>
 
-      {/* ---------- Base ring ---------- */}
-      <circle
-        cx={center}
-        cy={center}
-        r={radius}
-        fill="transparent"
-        stroke={colors.neutral700}
-        strokeWidth={strokeWidth}
-        opacity={0.3}
-      />
+          <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" />
+          </filter>
+        </defs>
 
-      {/* ---------- Glow arc ---------- */}
-      <circle
-        cx={center}
-        cy={center}
-        r={radius}
-        fill="transparent"
-        stroke={`url(#${gradientId})`}
-        strokeWidth={glowWidth}
-        strokeDasharray={circumference}
-        strokeDashoffset={dashOffset}
-        strokeLinecap="round"
-        opacity={0.45}
-        filter={`url(#${glowId})`}
-        style={{ transition: transitionStyle }}
-      />
+        {/* Base ring */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke={colors.neutral700}
+          strokeWidth={strokeWidth}
+          opacity={0.25}
+        />
 
-      {/* ---------- Main arc ---------- */}
-      <circle
-        ref={pathRef}
-        cx={center}
-        cy={center}
-        r={radius}
-        fill="transparent"
-        stroke={`url(#${gradientId})`}
-        strokeWidth={strokeWidth}
-        strokeDasharray={circumference}
-        strokeDashoffset={dashOffset}
-        strokeLinecap="round"
-        style={{ transition: transitionStyle }}
-      />
-      <circle
-        cx={dotX}
-        cy={dotY}
-        r={strokeWidth * 2.2}
-        fill={colors.accent500}
-        opacity={0.35}
-        filter={`url(#${glowId})`}
-      />
-      <circle
-        cx={dotX}
-        cy={dotY}
-        r={strokeWidth + 1}
-        fill={colors.accent500}
-        style={{
-          transition: disableTransitionRef.current
-            ? "none"
-            : "cx 120ms linear, cy 120ms linear",
-        }}
-      />
-    </svg>
+        {/* Glow arc */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke={`url(#${gradientId})`}
+          strokeWidth={glowWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={dashOffset}
+          strokeLinecap="round"
+          opacity={0.45}
+          filter={`url(#${glowId})`}
+          style={{ transition }}
+        />
+
+        {/* Main arc */}
+        <circle
+          ref={pathRef}
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke={`url(#${gradientId})`}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={dashOffset}
+          strokeLinecap="round"
+          style={{ transition }}
+        />
+
+        {/* Dot */}
+        <circle
+          cx={dotX}
+          cy={dotY}
+          r={strokeWidth * 2.2}
+          fill={colors.accent500}
+          opacity={0.35}
+          filter={`url(#${glowId})`}
+        />
+        <circle
+          cx={dotX}
+          cy={dotY}
+          r={strokeWidth + 1}
+          fill={colors.accent500}
+          style={{
+            transition: disableTransition.current
+              ? "none"
+              : "cx 120ms linear, cy 120ms linear",
+          }}
+        />
+      </svg>
+    </div>
   );
 };
 

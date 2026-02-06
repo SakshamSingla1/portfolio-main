@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { useColors, gradients } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
+import { sanitizeHtml } from "../../utils/helper";
 
 interface AboutMeCardProps {
   profile: ProfileRequest;
@@ -13,7 +14,7 @@ const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
   if (!profile.aboutMe) return null;
 
   return (
-    <section className="mx-auto w-full pt-12">
+    <section className="mx-auto w-full">
       <article className="relative rounded-3xl p-[1px]">
         {/* Gradient border */}
         <div
@@ -67,7 +68,7 @@ const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
               className="text-sm sm:text-base leading-relaxed"
               style={{ color: colors.neutral200 }}
             >
-              {profile.aboutMe}
+              {sanitizeHtml(profile.aboutMe)}
             </p>
           </div>
         </div>
