@@ -1,8 +1,10 @@
-import React, { memo } from "react";
-import { FiMessageCircle, FiCalendar, FiExternalLink } from "react-icons/fi";
+import React, { memo, useMemo } from "react";
+import { FiCalendar, FiExternalLink } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Testimonial } from "../../utils/types";
 import { sanitizeHtml } from "../../utils/helper";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
@@ -11,151 +13,99 @@ interface TestimonialCardProps {
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   const colors = useColors();
   const g = gradients(colors);
+  const isMobile = useIsMobile();
 
-  const formattedDate = testimonial.createdAt
-    ? new Date(testimonial.createdAt).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    : null;
+  const formattedDate = useMemo(
+    () =>
+      testimonial.createdAt
+        ? new Date(testimonial.createdAt).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        : null,
+    [testimonial.createdAt]
+  );
 
   return (
-    <article className="relative group rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1">
-      {/* Animated gradient border */}
-      <div
-        className="absolute inset-0 rounded-3xl blur-sm transition-all duration-500 group-hover:opacity-100"
-        style={{ background: g.cardBorderGradient }}
-      />
-
-      <div
-        className="
-          relative rounded-3xl p-7 flex flex-col gap-6
-          transition-all duration-500
-          group-hover:shadow-[0_0_40px_rgba(0,0,0,0.4)]
-        "
+    <div className="relative rounded-3xl p-[1px]">
+      <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }}/>
+      <div className={`relative rounded-3xl flex flex-col ${ isMobile ? "p-6 gap-5" : "p-7 gap-6"}`}
         style={{
           backgroundColor: colors.neutral900,
+          boxShadow: g.hoverGlowSoft,
         }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div
-            className="p-2 rounded-xl"
-            style={{
-              background: g.iconGradient,
-              boxShadow: g.hoverGlowInset,
-            }}
-          >
-            <FiMessageCircle size={18} className="text-white" />
-          </div>
-        </div>
-
-        {/* Quote */}
-        <div className="relative">
-          <span
-            className="absolute -top-4 -left-2 text-6xl select-none opacity-10"
-            style={{ color: colors.accent300 }}
-          >
-            “
-          </span>
-
-          <p
-            className="relative text-sm leading-relaxed italic"
-            style={{ color: colors.neutral200 }}
-          >
-            {sanitizeHtml(testimonial.message)}
-          </p>
-        </div>
-
-        {/* User */}
-        <div className="flex items-start gap-4 pt-2">
+        <div className="flex items-center gap-4">
           {testimonial.imageUrl ? (
-            <img
-              src={testimonial.imageUrl}
-              alt={testimonial.name}
-              className="
-                w-12 h-12 rounded-full object-cover
-                transition-all duration-300
-                group-hover:scale-105
-              "
+            <img src={testimonial.imageUrl} alt={testimonial.name} className="w-12 h-12 rounded-full"
               style={{
                 border: `2px solid ${colors.accent400}40`,
-                boxShadow: g.hoverGlowInset,
               }}
             />
           ) : (
             <div
-              className="
-                w-12 h-12 rounded-full
-                flex items-center justify-center
-                text-white font-semibold
-                transition-transform duration-300
-                group-hover:scale-105
-              "
+              className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
               style={{ background: g.iconGradient }}
             >
               {testimonial.name.charAt(0).toUpperCase()}
             </div>
           )}
-
-          <div className="flex-1">
-            <h3
-              className="font-semibold text-base"
+          <div className="flex flex-col gap-0.5 flex-1">
+            <div className="font-semibold text-sm"
               style={{ color: colors.neutral50 }}
             >
               {testimonial.name}
-            </h3>
-
-            <div className="flex flex-col gap-1 mt-1">
-              <span
-                className="text-sm font-medium"
-                style={{ color: colors.accent300 }}
-              >
-                {testimonial.role}
-              </span>
-
-              <span
-                className="text-sm"
-                style={{ color: colors.neutral400 }}
-              >
-                {testimonial.company}
-              </span>
-
-              {formattedDate && (
-                <div className="flex items-center gap-1 text-xs mt-2">
-                  <FiCalendar size={12} style={{ color: colors.neutral500 }} />
-                  <span style={{ color: colors.neutral500 }}>
-                    {formattedDate}
-                  </span>
-                </div>
-              )}
             </div>
+            <div className="text-xs"
+              style={{ color: colors.neutral400 }}
+            >
+              {testimonial.role} · {testimonial.company}
+            </div>
+            {testimonial.linkedInUrl && (
+              <a
+                href={testimonial.linkedInUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium"
+                style={{ color: colors.accent400 }}
+              >
+                LinkedIn
+                <FiExternalLink size={11} />
+              </a>
+            )}
           </div>
         </div>
-
-        {/* LinkedIn CTA */}
-        {testimonial.linkedInUrl && (
-          <div className="mt-auto pt-3">
-            <a
-              href={testimonial.linkedInUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center gap-2
-                text-sm font-medium
-                transition-all duration-300
-                hover:translate-x-1
-              "
-              style={{ color: colors.accent400 }}
+        {testimonial.message && (
+          <div>
+            <div className="text-sm font-normal mb-2" style={{ color: colors.accent400 }}>
+              Message
+            </div>
+            <div className="rounded-2xl p-4 text-sm leading-relaxed"
+              style={{
+                backgroundColor: colors.neutral800,
+                border: `1px solid ${colors.accent500}22`,
+                color: colors.neutral200,
+              }}
             >
-              View LinkedIn Profile
-              <FiExternalLink size={14} />
-            </a>
+              <ReadMoreText
+                text={sanitizeHtml(testimonial.message)}
+                limit={160}
+                mobileLimit={110}
+              />
+            </div>
+          </div>
+        )}
+        {formattedDate && (
+          <div className="flex justify-end items-center gap-1 text-[11px]">
+            <FiCalendar size={11} style={{ color: colors.neutral500 }} />
+            <span style={{ color: colors.neutral500 }}>
+              {formattedDate}
+            </span>
           </div>
         )}
       </div>
-    </article>
+    </div>
   );
 };
 

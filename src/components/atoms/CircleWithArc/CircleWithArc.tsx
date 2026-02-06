@@ -4,9 +4,9 @@ import { useColors } from "../../../utils/theme";
 
 interface CircleWithArcProps {
   progress: number;
-  size: number;        // image size
-  padding?: number;    // p-4 = 16
-  children: ReactNode; // image component from card
+  size: number;
+  padding?: number;
+  children: ReactNode;
 }
 
 const CircleWithArc: React.FC<CircleWithArcProps> = ({
@@ -66,7 +66,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
       className="relative flex items-center justify-center"
       style={{ width: svgSize, height: svgSize }}
     >
-      {/* ---------- Image Slot ---------- */}
       <div
         className="relative z-10 rounded-full overflow-hidden"
         style={{ width: size, height: size }}
@@ -74,7 +73,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
         {children}
       </div>
 
-      {/* ---------- Arc ---------- */}
       <svg
         width={svgSize}
         height={svgSize}
@@ -100,7 +98,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           </filter>
         </defs>
 
-        {/* Base ring */}
         <circle
           cx={center}
           cy={center}
@@ -111,7 +108,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           opacity={0.25}
         />
 
-        {/* Glow arc */}
         <circle
           cx={center}
           cy={center}
@@ -127,7 +123,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           style={{ transition }}
         />
 
-        {/* Main arc */}
         <circle
           ref={pathRef}
           cx={center}
@@ -142,7 +137,6 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           style={{ transition }}
         />
 
-        {/* Dot */}
         <circle
           cx={dotX}
           cy={dotY}

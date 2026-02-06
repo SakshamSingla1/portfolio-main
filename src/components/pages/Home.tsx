@@ -3,118 +3,47 @@ import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 import { useProfileMasterService } from "../../services/useProfileMasterService";
 import { HTTP_STATUS } from "../../utils/constants";
 import type { ProfileMaster } from "../../utils/types";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 import Navbar from "../molecules/Navbar/Navbar";
-
 import ProfileCard from "../templates/Profile.card";
-import EducationCard from "../templates/Education.card";
+import AboutMeCard from "../templates/AboutMe.card";
+import SkillCard from "../templates/Skill.card";
 import ExperienceCard from "../templates/Experience.card";
 import ProjectCard from "../templates/Project.card";
-import SkillCard from "../templates/Skill.card";
 import AchievementCard from "../templates/Achievement.card";
 import CertificationCard from "../templates/Certification.card";
+import EducationCard from "../templates/Education.card";
 import TestimonialCard from "../templates/Testimonial.card";
-import AboutMeCard from "../templates/AboutMe.card";
 import ContactUsFormTemplate from "../templates/ContactUsForm.template";
-
-import { useColors, gradients } from "../../utils/theme";
-
-/* -------------------------------------------------------------------------- */
-/*                                  Section                                   */
-/* -------------------------------------------------------------------------- */
-
-interface SectionProps {
-  id?: string;
-  title: string;
-  children: React.ReactNode;
-  gridClass?: string;
-  head?: boolean;
-}
-
-const Section: React.FC<SectionProps> = ({
-  id,
-  title,
-  children,
-  gridClass,
-  head = false,
-}) => {
-  const colors = useColors();
-  const g = gradients(colors);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  return (
-    <section id={id} className={`relative space-y-6 scroll-mt-32`}>
-      {/* Background glow */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 opacity-20 blur-2xl"
-        style={{ background: g.cardBorderGradient }}
-      />
-
-      {/* Header */}
-      {!head && (
-        <div className={`flex flex-col ${isMobile ? 'items-center' : 'items-start'} justify-start`}>
-          <h2
-            className="text-2xl font-semibold"
-            style={{ color: colors.accent100 }}
-          >
-            {title}
-          </h2>
-          <div
-            className="mt-3 h-[3px] w-20 rounded-full"
-            style={{ background: g.dividerGradient }}
-          />
-
-        </div>
-      )}
-
-      {/* Content */}
-      {gridClass ? (
-        <div className={`${gridClass} items-start gap-8`}>{children}</div>
-      ) : (
-        <div>{children}</div>
-      )}
-    </section>
-  );
-};
-
-/* -------------------------------------------------------------------------- */
-/*                                   Home                                     */
-/* -------------------------------------------------------------------------- */
+import Section from "../molecules/Section/Section";
 
 const Home: React.FC = () => {
   const { setDefaultTheme, setProfileId } = useDefaultColorTheme();
   const profileMasterService = useProfileMasterService();
+  const isMobile = useIsMobile();
 
   const [profileMaster, setProfileMaster] = useState<ProfileMaster | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const response = await profileMasterService.get();
-      if (response.status === HTTP_STATUS.OK) {
-        setProfileMaster(response.data.data);
-      } else {
-        setError("Failed to load profile data.");
-      }
-    } catch {
-      setError("Something went wrong while loading the profile.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const response = await profileMasterService.get();
+        if (response.status === HTTP_STATUS.OK) {
+          setProfileMaster(response.data.data);
+        } else {
+          setError("Failed to load profile data.");
+        }
+      } catch {
+        setError("Something went wrong while loading the profile.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProfile();
   }, []);
 
@@ -132,28 +61,21 @@ const Home: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || !profileMaster) {
     return (
       <div className="flex min-h-[70vh] items-center justify-center text-sm text-red-500">
-        {error}
+        {error || "Profile not found"}
       </div>
     );
   }
 
-  if (!profileMaster) return null;
-
   return (
     <>
-      {/* ================= FLOATING NAVBAR (OUTSIDE FLOW) ================= */}
-      <header className="fixed top-0 left-0 right-0 z-50 mt-4">
-        <div className="pointer-events-auto">
-          <Navbar profile={profileMaster.profile || null} />
-        </div>
-      </header>
+      <div className="fixed top-0 left-0 right-0 z-50 mt-4">
+        <Navbar profile={profileMaster.profile || null} />
+      </div>
 
-      {/* ================= MAIN CONTENT ================= */}
-      <main className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 pt-32 space-y-20 sm:space-y-24 lg:space-y-28">
-        {/* HERO */}
+      <div className={`mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 pt-32 pb-10 ${ isMobile ? "space-y-16" : "space-y-24 lg:space-y-28"}`}>
         {profileMaster.profile && (
           <Section id="hero" title="" head>
             <ProfileCard
@@ -163,7 +85,6 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* ABOUT */}
         {profileMaster.profile?.aboutMe && (
           <Section id="about-me" title="About Me">
             <div className="mx-auto max-w-3xl">
@@ -172,12 +93,13 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* SKILLS */}
         {profileMaster.skills.length > 0 && (
           <Section
             id="skills"
             title="Skills"
-            gridClass="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+            gridClass={`grid gap-6 ${
+              isMobile ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
+            }`}
           >
             {profileMaster.skills.map(skill => (
               <SkillCard key={skill.id} skill={skill} />
@@ -185,10 +107,9 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* EXPERIENCE */}
         {profileMaster.experiences.length > 0 && (
           <Section id="experience" title="Experience">
-            <div className="space-y-8">
+            <div className={isMobile ? "space-y-6" : "space-y-8"}>
               {profileMaster.experiences.map(exp => (
                 <ExperienceCard key={exp.id} experience={exp} />
               ))}
@@ -196,12 +117,13 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* PROJECTS */}
         {profileMaster.projects.length > 0 && (
           <Section
             id="projects"
             title="Projects"
-            gridClass="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
           >
             {profileMaster.projects.map(project => (
               <ProjectCard key={project.id} project={project} />
@@ -209,25 +131,13 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* EDUCATION */}
-        {profileMaster.educations.length > 0 && (
-          <Section
-            id="education"
-            title="Education"
-            gridClass="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {profileMaster.educations.map(edu => (
-              <EducationCard key={edu.id} education={edu} />
-            ))}
-          </Section>
-        )}
-
-        {/* ACHIEVEMENTS */}
         {profileMaster.achievements.length > 0 && (
           <Section
             id="achievements"
             title="Achievements"
-            gridClass="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            gridClass={`grid gap-6 ${
+              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
           >
             {profileMaster.achievements.map(a => (
               <AchievementCard key={a.id} achievement={a} />
@@ -235,12 +145,13 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* CERTIFICATIONS */}
         {profileMaster.certifications.length > 0 && (
           <Section
             id="certifications"
             title="Certifications"
-            gridClass="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            gridClass={`grid gap-6 ${
+              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
           >
             {profileMaster.certifications.map(cert => (
               <CertificationCard key={cert.id} certification={cert} />
@@ -248,12 +159,27 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {/* TESTIMONIALS */}
+        {profileMaster.educations.length > 0 && (
+          <Section
+            id="education"
+            title="Education"
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
+            {profileMaster.educations.map(edu => (
+              <EducationCard key={edu.id} education={edu} />
+            ))}
+          </Section>
+        )}
+
         {profileMaster.testimonials.length > 0 && (
           <Section
             id="testimonials"
             title="Testimonials"
-            gridClass="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
           >
             {profileMaster.testimonials.map(t => (
               <TestimonialCard key={t.id} testimonial={t} />
@@ -261,13 +187,10 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        <Section
-          id="contact"
-          title="Get In Touch"
-        >
+        <Section id="contact" title="Get In Touch">
           <ContactUsFormTemplate />
         </Section>
-      </main>
+      </div>
     </>
   );
 };

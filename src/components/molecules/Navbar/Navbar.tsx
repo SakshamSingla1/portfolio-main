@@ -11,11 +11,11 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "#hero" },
   { label: "About", href: "#about-me" },
   { label: "Skills", href: "#skills" },
-  { label: "Education", href: "#education" },
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
-  { label: "Certifications", href: "#certifications" },
   { label: "Achievements", href: "#achievements" },
+  { label: "Certifications", href: "#certifications" },
+  { label: "Education", href: "#education" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
@@ -32,14 +32,12 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("#hero");
 
-  /* -------------------------------- Scroll Shadow ------------------------------- */
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* -------------------------- Active Section Detection -------------------------- */
   useEffect(() => {
     const sections = NAV_ITEMS.map(item =>
       document.querySelector(item.href)
@@ -72,7 +70,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
           boxShadow: isScrolled ? g.hoverGlowSoft : "none",
         }}
       >
-        {/* Glass container */}
         <div
           className="flex items-center justify-between rounded-2xl px-6 py-3"
           style={{
@@ -80,7 +77,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
             backdropFilter: "blur(14px)",
           }}
         >
-          {/* Brand */}
           <a
             href="#hero"
             className="group flex items-center gap-3"
@@ -120,7 +116,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
             })}
           </ul>
 
-          {/* Mobile Toggle */}
           <button
             onClick={() => setOpen(v => !v)}
             className="md:hidden text-lg"
@@ -131,7 +126,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {open && (
           <div
             className="md:hidden mt-2 rounded-2xl p-4"
