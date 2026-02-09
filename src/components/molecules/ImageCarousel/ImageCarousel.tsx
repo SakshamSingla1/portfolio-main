@@ -50,7 +50,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 onClick={() => onImageClick?.(images[index].url)}
                 className="w-full object-cover cursor-pointer transition-transform duration-700"
                 style={{
-                    height: isMobile ? height - 40 : height,
+                    height: height,
                 }}
             />
             <div className="absolute inset-x-0 top-0 h-24" />
