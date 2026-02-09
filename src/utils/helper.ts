@@ -38,21 +38,21 @@ export const getEducationLabel = (degree: string) => {
 }
 
 export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null => {
-  const items: NavItem[] = [{ label: "Home", href: "#hero" }];
-  if (data?.profile?.aboutMe) items.push({ label: "About", href: "#about-me" });
-  if (data?.skills?.length) items.push({ label: "Skills", href: "#skills" });
+  const items: NavItem[] = [{ label: "Home", section: "hero" }];
+  if (data?.profile?.aboutMe) items.push({ label: "About", section: "about-me" });
+  if (data?.skills?.length) items.push({ label: "Skills", section: "skills" });
   if (data?.experiences?.length)
-    items.push({ label: "Experience", href: "#experience" });
+    items.push({ label: "Experience", section: "experience" });
   if (data?.projects?.length)
-    items.push({ label: "Projects", href: "#projects" });
+    items.push({ label: "Projects", section: "projects" });
   if (data?.achievements?.length)
-    items.push({ label: "Achievements", href: "#achievements" });
+    items.push({ label: "Achievements", section: "achievements" });
   if (data?.certifications?.length)
-    items.push({ label: "Certifications", href: "#certifications" });
+    items.push({ label: "Certifications", section: "certifications" });
   if (data?.educations?.length)
-    items.push({ label: "Education", href: "#education" });
+    items.push({ label: "Education", section: "education" });
   if (data?.testimonials?.length)
-    items.push({ label: "Testimonials", href: "#testimonials" });
-  items.push({ label: "Contact", href: "#contact" });
+    items.push({ label: "Testimonials", section: "testimonials" });
+  items.push({ label: "Contact", section: "contact" });
   return items;
 }
