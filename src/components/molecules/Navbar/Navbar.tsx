@@ -7,24 +7,12 @@ interface NavItem {
   href: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about-me" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Achievements", href: "#achievements" },
-  { label: "Certifications", href: "#certifications" },
-  { label: "Education", href: "#education" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
-];
-
 export interface NavbarProps {
   profile: ProfileRequest | null;
+  navItems: NavItem[];
 }
 
-const Navbar: React.FC<NavbarProps> = ({ profile }) => {
+const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
   const colors = useColors();
   const g = gradients(colors);
 
@@ -39,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
   }, []);
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map(item =>
+    const sections = navItems.map(item =>
       document.querySelector(item.href)
     ).filter(Boolean) as HTMLElement[];
 
@@ -97,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
             </span>
           </a>
           <ul className="hidden md:flex items-center gap-6 text-sm">
-            {NAV_ITEMS.map(item => { const isActive = active === item.href;
+            {navItems.map(item => { const isActive = active === item.href;
               return (
                 <li key={item.href} className="relative">
                   <a
@@ -136,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile }) => {
             }}
           >
             <ul className="flex flex-col gap-4 text-sm">
-              {NAV_ITEMS.map(item => {
+              {navItems.map(item => {
                 const isActive = active === item.href;
 
                 return (

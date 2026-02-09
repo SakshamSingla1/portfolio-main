@@ -1,5 +1,5 @@
 import { DEGREE_OPTIONS } from "./constants";
-import type { ColorTheme } from "./types";
+import type { ColorTheme, NavItem, ProfileMaster } from "./types";
 
 export const replaceUrlParams = (url: string, params: Record<string, any>) => {
   let result = url;
@@ -35,4 +35,24 @@ export const toTitleCase = (value?: string | null) => {
 
 export const getEducationLabel = (degree: string) => {
     return DEGREE_OPTIONS.find(option => option.value === degree)?.label || degree;
+}
+
+export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null => {
+  const items: NavItem[] = [{ label: "Home", href: "#hero" }];
+  if (data?.profile?.aboutMe) items.push({ label: "About", href: "#about-me" });
+  if (data?.skills?.length) items.push({ label: "Skills", href: "#skills" });
+  if (data?.experiences?.length)
+    items.push({ label: "Experience", href: "#experience" });
+  if (data?.projects?.length)
+    items.push({ label: "Projects", href: "#projects" });
+  if (data?.achievements?.length)
+    items.push({ label: "Achievements", href: "#achievements" });
+  if (data?.certifications?.length)
+    items.push({ label: "Certifications", href: "#certifications" });
+  if (data?.educations?.length)
+    items.push({ label: "Education", href: "#education" });
+  if (data?.testimonials?.length)
+    items.push({ label: "Testimonials", href: "#testimonials" });
+  items.push({ label: "Contact", href: "#contact" });
+  return items;
 }

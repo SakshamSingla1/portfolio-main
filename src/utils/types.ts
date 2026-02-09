@@ -190,3 +190,8 @@ export const Status = {
     BLOCKED: "BLOCKED",
     DELETED: "DELETED",
 }
+
+export interface NavItem {
+    label: string;
+    href: string;
+}

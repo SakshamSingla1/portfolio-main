@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 import { useProfileMasterService } from "../../services/useProfileMasterService";
 import { HTTP_STATUS } from "../../utils/constants";
@@ -17,6 +17,7 @@ import EducationCard from "../templates/Education.card";
 import TestimonialCard from "../templates/Testimonial.card";
 import ContactUsFormTemplate from "../templates/ContactUsForm.template";
 import Section from "../molecules/Section/Section";
+import { generateNavItems } from "../../utils/helper";
 
 const Home: React.FC = () => {
   const { setDefaultTheme, setProfileId } = useDefaultColorTheme();
@@ -26,6 +27,11 @@ const Home: React.FC = () => {
   const [profileMaster, setProfileMaster] = useState<ProfileMaster | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navItems = useMemo(
+    () => generateNavItems(profileMaster),
+    [profileMaster]
+  );
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -72,14 +78,10 @@ const Home: React.FC = () => {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50 mt-4">
-        <Navbar profile={profileMaster.profile || null} />
+        <Navbar profile={profileMaster.profile || null} navItems={navItems || []} />
       </div>
 
-      <div
-        className={`mx-auto max-w-8xl px-12 pt-32 pb-10 ${
-          isMobile ? "space-y-16" : "space-y-28"
-        }`}
-      >
+      <div className={`mx-auto max-w-6xl px-4 pt-32 pb-10 ${isMobile ? "space-y-16" : "space-y-28" }`}>
         {profileMaster.profile && (
           <Section id="hero" title="" head>
             <ProfileCard
@@ -98,13 +100,7 @@ const Home: React.FC = () => {
         )}
 
         {profileMaster.skills.length > 0 && (
-          <Section
-            id="skills"
-            title="Skills"
-            gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-2" : "grid-cols-4"
-            }`}
-          >
+          <Section id="skills" title="Skills" gridClass={`grid gap-6 ${isMobile ? "grid-cols-2" : "grid-cols-4" }`}>
             {profileMaster.skills.map(skill => (
               <SkillCard key={skill.id} skill={skill} />
             ))}
@@ -122,13 +118,7 @@ const Home: React.FC = () => {
         )}
 
         {profileMaster.projects.length > 0 && (
-          <Section
-            id="projects"
-            title="Projects"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
+          <Section id="projects" title="Projects" gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3" }`}>
             {profileMaster.projects.map(project => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -139,9 +129,8 @@ const Home: React.FC = () => {
           <Section
             id="achievements"
             title="Achievements"
-            gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
+            gridClass={`grid gap-6 ${isMobile ? "grid-cols-1" : "grid-cols-3"
+              }`}
           >
             {profileMaster.achievements.map(a => (
               <AchievementCard key={a.id} achievement={a} />
@@ -153,9 +142,8 @@ const Home: React.FC = () => {
           <Section
             id="certifications"
             title="Certifications"
-            gridClass={`grid gap-6 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
+            gridClass={`grid gap-6 ${isMobile ? "grid-cols-1" : "grid-cols-3"
+              }`}
           >
             {profileMaster.certifications.map(cert => (
               <CertificationCard key={cert.id} certification={cert} />
@@ -167,9 +155,8 @@ const Home: React.FC = () => {
           <Section
             id="education"
             title="Education"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
+            gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3"
+              }`}
           >
             {profileMaster.educations.map(edu => (
               <EducationCard key={edu.id} education={edu} />
@@ -181,9 +168,8 @@ const Home: React.FC = () => {
           <Section
             id="testimonials"
             title="Testimonials"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
+            gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3"
+              }`}
           >
             {profileMaster.testimonials.map(t => (
               <TestimonialCard key={t.id} testimonial={t} />

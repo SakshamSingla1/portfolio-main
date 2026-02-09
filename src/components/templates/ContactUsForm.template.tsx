@@ -50,14 +50,14 @@ const ContactUsFormTemplate: React.FC = () => {
     return (
         <div className="relative rounded-3xl p-[1px]">
             <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }} />
-            <div className={`relative rounded-3xl ${isMobile ? "p-8" : "p-12"} flex flex-col gap-12`}
+            <div className={`relative rounded-3xl ${isMobile ? "p-8" : "p-12"} flex flex-col gap-4`}
                 style={{ backgroundColor: colors.neutral900, boxShadow: g.hoverGlowSoft }}
             >
                 <div className="text-sm" style={{ color: colors.neutral400 }}>
                     Have a question, an opportunity, or a project in mind? Fill out the
                     form below and I’ll get back to you as soon as possible.
                 </div>
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-2">
                     <TextField
                         label="Full name"
                         placeholder="Your full name"
@@ -68,7 +68,7 @@ const ContactUsFormTemplate: React.FC = () => {
                         error={formik.touched.name && Boolean(formik.errors.name)}
                         helperText={formik.touched.name ? formik.errors.name : ""}
                     />
-                    <div className={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`} >
+                    <div className={`grid gap-2 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`} >
                         <TextField
                             label="Email address"
                             placeholder="your@email.com"

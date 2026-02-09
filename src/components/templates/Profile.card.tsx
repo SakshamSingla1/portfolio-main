@@ -16,7 +16,11 @@ import {
 } from "react-icons/fa";
 import { SiLeetcode, SiCodeforces, SiCodechef } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
-import { Status, type ProfileRequest, type SocialLinkResponse } from "../../utils/types";
+import {
+  Status,
+  type ProfileRequest,
+  type SocialLinkResponse,
+} from "../../utils/types";
 import { useColors, gradients } from "../../utils/theme";
 import CircleWithArc from "../atoms/CircleWithArc/CircleWithArc";
 import { SocialLinkPlatform } from "../../utils/constants";
@@ -73,11 +77,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
   const [progress, setProgress] = useState(0);
   const [preview, setPreview] = useState(false);
 
-  const imageSize = isMobile ? 200 : 280;
+  const imageSize = isMobile ? 180 : 280;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(p => (p >= 100 ? 0 : p + 0.4));
+      setProgress((p) => (p >= 100 ? 0 : p + 0.4));
     }, 80);
     return () => clearInterval(interval);
   }, []);
@@ -89,7 +93,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
 
   return (
     <>
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full">
         <div className="relative rounded-3xl p-[1px]">
           <div
             className="absolute inset-0 rounded-3xl opacity-60"
@@ -107,31 +111,42 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
           >
             <div
               className={`flex ${
-                isMobile ? "flex-col items-center gap-8" : "flex-row gap-12"
+                isMobile
+                  ? "flex-col items-center gap-8"
+                  : "flex-row items-center gap-12"
               }`}
             >
+              {/* Profile Image */}
               {profile.profileImageUrl && (
                 <div
                   onClick={() => setPreview(true)}
-                  className="cursor-pointer"
+                  className="cursor-pointer shrink-0"
                 >
-                  <CircleWithArc progress={progress} size={imageSize} padding={14}>
+                  <CircleWithArc
+                    progress={progress}
+                    size={imageSize}
+                    padding={14}
+                  >
                     <img
                       src={profile.profileImageUrl}
                       alt={profile.fullName}
-                      className="w-full h-full object-cover rounded-full"
+                      className="h-full w-full rounded-full object-cover"
                     />
                   </CircleWithArc>
                 </div>
               )}
 
+              {/* Content */}
               <div
-                className={`flex-1 ${
-                  isMobile ? "text-center" : "text-left"
+                className={`flex-1 flex flex-col ${
+                  isMobile
+                    ? "items-center text-center"
+                    : "items-start text-left"
                 }`}
               >
+                {/* Name & Title */}
                 <div
-                  className="font-semibold tracking-tight"
+                  className="font-semibold tracking-tight leading-tight"
                   style={{
                     color: colors.neutral50,
                     fontSize: isMobile ? 26 : 32,
@@ -147,14 +162,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                   {profile.title}
                 </div>
 
+                {/* Contact Info */}
                 <div
                   className={`mt-6 grid ${
-                    isMobile ? "grid-cols-1 gap-3" : "grid-cols-2 gap-4"
+                    isMobile
+                      ? "grid-cols-1 gap-3"
+                      : "grid-cols-2 gap-x-6 gap-y-3"
                   }`}
                   style={{ color: colors.neutral200 }}
                 >
                   {profile.location && (
-                    <div className="flex items-center gap-2 justify-center md:justify-start">
+                    <div className="flex items-center gap-2">
                       <FaMapMarkerAlt style={{ color: colors.accent400 }} />
                       {profile.location}
                     </div>
@@ -162,8 +180,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
 
                   {profile.email && (
                     <div
-                      onClick={() => window.open(`mailto:${profile.email}`, "_blank")}
-                      className="flex items-center gap-2 cursor-pointer justify-center md:justify-start"
+                      className="flex cursor-pointer items-center gap-2"
+                      onClick={() =>
+                        window.open(`mailto:${profile.email}`, "_blank")
+                      }
                     >
                       <FaEnvelope style={{ color: colors.accent400 }} />
                       {profile.email}
@@ -172,8 +192,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
 
                   {profile.phone && (
                     <div
-                      onClick={() => window.open(`tel:${profile.phone}`, "_blank")}
-                      className="flex items-center gap-2 cursor-pointer justify-center md:justify-start"
+                      className="flex cursor-pointer items-center gap-2"
+                      onClick={() =>
+                        window.open(`tel:${profile.phone}`, "_blank")
+                      }
                     >
                       <FaPhoneAlt style={{ color: colors.accent400 }} />
                       {profile.phone}
@@ -181,8 +203,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                   )}
                 </div>
 
+                {/* Buttons */}
                 <div
-                  className={`mt-8 flex gap-4 ${
+                  className={`mt-8 flex flex-wrap gap-4 ${
                     isMobile ? "justify-center" : "justify-start"
                   }`}
                 >
@@ -205,22 +228,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                   )}
                 </div>
 
+                {/* Divider */}
                 {socialLinks.length > 0 && (
                   <div
-                    className="my-8 h-px"
+                    className="my-8 h-px w-full"
                     style={{ background: g.dividerGradient }}
                   />
                 )}
 
+                {/* Social Links */}
                 <div
                   className={`flex flex-wrap gap-3 ${
                     isMobile ? "justify-center" : "justify-start"
                   }`}
                 >
                   {socialLinks
-                    .filter(l => l.status === Status.ACTIVE)
+                    .filter((l) => l.status === Status.ACTIVE)
                     .sort((a, b) => Number(a.order) - Number(b.order))
-                    .map(link => (
+                    .map((link) => (
                       <a
                         key={link.id}
                         href={link.url}
@@ -245,6 +270,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
         </div>
       </div>
 
+      {/* Fullscreen Image */}
       {profile.profileImageUrl && (
         <FullscreenImageViewer
           open={preview}
