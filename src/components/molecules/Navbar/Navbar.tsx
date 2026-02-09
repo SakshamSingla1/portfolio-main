@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useColors, gradients } from "../../../utils/theme";
 import type { ProfileRequest } from "../../../utils/types";
 
-interface NavItem {
+export interface NavItem {
   label: string;
-  href: string;
+  section: string;
 }
 
 export interface NavbarProps {
@@ -16,9 +17,19 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
   const colors = useColors();
   const g = gradients(colors);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeSection = searchParams.get("section") ?? "hero";
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string>("#hero");
+
+  const navigateToSection = (section: string) => {
+    setSearchParams({ section });
+    const el = document.getElementById(section);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 40);
@@ -27,27 +38,26 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
   }, []);
 
   useEffect(() => {
-    const sections = navItems.map(item =>
-      document.querySelector(item.href)
-    ).filter(Boolean) as HTMLElement[];
+    const sections = navItems
+      .map(item => document.getElementById(item.section))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!sections.length) return;
 
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            setActive(`#${entry.target.id}`);
+            setSearchParams({ section: entry.target.id }, { replace: true });
           }
         });
       },
-      {
-        rootMargin: "-40% 0px -50% 0px",
-        threshold: 0.1,
-      }
+      { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 }
     );
 
     sections.forEach(section => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [navItems, setSearchParams]);
 
   return (
     <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
@@ -58,47 +68,23 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
           boxShadow: isScrolled ? g.hoverGlowSoft : "none",
         }}
       >
-        <div
-          className="flex items-center justify-between rounded-2xl px-6 py-3"
-          style={{
-            backgroundColor: `${colors.neutral900}CC`,
-            backdropFilter: "blur(14px)",
-          }}
-        >
-          <a
-            href="#hero"
-            className="group flex items-center gap-3"
-            onClick={() => setActive("#hero")}
-          >
+        <div className="flex items-center justify-between rounded-2xl px-6 py-3" style={{ backgroundColor: `${colors.neutral900}CC`, backdropFilter: "blur(14px)"}}>
+          <button onClick={() => navigateToSection("hero")} className="group flex items-center gap-3">
             {profile?.logoUrl && (
-              <img
-                src={profile.logoUrl}
-                alt="Profile Logo"
-                className="h-8 w-8 rounded-full object-cover"
-              />
+              <img src={profile.logoUrl} alt="Profile Logo" className="h-8 w-8 rounded-full object-cover"/>
             )}
-            <span
-              className="text-sm font-semibold tracking-wide transition-colors"
-              style={{ color: colors.neutral50 }}
-            >
-              {profile?.fullName || "Profile"}
-            </span>
-          </a>
+            <span className="text-sm font-semibold tracking-wide" style={{ color: colors.neutral50 }}>{profile?.fullName || "Profile"}</span>
+          </button>
+
           <ul className="hidden md:flex items-center gap-6 text-sm">
-            {navItems.map(item => { const isActive = active === item.href;
+            {navItems.map(item => {
+              const isActive = activeSection === item.section;
               return (
-                <li key={item.href} className="relative">
-                  <a
-                    href={item.href}
-                    onClick={() => setActive(item.href)}
-                    className="relative px-1 py-1 transition-colors"
-                    style={{ color: isActive ? colors.accent400 : colors.neutral300 }}
-                  >
+                <li key={item.section} className="relative">
+                  <button onClick={() => navigateToSection(item.section)} className="relative px-1 py-1 transition-colors" style={{ color: isActive ? colors.accent400 : colors.neutral300 }}>
                     {item.label}
-                    <span className="absolute left-0 -bottom-1 h-[2px] w-full rounded-full"
-                      style={{ background: isActive ? g.dividerGradient : "transparent", opacity: isActive ? 1 : 0 }}
-                    />
-                  </a>
+                    <span className="absolute left-0 -bottom-1 h-[2px] w-full rounded-full" style={{ background: isActive ? g.dividerGradient : "transparent", opacity: isActive ? 1 : 0 }} />
+                  </button>
                 </li>
               );
             })}
@@ -108,7 +94,6 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
             onClick={() => setOpen(v => !v)}
             className="md:hidden text-lg"
             style={{ color: colors.neutral200 }}
-            aria-label="Toggle navigation"
           >
             ☰
           </button>
@@ -125,17 +110,15 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
           >
             <ul className="flex flex-col gap-4 text-sm">
               {navItems.map(item => {
-                const isActive = active === item.href;
-
+                const isActive = activeSection === item.section;
                 return (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
+                  <li key={item.section}>
+                    <button
                       onClick={() => {
-                        setActive(item.href);
+                        navigateToSection(item.section);
                         setOpen(false);
                       }}
-                      className="block rounded-lg px-3 py-2"
+                      className="block w-full text-left rounded-lg px-3 py-2"
                       style={{
                         backgroundColor: isActive
                           ? `${colors.accent500}22`
@@ -146,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
                       }}
                     >
                       {item.label}
-                    </a>
+                    </button>
                   </li>
                 );
               })}

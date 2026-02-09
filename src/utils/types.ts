@@ -193,5 +193,5 @@ export const Status = {
 
 export interface NavItem {
     label: string;
-    href: string;
+    section: string;
 }
