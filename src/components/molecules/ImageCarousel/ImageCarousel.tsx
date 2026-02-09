@@ -97,9 +97,9 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 </div>
                             )}
                             {skills.length > 0 && (
-                                <div className="flex gap-2 mt-2">
+                                <div className="grid grid-cols-2 gap-2 mt-2">
                                     {skills.map(skill => (
-                                        <div key={skill.logoName} className=" grid grid-cols-[auto_1fr] items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
+                                        <div key={skill.logoName} className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
                                             style={{
                                                 backgroundColor: "rgba(18,18,18,0.55)",
                                                 backdropFilter: "blur(2px)",
