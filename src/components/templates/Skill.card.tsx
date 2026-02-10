@@ -8,15 +8,24 @@ interface SkillCardProps {
   skill: SkillResponse;
 }
 
+export const SKILL_LEVEL_PERCENT: Record<string, number> = {
+  Beginner: 40,
+  Intermediate: 70,
+  Advanced: 90,
+};
+
+export const getSkillLevelPercent = (level?: string): number => {
+  if (!level) return SKILL_LEVEL_PERCENT.Beginner;
+  return SKILL_LEVEL_PERCENT[level] ?? SKILL_LEVEL_PERCENT.Beginner;
+};
+
+
 const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const colors = useColors();
   const g = gradients(colors);
   const isMobile = useIsMobile();
 
-  const level =
-    typeof skill.level === "number"
-      ? Math.min(100, Math.max(0, skill.level))
-      : 70;
+  const level = getSkillLevelPercent(skill.level);
 
   const size = isMobile ? 56 : 62;
   const stroke = 4;
