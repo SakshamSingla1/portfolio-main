@@ -59,8 +59,12 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
 
 export const normalizePercentage = (grade?: string): string => {
   if (!grade) return "";
-  const match = grade.match(/(\d+)\s*%|\b(\d+)\s*percentage\b/i);
-  if (!match) return grade.trim();
-  const value = match[1] || match[2];
-  return `${value}%`;
+  const parts = grade.trim().split(/\s+/);
+  const value = parts[0];
+  const label = parts[1]?.toLowerCase();
+  if (label?.toLowerCase() === "percentage" && !isNaN(Number(value))) {
+    return `${value}%`;
+  }
+  return grade.trim();
 };
+
