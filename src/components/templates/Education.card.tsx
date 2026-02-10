@@ -6,7 +6,7 @@ import {
   FiAward,
 } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
-import { getEducationLabel, sanitizeHtml } from "../../utils/helper";
+import { getEducationLabel, normalizePercentage, sanitizeHtml } from "../../utils/helper";
 import { type Education } from "../../utils/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
@@ -85,7 +85,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education }) => {
               }}
             >
               <FiAward size={13} />
-              {education.grade}
+              {normalizePercentage(education.grade)}
             </div>
           )}
         </div>

@@ -56,3 +56,11 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
   items.push({ label: "Contact", section: "contact" });
   return items;
 }
+
+export const normalizePercentage = (grade?: string): string => {
+  if (!grade) return "";
+  const match = grade.match(/(\d+)\s*%|\b(\d+)\s*percentage\b/i);
+  if (!match) return grade.trim();
+  const value = match[1] || match[2];
+  return `${value}%`;
+};
