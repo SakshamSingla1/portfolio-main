@@ -30,7 +30,7 @@ const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
           {profile.aboutMeImageUrl && (
             <div className={`flex ${isMobile ? "justify-center" : "justify-start"}`}>
               <div className="rounded-2xl p-[3px]" style={{ background: g.iconGradient }}>
-                <img src={profile.aboutMeImageUrl} alt={profile.fullName} className={`${isMobile ? "h-48 w-24" : "h-96 w-48"} rounded-2xl object-cover`} />
+                <img src={profile.aboutMeImageUrl} alt={profile.fullName} className={`${isMobile ? "h-36 w-24" : "h-72 w-48"} rounded-2xl object-cover`} />
               </div>
             </div>
           )}
@@ -41,8 +41,8 @@ const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
             <p className="text-sm leading-relaxed" style={{ color: colors.neutral200 }}>
               <ReadMoreText
                 text={sanitizeHtml(profile.aboutMe)}
-                limit={160}
-                mobileLimit={120}
+                limit={500}
+                mobileLimit={500}
                 className=""
               />
             </p>
