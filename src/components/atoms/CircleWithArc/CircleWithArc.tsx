@@ -1,4 +1,10 @@
-import React, { type ReactNode, useEffect, useId, useRef } from "react";
+import React, {
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { useMediaQuery } from "@mui/material";
 import { useColors } from "../../../utils/theme";
 
@@ -12,7 +18,7 @@ interface CircleWithArcProps {
 const CircleWithArc: React.FC<CircleWithArcProps> = ({
   progress,
   size,
-  padding = 16,
+  padding = 18,
   children,
 }) => {
   const colors = useColors();
@@ -20,23 +26,36 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
 
   const gradientId = useId();
   const glowId = useId();
+  const softGlowId = useId();
 
   const strokeWidth = isMobile ? 2 : 3;
   const glowWidth = strokeWidth * 2.5;
 
-  const imageRadius = size / 2;
-  const radius = imageRadius + padding + strokeWidth / 2;
+  /* ---------------------------------- */
+  /* Geometry */
+  /* ---------------------------------- */
 
-  const svgSize = size + padding * 2 + strokeWidth * 2;
+  const imageRadius = size / 2;
+  const radius = imageRadius + padding;
+  const svgSize = (radius + strokeWidth) * 2;
   const center = svgSize / 2;
 
   const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference - (progress / 100) * circumference;
+  const dashOffset =
+    circumference - (progress / 100) * circumference;
 
   const pathRef = useRef<SVGCircleElement>(null);
   const prevProgress = useRef(progress);
   const disableTransition = useRef(false);
 
+  const [dot, setDot] = useState({
+    x: center,
+    y: center,
+  });
+
+  /* ---------------------------------- */
+  /* Smooth Reset Handling */
+  /* ---------------------------------- */
   useEffect(() => {
     if (progress < prevProgress.current) {
       disableTransition.current = true;
@@ -47,15 +66,23 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
     prevProgress.current = progress;
   }, [progress]);
 
-  let dotX = center;
-  let dotY = center;
+  /* ---------------------------------- */
+  /* Dot Tracking (correct way) */
+  /* ---------------------------------- */
+  useEffect(() => {
+    if (!pathRef.current) return;
 
-  if (pathRef.current) {
-    const length = (progress / 100) * circumference;
-    const point = pathRef.current.getPointAtLength(length);
-    dotX = point.x;
-    dotY = point.y;
-  }
+    const length =
+      (progress / 100) * circumference;
+
+    const point =
+      pathRef.current.getPointAtLength(length);
+
+    setDot({
+      x: point.x,
+      y: point.y,
+    });
+  }, [progress, circumference]);
 
   const transition = disableTransition.current
     ? "none"
@@ -64,40 +91,82 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
   return (
     <div
       className="relative flex items-center justify-center"
-      style={{ width: svgSize, height: svgSize }}
+      style={{
+        width: svgSize,
+        height: svgSize,
+      }}
     >
+      {/* Avatar */}
       <div
-        className="relative z-10 rounded-full overflow-hidden"
+        className="relative z-10 rounded-full overflow-hidden transition-transform duration-500 hover:scale-105"
         style={{ width: size, height: size }}
       >
         {children}
       </div>
 
+      {/* SVG */}
       <svg
         width={svgSize}
         height={svgSize}
         viewBox={`0 0 ${svgSize} ${svgSize}`}
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none overflow-visible"
       >
         <defs>
+          {/* Animated Gradient */}
           <linearGradient
             id={gradientId}
-            gradientUnits="userSpaceOnUse"
-            x1={0}
-            y1={0}
-            x2={svgSize}
-            y2={svgSize}
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
           >
             <stop offset="0%" stopColor={colors.primary300} />
-            <stop offset="40%" stopColor={colors.primary500} />
+            <stop offset="50%" stopColor={colors.primary500} />
             <stop offset="100%" stopColor={colors.accent500} />
+
+            <animateTransform
+              attributeName="gradientTransform"
+              type="rotate"
+              from="0 0.5 0.5"
+              to="360 0.5 0.5"
+              dur="8s"
+              repeatCount="indefinite"
+            />
           </linearGradient>
 
-          <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" />
+          {/* Main Glow */}
+          <filter
+            id={glowId}
+            x={-svgSize}
+            y={-svgSize}
+            width={svgSize * 3}
+            height={svgSize * 3}
+            filterUnits="userSpaceOnUse"
+          >
+            <feGaussianBlur
+              stdDeviation="8"
+              result="blur"
+            />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Soft Outer Glow */}
+          <filter
+            id={softGlowId}
+            x={-svgSize}
+            y={-svgSize}
+            width={svgSize * 3}
+            height={svgSize * 3}
+            filterUnits="userSpaceOnUse"
+          >
+            <feGaussianBlur stdDeviation="16" />
           </filter>
         </defs>
 
+        {/* Background Track */}
         <circle
           cx={center}
           cy={center}
@@ -108,6 +177,28 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           opacity={0.25}
         />
 
+        {/* Secondary Orbit Ring */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius + 6}
+          fill="none"
+          stroke={colors.primary400}
+          strokeWidth={1}
+          opacity={0.15}
+          strokeDasharray="4 8"
+        >
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from={`0 ${center} ${center}`}
+            to={`360 ${center} ${center}`}
+            dur="20s"
+            repeatCount="indefinite"
+          />
+        </circle>
+
+        {/* Soft Glow Layer */}
         <circle
           cx={center}
           cy={center}
@@ -118,11 +209,11 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
-          opacity={0.45}
-          filter={`url(#${glowId})`}
-          style={{ transition }}
+          opacity={0.4}
+          filter={`url(#${softGlowId})`}
         />
 
+        {/* Main Arc */}
         <circle
           ref={pathRef}
           cx={center}
@@ -134,21 +225,16 @@ const CircleWithArc: React.FC<CircleWithArcProps> = ({
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
+          filter={`url(#${glowId})`}
           style={{ transition }}
         />
 
+
+        {/* Core Dot */}
         <circle
-          cx={dotX}
-          cy={dotY}
-          r={strokeWidth * 2.2}
-          fill={colors.accent500}
-          opacity={0.35}
-          filter={`url(#${glowId})`}
-        />
-        <circle
-          cx={dotX}
-          cy={dotY}
-          r={strokeWidth + 1}
+          cx={dot.x}
+          cy={dot.y}
+          r={strokeWidth + 1.2}
           fill={colors.accent500}
           style={{
             transition: disableTransition.current

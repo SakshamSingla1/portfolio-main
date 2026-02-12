@@ -16,11 +16,13 @@ import {
 } from "react-icons/fa";
 import { SiLeetcode, SiCodeforces, SiCodechef } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
+
 import {
   Status,
   type ProfileRequest,
   type SocialLinkResponse,
 } from "../../utils/types";
+
 import { useColors, gradients } from "../../utils/theme";
 import CircleWithArc from "../atoms/CircleWithArc/CircleWithArc";
 import { SocialLinkPlatform } from "../../utils/constants";
@@ -68,7 +70,10 @@ interface ProfileCardProps {
   socialLinks: SocialLinkResponse[];
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({
+  profile,
+  socialLinks,
+}) => {
   const colors = useColors();
   const g = gradients(colors);
   const isMobile = useIsMobile();
@@ -81,167 +86,98 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((p) => (p >= 100 ? 0 : p + 0.4));
-    }, 80);
+      setProgress((p) => (p >= 100 ? 0 : p + 0.5));
+    }, 120);
+
     return () => clearInterval(interval);
   }, []);
 
   const handleViewResume = () => {
-    const url = publicResumeService.getViewResumeUrl(profile.userName);
+    const url = publicResumeService.getViewResumeUrl(
+      profile.userName
+    );
     window.open(url, "_blank");
   };
 
   return (
     <>
       <div className="mx-auto w-full">
-        <div className="relative rounded-3xl p-[1px]">
-          <div
-            className="absolute inset-0 rounded-3xl opacity-60"
-            style={{ background: g.cardBorderGradient }}
-          />
-
-          <div
-            className={`relative rounded-3xl ${
-              isMobile ? "p-6" : "p-10"
-            }`}
-            style={{
-              backgroundColor: colors.neutral900,
-              boxShadow: g.hoverGlowSoft,
+        <div className="relative rounded-3xl p-[2px] overflow-hidden">
+          <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }} />
+          <div className={`relative rounded-3xl backdrop-blur-xl ${ isMobile ? "p-6" : "p-12"} transition-all duration-500`} style={{
+              backgroundColor: `${colors.neutral900}dd`,
+              boxShadow: `0 20px 60px rgba(0,0,0,0.5), inset 0 0 40px rgba(255,255,255,0.02)`,
             }}
           >
-            <div
-              className={`flex ${
-                isMobile
-                  ? "flex-col items-center gap-8"
-                  : "flex-row items-center gap-12"
-              }`}
-            >
-              {/* Profile Image */}
+            <div className={`flex ${isMobile ? "flex-col items-center gap-10" : "flex-row items-center gap-16"}`}>
               {profile.profileImageUrl && (
-                <div
-                  onClick={() => setPreview(true)}
-                  className="cursor-pointer shrink-0"
-                >
+                <div onClick={() => setPreview(true)} className="cursor-pointer transition-all duration-500 hover:scale-105">
                   <CircleWithArc
                     progress={progress}
                     size={imageSize}
-                    padding={14}
+                    padding={18}
                   >
-                    <img
-                      src={profile.profileImageUrl}
-                      alt={profile.fullName}
-                      className="h-full w-full rounded-full object-cover"
-                    />
+                    <img src={profile.profileImageUrl} alt={profile.fullName} className="h-full w-full rounded-full object-cover shadow-2xl" />
                   </CircleWithArc>
                 </div>
               )}
-
-              {/* Content */}
-              <div
-                className={`flex-1 flex flex-col ${
-                  isMobile
-                    ? "items-center text-center"
-                    : "items-start text-left"
-                }`}
-              >
-                {/* Name & Title */}
-                <div
-                  className="font-semibold tracking-tight leading-tight"
-                  style={{
-                    color: colors.neutral50,
-                    fontSize: isMobile ? 26 : 32,
-                  }}
-                >
+              <div className={`flex-1 flex flex-col ${isMobile ? "items-center text-center" : "items-start text-left"}`}>
+                <h1 className="font-bold" style={{ color: colors.neutral50, fontSize: isMobile ? 28 : 40 }}>
                   {profile.fullName}
-                </div>
-
-                <div
-                  className="mt-1 text-base font-medium"
-                  style={{ color: colors.accent300 }}
-                >
+                </h1>
+                <p className="mt-3 text-lg font-medium" style={{ color: colors.accent300 }}>
                   {profile.title}
-                </div>
-
-                {/* Contact Info */}
-                <div
-                  className={`mt-6 grid ${
-                    isMobile
-                      ? "grid-cols-1 gap-3"
-                      : "grid-cols-2 gap-x-6 gap-y-3"
-                  }`}
-                  style={{ color: colors.neutral200 }}
-                >
+                </p>
+                <div className={`mt-8 grid ${isMobile ? "grid-cols-1 gap-4" : "grid-cols-2 gap-x-10 gap-y-5"}`} style={{ color: colors.neutral200 }}>
                   {profile.location && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3 transition hover:translate-x-1 duration-300">
                       <FaMapMarkerAlt style={{ color: colors.accent400 }} />
                       {profile.location}
                     </div>
                   )}
-
                   {profile.email && (
-                    <div
-                      className="flex cursor-pointer items-center gap-2"
-                      onClick={() =>
-                        window.open(`mailto:${profile.email}`, "_blank")
-                      }
-                    >
+                    <div className="flex cursor-pointer items-center gap-3 transition hover:translate-x-1 duration-300" onClick={() => window.open(`mailto:${profile.email}`, "_blank")}>
                       <FaEnvelope style={{ color: colors.accent400 }} />
                       {profile.email}
                     </div>
                   )}
-
                   {profile.phone && (
-                    <div
-                      className="flex cursor-pointer items-center gap-2"
-                      onClick={() =>
-                        window.open(`tel:${profile.phone}`, "_blank")
-                      }
-                    >
+                    <div className="flex cursor-pointer items-center gap-3 transition hover:translate-x-1 duration-300" onClick={() => window.open(`tel:${profile.phone}`, "_blank")}>
                       <FaPhoneAlt style={{ color: colors.accent400 }} />
                       {profile.phone}
                     </div>
                   )}
                 </div>
-
-                {/* Buttons */}
-                <div
-                  className={`mt-8 flex flex-wrap gap-4 ${
-                    isMobile ? "justify-center" : "justify-start"
-                  }`}
-                >
+                <div className={`mt-10 flex flex-wrap gap-5 ${isMobile? "justify-center" : "justify-start"}`}>
                   {profile.userName && (
-                    <Button
-                      label="View Resume"
-                      variant="primaryContained"
-                      onClick={handleViewResume}
-                    />
+                    <div className="transition duration-300 hover:-translate-y-1 hover:scale-105">
+                      <Button
+                        label="View Resume"
+                        variant="primaryContained"
+                        onClick={handleViewResume}
+                      />
+                    </div>
                   )}
 
                   {profile.email && (
-                    <Button
-                      label="Contact Me"
-                      variant="primaryContained"
-                      onClick={() =>
-                        window.open(`mailto:${profile.email}`, "_blank")
-                      }
-                    />
+                    <div className="transition duration-300 hover:-translate-y-1 hover:scale-105">
+                      <Button
+                        label="Contact Me"
+                        variant="primaryContained"
+                        onClick={() =>
+                          window.open(
+                            `mailto:${profile.email}`,
+                            "_blank"
+                          )
+                        }
+                      />
+                    </div>
                   )}
                 </div>
-
-                {/* Divider */}
                 {socialLinks.length > 0 && (
-                  <div
-                    className="my-8 h-px w-full"
-                    style={{ background: g.dividerGradient }}
-                  />
+                  <div className="my-10 h-px w-full opacity-50" style={{ background: g.dividerGradient }} />
                 )}
-
-                {/* Social Links */}
-                <div
-                  className={`flex flex-wrap gap-3 ${
-                    isMobile ? "justify-center" : "justify-start"
-                  }`}
-                >
+                <div className={`flex flex-wrap gap-4 ${isMobile ? "justify-center" : "justify-start"}`}>
                   {socialLinks
                     .filter((l) => l.status === Status.ACTIVE)
                     .sort((a, b) => Number(a.order) - Number(b.order))
@@ -252,12 +188,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         title={link.platform}
-                        className="flex h-12 w-12 items-center justify-center rounded-xl"
+                        className="flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
                         style={{
-                          backgroundColor: colors.neutral800,
-                          border: `1px solid ${colors.accent500}33`,
+                          backgroundColor: `${colors.neutral800}cc`,
+                          border: `1px solid ${colors.accent500}44`,
                           color: colors.accent400,
-                          backdropFilter: "blur(6px)",
+                          boxShadow:"0 8px 20px rgba(0,0,0,0.4)",
+                          backdropFilter: "blur(12px)",
                         }}
                       >
                         {getSocialIcon(link.platform)}
@@ -269,8 +206,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, socialLinks }) => {
           </div>
         </div>
       </div>
-
-      {/* Fullscreen Image */}
       {profile.profileImageUrl && (
         <FullscreenImageViewer
           open={preview}

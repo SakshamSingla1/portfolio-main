@@ -58,17 +58,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     )}
 
                     {project.githubRepositories?.length > 0 && (
-                        <div
-                            className="mx-4 rounded-2xl p-4"
-                            style={{
-                                backgroundColor: colors.neutral800,
-                                border: `1px solid ${colors.accent500}22`,
-                            }}
-                        >
-                            <div
-                                className="mb-3 flex items-center gap-2 text-sm font-normal"
-                                style={{ color: colors.neutral100 }}
-                            >
+                        <div className="mx-4 rounded-2xl p-4" style={{
+                            backgroundColor: colors.neutral800,
+                            border: `1px solid ${colors.accent500}22`,
+                        }}>
+                            <div className="mb-3 flex items-center gap-2 text-sm font-normal" style={{ color: colors.neutral100 }}>
                                 <FaGithub size={16} style={{ color: colors.accent400 }} />
                                 <div className="text-base font-normal" style={{ color: colors.accent400 }}>
                                     GitHub Repositories
@@ -102,11 +96,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                     )}
 
                     {project.projectDescription && (
-                        <div
-                            className={`mx-4 mb-4 rounded-2xl ${
-                                isMobile ? "p-4" : "p-5"
-                            } text-sm`}
-                            style={{
+                        <div className={`mx-4 mb-4 rounded-2xl ${ isMobile ? "p-4" : "p-5" } text-sm`} style={{
                                 backgroundColor: colors.neutral800,
                                 border: `1px solid ${colors.accent500}22`,
                                 color: colors.neutral200,
