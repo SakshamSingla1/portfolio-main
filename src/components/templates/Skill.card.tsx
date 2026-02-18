@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useId, useState } from "react";
 import { useColors, gradients } from "../../utils/theme";
 import { type SkillResponse } from "../../utils/types";
 import { toTitleCase } from "../../utils/helper";
@@ -12,6 +12,7 @@ export const SKILL_LEVEL_PERCENT: Record<string, number> = {
   Beginner: 40,
   Intermediate: 70,
   Advanced: 90,
+  Expert: 100,
 };
 
 export const getSkillLevelPercent = (level?: string): number => {
@@ -19,26 +20,45 @@ export const getSkillLevelPercent = (level?: string): number => {
   return SKILL_LEVEL_PERCENT[level] ?? SKILL_LEVEL_PERCENT.Beginner;
 };
 
-
 const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const colors = useColors();
   const g = gradients(colors);
   const isMobile = useIsMobile();
+  const gradientId = useId();
 
-  const level = getSkillLevelPercent(skill.level);
+  const targetLevel = getSkillLevelPercent(skill.level);
+  const [level, setLevel] = useState(0);
 
-  const size = isMobile ? 56 : 62;
-  const stroke = 4;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLevel(targetLevel);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [targetLevel]);
+
+  const size = isMobile ? 58 : 70;
+  const stroke = 5;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (level / 100) * circumference;
 
+  const getLevelLabel = () => {
+    if (targetLevel === 100) return "Expert";
+    if (targetLevel >= 90) return "Advanced";
+    if (targetLevel >= 70) return "Intermediate";
+    return "Beginner";
+  };
+
   return (
-    <div className="relative rounded-2xl p-[1px]">
-      <div className="absolute inset-0 rounded-2xl opacity-50"
+    <div className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:scale-105">
+      <div
+        className="absolute inset-0 rounded-2xl opacity-60 group-hover:opacity-100 transition"
         style={{ background: g.cardBorderGradient }}
       />
-      <div className={`relative rounded-2xl flex flex-col items-center ${isMobile ? "p-4 gap-2.5" : "p-5 gap-3"}`}
+      <div
+        className={`relative rounded-2xl flex flex-col items-center text-center ${
+          isMobile ? "p-4 gap-2.5" : "p-6 gap-3"
+        }`}
         style={{
           backgroundColor: colors.neutral900,
           boxShadow: g.hoverGlowSoft,
@@ -58,20 +78,22 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke="url(#skillArc)"
+              stroke={`url(#${gradientId})`}
               strokeWidth={stroke}
               fill="none"
               strokeDasharray={circumference}
               strokeDashoffset={offset}
               strokeLinecap="round"
               transform={`rotate(-90 ${size / 2} ${size / 2})`}
+              style={{
+                transition: "stroke-dashoffset 1.2s ease-in-out",
+              }}
             />
             <defs>
-              <linearGradient id="skillArc" x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor={colors.primary300} />
-                <stop offset="25%" stopColor={colors.primary500} />
-                <stop offset="50%" stopColor={colors.accent300} />
-                <stop offset="75%" stopColor={colors.accent500} />
+                <stop offset="40%" stopColor={colors.primary500} />
+                <stop offset="70%" stopColor={colors.accent300} />
                 <stop offset="100%" stopColor={colors.accent500} />
               </linearGradient>
             </defs>
@@ -80,18 +102,34 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
             <img
               src={skill.logoUrl}
               alt={skill.logoName}
-              className="w-8 h-8 object-contain"
+              className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110"
             />
           </div>
         </div>
-        <div className="font-medium" style={{ color: colors.neutral50, fontSize: 13 }}>
+
+        <div
+          className="font-semibold tracking-wide"
+          style={{ color: colors.neutral50, fontSize: 14 }}
+        >
           {skill.logoName}
         </div>
-        <div className="text-sm" style={{ color: colors.accent400 }}>
+
+        <div
+          className="text-xs opacity-80"
+          style={{ color: colors.accent400 }}
+        >
           {toTitleCase(skill.category)}
         </div>
-        <div className="text-[11px]" style={{ color: colors.accent400 }}>
-          {level}%
+
+        <div
+          className="px-3 py-1 text-[11px] rounded-full font-medium mt-1"
+          style={{
+            background: colors.primary900,
+            color: colors.primary300,
+            border: `1px solid ${colors.primary700}`,
+          }}
+        >
+          {getLevelLabel()} • {targetLevel}%
         </div>
       </div>
     </div>

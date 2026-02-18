@@ -14,3 +14,11 @@
 .animate-fade-in {
   animation: fade-in 600ms ease forwards;
 }
+
+@layer base {
+  body {
+    font-family: "Inter", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+  }
+}
