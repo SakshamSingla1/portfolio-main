@@ -1,4 +1,3 @@
-import DOMPurify from "dompurify";
 import { DEGREE_OPTIONS } from "./constants";
 import type { ColorTheme, NavItem, ProfileMaster } from "./types";
 
