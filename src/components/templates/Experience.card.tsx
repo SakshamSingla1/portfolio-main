@@ -105,7 +105,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience }) => {
             }}
           >
             <ReadMoreText
-              text={sanitizeHtml(experience.description)}
+              text={experience.description}
               limit={200}
               mobileLimit={130}
             />

@@ -103,7 +103,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education }) => {
               }}
             >
               <ReadMoreText
-                text={sanitizeHtml(education.description)}
+                text={education.description}
                 limit={160}
                 mobileLimit={110}
               />

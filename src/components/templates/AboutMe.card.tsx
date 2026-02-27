@@ -40,7 +40,7 @@ const AboutMeCard: React.FC<AboutMeCardProps> = ({ profile }) => {
             </h3>
             <p className="text-sm leading-relaxed" style={{ color: colors.neutral200 }}>
               <ReadMoreText
-                text={sanitizeHtml(profile.aboutMe)}
+                text={profile.aboutMe}
                 limit={500}
                 mobileLimit={500}
                 className=""

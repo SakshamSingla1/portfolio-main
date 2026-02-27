@@ -103,7 +103,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             }}
                         >
                             <ReadMoreText
-                                text={sanitizeHtml(project.projectDescription)}
+                                text={project.projectDescription}
                                 limit={160}
                                 mobileLimit={110}
                             />

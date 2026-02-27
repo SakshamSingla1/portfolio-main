@@ -115,7 +115,7 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
                 }}
               >
                 <ReadMoreText
-                  text={sanitizeHtml(achievement.description)}
+                  text={achievement.description}
                   limit={160}
                   mobileLimit={110}
                 />

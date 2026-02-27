@@ -89,7 +89,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
               }}
             >
               <ReadMoreText
-                text={sanitizeHtml(testimonial.message)}
+                text={testimonial.message}
                 limit={160}
                 mobileLimit={110}
               />

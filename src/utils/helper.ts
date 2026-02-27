@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { DEGREE_OPTIONS } from "./constants";
 import type { ColorTheme, NavItem, ProfileMaster } from "./types";
 
@@ -20,7 +21,7 @@ export const getColor = (theme: ColorTheme | null,colorName: string) => {
 }
 
 export const sanitizeHtml = (html: string) => {
-    return html.replace(/<[^>]*>/g, "");
+  return (html || '').replace(/<[^>]*>/g, ' ');
 }
 
 export const toTitleCase = (value?: string | null) => {
