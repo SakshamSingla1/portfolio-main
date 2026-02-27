@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import { useColors, gradients } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
-import { sanitizeHtml } from "../../utils/helper";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 

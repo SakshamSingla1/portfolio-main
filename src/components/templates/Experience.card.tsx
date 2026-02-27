@@ -6,7 +6,7 @@ import {
   FiLayers,
 } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
-import { sanitizeHtml, toTitleCase } from "../../utils/helper";
+import { toTitleCase } from "../../utils/helper";
 import { type ExperienceResponse } from "../../utils/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";

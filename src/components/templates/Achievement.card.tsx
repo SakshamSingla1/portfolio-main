@@ -2,7 +2,6 @@ import React, { memo, useMemo, useState } from "react";
 import { FiAward, FiCalendar } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Achievement } from "../../utils/types";
-import { sanitizeHtml } from "../../utils/helper";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import FullscreenImageViewer from "../atoms/FullScreenImagePreviewer/FullScreenImagePreviewer";

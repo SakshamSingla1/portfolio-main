@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useState } from "react";
 import { useColors, gradients } from "../../utils/theme";
-import { sanitizeHtml, toTitleCase } from "../../utils/helper";
+import { toTitleCase } from "../../utils/helper";
 import { type ProjectResponse } from "../../utils/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";

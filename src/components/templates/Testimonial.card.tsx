@@ -2,7 +2,6 @@ import React, { memo, useMemo } from "react";
 import { FiCalendar, FiExternalLink } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Testimonial } from "../../utils/types";
-import { sanitizeHtml } from "../../utils/helper";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
