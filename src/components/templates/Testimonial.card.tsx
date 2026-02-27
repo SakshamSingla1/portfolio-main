@@ -27,9 +27,15 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   );
 
   return (
-    <div className="relative rounded-3xl p-[1px]">
-      <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }}/>
-      <div className={`relative rounded-3xl flex flex-col ${ isMobile ? "p-6 gap-5" : "p-7 gap-6"}`}
+    <div className="relative rounded-3xl p-[1px] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+      <div
+        className="absolute inset-0 rounded-3xl opacity-60"
+        style={{ background: g.cardBorderGradient }}
+      />
+      <div
+        className={`relative rounded-3xl flex flex-col ${
+          isMobile ? "p-6 gap-5" : "p-7 gap-6"
+        }`}
         style={{
           backgroundColor: colors.neutral900,
           boxShadow: g.hoverGlowSoft,
@@ -37,26 +43,32 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
       >
         <div className="flex items-center gap-4">
           {testimonial.imageUrl ? (
-            <img src={testimonial.imageUrl} alt={testimonial.name} className="w-12 h-12 rounded-full"
+            <img
+              src={testimonial.imageUrl}
+              alt={testimonial.name}
+              className="w-14 h-14 rounded-full object-cover"
               style={{
                 border: `2px solid ${colors.accent400}40`,
               }}
             />
           ) : (
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
+              className="w-14 h-14 rounded-full flex items-center justify-center font-semibold text-white text-lg"
               style={{ background: g.iconGradient }}
             >
               {testimonial.name.charAt(0).toUpperCase()}
             </div>
           )}
-          <div className="flex flex-col gap-0.5 flex-1">
-            <div className="font-semibold text-sm"
+
+          <div className="flex flex-col gap-1 flex-1">
+            <div
+              className="font-semibold text-sm"
               style={{ color: colors.neutral50 }}
             >
               {testimonial.name}
             </div>
-            <div className="text-xs"
+            <div
+              className="text-xs"
               style={{ color: colors.neutral400 }}
             >
               {testimonial.role} · {testimonial.company}
@@ -66,7 +78,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
                 href={testimonial.linkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-medium"
+                className="inline-flex items-center gap-1 text-xs font-medium mt-1"
                 style={{ color: colors.accent400 }}
               >
                 LinkedIn
@@ -75,26 +87,33 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
             )}
           </div>
         </div>
+
         {testimonial.message && (
           <div>
-            <div className="text-sm font-normal mb-2" style={{ color: colors.accent400 }}>
+            <div
+              className="text-sm font-medium mb-2"
+              style={{ color: colors.accent400 }}
+            >
               Message
             </div>
-            <div className="rounded-2xl p-4 text-sm leading-relaxed"
+            <div
+              className="rounded-2xl p-4 text-sm leading-relaxed"
               style={{
-                backgroundColor: colors.neutral800,
+                backgroundColor: `${colors.neutral800}CC`,
+                backdropFilter: "blur(6px)",
                 border: `1px solid ${colors.accent500}22`,
                 color: colors.neutral200,
               }}
             >
               <ReadMoreText
                 text={testimonial.message}
-                limit={160}
-                mobileLimit={110}
+                limit={180}
+                mobileLimit={130}
               />
             </div>
           </div>
         )}
+
         {formattedDate && (
           <div className="flex justify-end items-center gap-1 text-[11px]">
             <FiCalendar size={11} style={{ color: colors.neutral500 }} />

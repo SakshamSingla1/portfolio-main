@@ -43,7 +43,6 @@ const Home: React.FC = () => {
     try {
       setLoading(true);
       const response = await profileMasterService.get();
-
       if (response.status === HTTP_STATUS.OK) {
         setProfileMaster(response.data.data);
       } else {
@@ -55,7 +54,6 @@ const Home: React.FC = () => {
       setLoading(false);
     }
   };
-
 
   const canonicalUrl =
     profileMaster?.socialLinks?.find(
@@ -75,29 +73,30 @@ const Home: React.FC = () => {
     profileMaster?.profile?.aboutMe?.slice(0, 160) ||
     "Professional portfolio showcasing skills, projects, experience and achievements.";
 
-
   useEffect(() => {
     fetchProfile();
   }, []);
 
   useEffect(() => {
     if (!profileMaster) return;
-
     setDefaultTheme(profileMaster.colorTheme || null);
     setProfileId(profileMaster.profile?.id || null);
   }, [profileMaster, setDefaultTheme, setProfileId]);
 
   if (loading) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center text-sm text-neutral-500">
-        Loading profile…
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-pulse">
+          <div className="h-10 w-40 rounded-xl bg-neutral-800" />
+          <div className="h-3 w-60 rounded bg-neutral-800" />
+        </div>
       </div>
     );
   }
 
   if (error || !profileMaster) {
     return (
-      <div className="flex min-h-[70vh] items-center justify-center text-sm text-red-500">
+      <div className="flex min-h-screen items-center justify-center text-red-500 text-sm">
         {error || "Profile not found"}
       </div>
     );
@@ -107,9 +106,7 @@ const Home: React.FC = () => {
     <>
       <Helmet>
         <title>{title}</title>
-
         <meta name="description" content={description} />
-
         <meta
           name="keywords"
           content={[
@@ -123,16 +120,13 @@ const Home: React.FC = () => {
             .filter(Boolean)
             .join(", ")}
         />
-
         <link rel="canonical" href={canonicalUrl} />
         <link rel="icon" href={ogImage} />
-
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={ogImage} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
-
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={ogImage} />
       </Helmet>
@@ -144,9 +138,12 @@ const Home: React.FC = () => {
         />
       </div>
 
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
+
       <div
-        className={`mx-auto max-w-6xl px-4 pt-32 pb-10 ${isMobile ? "space-y-16" : "space-y-28"
-          }`}
+        className={`mx-auto max-w-6xl px-4 pt-36 pb-16 ${
+          isMobile ? "space-y-20" : "space-y-32"
+        }`}
       >
         {profileMaster.profile && (
           <Section id="hero" title="" head>
@@ -167,8 +164,9 @@ const Home: React.FC = () => {
           <Section
             id="skills"
             title="Skills"
-            gridClass={`grid gap-6 ${isMobile ? "grid-cols-2" : "grid-cols-4"
-              }`}
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-2" : "grid-cols-4"
+            }`}
           >
             {profileMaster.skills.map(skill => (
               <SkillCard key={skill.id} skill={skill} />
@@ -178,7 +176,7 @@ const Home: React.FC = () => {
 
         {profileMaster.experiences.length > 0 && (
           <Section id="experience" title="Experience">
-            <div className={isMobile ? "space-y-6" : "space-y-8"}>
+            <div className={isMobile ? "space-y-6" : "space-y-10"}>
               {profileMaster.experiences.map(exp => (
                 <ExperienceCard key={exp.id} experience={exp} />
               ))}
@@ -190,8 +188,9 @@ const Home: React.FC = () => {
           <Section
             id="projects"
             title="Projects"
-            gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3"
-              }`}
+            gridClass={`grid gap-10 ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
           >
             {profileMaster.projects.map(project => (
               <ProjectCard key={project.id} project={project} />
@@ -203,8 +202,9 @@ const Home: React.FC = () => {
           <Section
             id="achievements"
             title="Achievements"
-            gridClass={`grid gap-6 ${isMobile ? "grid-cols-1" : "grid-cols-3"
-              }`}
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
           >
             {profileMaster.achievements.map(a => (
               <AchievementCard key={a.id} achievement={a} />
@@ -216,8 +216,9 @@ const Home: React.FC = () => {
           <Section
             id="certifications"
             title="Certifications"
-            gridClass={`grid gap-6 ${isMobile ? "grid-cols-1" : "grid-cols-3"
-              }`}
+            gridClass={`grid gap-8 ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
           >
             {profileMaster.certifications.map(cert => (
               <CertificationCard
@@ -232,8 +233,9 @@ const Home: React.FC = () => {
           <Section
             id="education"
             title="Education"
-            gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3"
-              }`}
+            gridClass={`grid gap-10 ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
           >
             {profileMaster.educations.map(edu => (
               <EducationCard key={edu.id} education={edu} />
@@ -245,8 +247,9 @@ const Home: React.FC = () => {
           <Section
             id="testimonials"
             title="Testimonials"
-            gridClass={`grid gap-8 ${isMobile ? "grid-cols-1" : "grid-cols-3"
-              }`}
+            gridClass={`grid gap-10 ${
+              isMobile ? "grid-cols-1" : "grid-cols-3"
+            }`}
           >
             {profileMaster.testimonials.map(t => (
               <TestimonialCard key={t.id} testimonial={t} />

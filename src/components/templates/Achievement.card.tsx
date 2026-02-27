@@ -14,7 +14,6 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
   const colors = useColors();
   const g = gradients(colors);
   const isMobile = useIsMobile();
-
   const [openPreview, setOpenPreview] = useState(false);
 
   const issuedAt = useMemo(
@@ -47,10 +46,10 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
           {achievement.proofUrl && (
             <div
               onClick={() => setOpenPreview(true)}
-              className="relative px-4 pt-4 cursor-pointer"
+              className="relative px-5 pt-5 cursor-pointer group"
             >
               <div
-                className="relative overflow-hidden rounded-2xl"
+                className="relative overflow-hidden rounded-2xl transition-transform duration-300 group-hover:scale-[1.02]"
                 style={{
                   backgroundColor: colors.neutral800,
                   border: `1px solid ${colors.accent500}22`,
@@ -59,47 +58,44 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
                 <img
                   src={achievement.proofUrl}
                   alt={achievement.title}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-44 object-cover"
                 />
 
                 <div
-                  className="absolute top-3 left-3 flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium"
+                  className="absolute top-4 left-4 flex items-center gap-2 rounded-lg px-3 py-1 text-xs font-medium"
                   style={{
                     backgroundColor: `${colors.neutral900}DD`,
                     color: colors.accent400,
                     backdropFilter: "blur(8px)",
                   }}
                 >
-                  <FiAward size={12} />
+                  <FiAward size={13} />
                   Achievement
                 </div>
               </div>
             </div>
           )}
 
-          <div
-            className={`flex flex-col ${
-              isMobile ? "p-5 gap-3" : "p-6 gap-4"
-            }`}
-          >
+          <div className={`flex flex-col ${isMobile ? "p-6 gap-4" : "p-8 gap-5"}`}>
+            {/* Bigger Title */}
             <ReadMoreText
               text={achievement.title}
-              limit={70}
-              mobileLimit={46}
-              className="font-semibold text-base"
+              limit={90}
+              mobileLimit={60}
+              className="font-semibold text-lg leading-7"
             />
 
-            <div className="flex flex-col gap-1.5 text-sm">
+            <div className="flex flex-col gap-2 text-base">
               <div className="flex items-center gap-2">
-                <FiAward size={14} style={{ color: colors.accent400 }} />
-                <span style={{ color: colors.neutral400 }}>
+                <FiAward size={16} style={{ color: colors.accent400 }} />
+                <span style={{ color: colors.neutral300 }}>
                   {achievement.issuer}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs">
-                <FiCalendar size={13} style={{ color: colors.accent500 }} />
-                <span style={{ color: colors.neutral300 }}>
+              <div className="flex items-center gap-2 text-sm">
+                <FiCalendar size={15} style={{ color: colors.accent500 }} />
+                <span style={{ color: colors.neutral400 }}>
                   Achieved {issuedAt}
                 </span>
               </div>
@@ -107,7 +103,7 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
 
             {achievement.description && (
               <div
-                className="rounded-2xl p-4 text-sm"
+                className="rounded-2xl p-5 text-base leading-7"
                 style={{
                   backgroundColor: colors.neutral800,
                   border: `1px solid ${colors.accent500}33`,
@@ -115,8 +111,8 @@ const AchievementCard: React.FC<AchievementProps> = ({ achievement }) => {
               >
                 <ReadMoreText
                   text={achievement.description}
-                  limit={160}
-                  mobileLimit={110}
+                  limit={220}
+                  mobileLimit={160}
                 />
               </div>
             )}

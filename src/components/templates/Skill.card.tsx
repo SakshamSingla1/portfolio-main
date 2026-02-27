@@ -36,8 +36,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
     return () => clearTimeout(timer);
   }, [targetLevel]);
 
-  const size = isMobile ? 58 : 70;
-  const stroke = 5;
+  const size = isMobile ? 60 : 72;
+  const stroke = 6;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (level / 100) * circumference;
@@ -50,14 +50,14 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   };
 
   return (
-    <div className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:scale-105">
+    <div className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div
         className="absolute inset-0 rounded-2xl opacity-60 group-hover:opacity-100 transition"
         style={{ background: g.cardBorderGradient }}
       />
       <div
         className={`relative rounded-2xl flex flex-col items-center text-center ${
-          isMobile ? "p-4 gap-2.5" : "p-6 gap-3"
+          isMobile ? "p-5 gap-3" : "p-6 gap-3.5"
         }`}
         style={{
           backgroundColor: colors.neutral900,
@@ -70,7 +70,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke={colors.neutral700}
+              stroke={colors.neutral800}
               strokeWidth={stroke}
               fill="none"
             />
@@ -92,8 +92,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
             <defs>
               <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor={colors.primary300} />
-                <stop offset="40%" stopColor={colors.primary500} />
-                <stop offset="70%" stopColor={colors.accent300} />
+                <stop offset="50%" stopColor={colors.primary500} />
                 <stop offset="100%" stopColor={colors.accent500} />
               </linearGradient>
             </defs>
@@ -108,8 +107,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
         </div>
 
         <div
-          className="font-semibold tracking-wide"
-          style={{ color: colors.neutral50, fontSize: 14 }}
+          className="font-semibold tracking-wide text-sm"
+          style={{ color: colors.neutral50 }}
         >
           {skill.logoName}
         </div>

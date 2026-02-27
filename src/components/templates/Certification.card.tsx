@@ -1,9 +1,5 @@
-import React, { memo, useState } from "react";
-import {
-  FiCheckCircle,
-  FiCalendar,
-  FiAward,
-} from "react-icons/fi";
+import React, { memo, useMemo, useState } from "react";
+import { FiCheckCircle, FiCalendar, FiAward } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
 import { type Certification } from "../../utils/types";
 import { useIsMobile } from "../../hooks/useIsMobile";
@@ -18,16 +14,24 @@ const CertificationCard: React.FC<CertificationCardProps> = ({ certification }) 
   const colors = useColors();
   const g = gradients(colors);
   const isMobile = useIsMobile();
-
   const [openPreview, setOpenPreview] = useState(false);
+
+  const issuedAt = useMemo(
+    () =>
+      certification.issueDate
+        ? new Date(certification.issueDate).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+        : "—",
+    [certification.issueDate]
+  );
 
   return (
     <>
-      <div className="relative rounded-3xl p-[1px]">
-        <div
-          className="absolute inset-0 rounded-3xl opacity-60"
-          style={{ background: g.cardBorderGradient }}
-        />
+      <div className="relative rounded-3xl p-[1px] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <div className="absolute inset-0 rounded-3xl opacity-60" style={{ background: g.cardBorderGradient }} />
 
         <div
           className="relative rounded-3xl overflow-hidden flex flex-col"
@@ -37,10 +41,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({ certification }) 
           }}
         >
           {certification.credentialUrl && (
-            <div
-              onClick={() => setOpenPreview(true)}
-              className="relative px-4 pt-4 cursor-pointer"
-            >
+            <div onClick={() => setOpenPreview(true)} className="relative px-6 pt-6 cursor-pointer">
               <div
                 className="relative overflow-hidden rounded-2xl"
                 style={{
@@ -51,48 +52,44 @@ const CertificationCard: React.FC<CertificationCardProps> = ({ certification }) 
                 <img
                   src={certification.credentialUrl}
                   alt={certification.title}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-48 md:h-56 object-cover transition-transform duration-500 hover:scale-105"
                 />
 
                 <div
-                  className="absolute top-3 left-3 flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium"
+                  className="absolute top-4 left-4 flex items-center gap-2 rounded-lg px-3 py-1 text-sm font-medium"
                   style={{
                     backgroundColor: `${colors.neutral900}DD`,
                     color: colors.accent400,
                     backdropFilter: "blur(8px)",
                   }}
                 >
-                  <FiCheckCircle size={12} />
+                  <FiCheckCircle size={14} />
                   Certified
                 </div>
               </div>
             </div>
           )}
 
-          <div
-            className={`flex flex-col ${
-              isMobile ? "p-5 gap-3" : "p-6 gap-4"
-            }`}
-          >
+          <div className={`flex flex-col ${isMobile ? "p-6 gap-4" : "p-8 gap-5"}`}>
             <ReadMoreText
               text={certification.title}
-              limit={70}
-              mobileLimit={46}
-              className="font-semibold text-base"
+              limit={80}
+              mobileLimit={60}
+              className="font-semibold text-lg md:text-xl tracking-tight"
             />
 
-            <div className="flex flex-col gap-1.5 text-sm">
+            <div className="flex flex-col gap-2 text-[15px] md:text-[16px]">
               <div className="flex items-center gap-2">
-                <FiAward size={14} style={{ color: colors.accent400 }} />
-                <span style={{ color: colors.neutral400 }}>
+                <FiAward size={16} style={{ color: colors.accent400 }} />
+                <span style={{ color: colors.neutral300 }}>
                   {certification.issuer}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 text-xs">
-                <FiCalendar size={13} style={{ color: colors.accent500 }} />
-                <span style={{ color: colors.neutral300 }}>
-                  Issued {certification.issueDate}
+              <div className="flex items-center gap-2 text-sm">
+                <FiCalendar size={15} style={{ color: colors.accent500 }} />
+                <span style={{ color: colors.neutral400 }}>
+                  Issued {issuedAt}
                 </span>
               </div>
             </div>
