@@ -62,7 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
   return (
     <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
       <div
-        className="w-full max-w-6xl rounded-2xl p-[1px] transition-all"
+        className="w-full max-w-7xl rounded-2xl p-px transition-all"
         style={{
           backgroundImage: g.cardBorderGradient,
           boxShadow: isScrolled ? g.hoverGlowSoft : "none",

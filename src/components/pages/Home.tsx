@@ -19,6 +19,7 @@ import EducationCard from "../templates/Education.card";
 import TestimonialCard from "../templates/Testimonial.card";
 import ContactUsFormTemplate from "../templates/ContactUsForm.template";
 import Section from "../molecules/Section/Section";
+import Slider from "../molecules/Slider/Slider";
 
 import { generateNavItems } from "../../utils/helper";
 
@@ -55,24 +56,6 @@ const Home: React.FC = () => {
     }
   };
 
-  const canonicalUrl =
-    profileMaster?.socialLinks?.find(
-      link => link.platform === SocialLinkPlatform.PORTFOLIO
-    )?.url || FALLBACK_SITE_URL;
-
-  const ogImage =
-    profileMaster?.profile?.logoUrl?.startsWith("http")
-      ? profileMaster.profile.logoUrl
-      : FALLBACK_OG_IMAGE;
-
-  const title = profileMaster?.profile?.fullName
-    ? `${profileMaster.profile.fullName} | ${profileMaster.profile.title}`
-    : "Portfolio";
-
-  const description =
-    profileMaster?.profile?.aboutMe?.slice(0, 160) ||
-    "Professional portfolio showcasing skills, projects, experience and achievements.";
-
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -101,6 +84,24 @@ const Home: React.FC = () => {
       </div>
     );
   }
+
+  const canonicalUrl =
+    profileMaster.socialLinks?.find(
+      link => link.platform === SocialLinkPlatform.PORTFOLIO
+    )?.url || FALLBACK_SITE_URL;
+
+  const ogImage =
+    profileMaster.profile?.logoUrl?.startsWith("http")
+      ? profileMaster.profile.logoUrl
+      : FALLBACK_OG_IMAGE;
+
+  const title = profileMaster.profile?.fullName
+    ? `${profileMaster.profile.fullName} | ${profileMaster.profile.title}`
+    : "Portfolio";
+
+  const description =
+    profileMaster.profile?.aboutMe?.slice(0, 160) ||
+    "Professional portfolio showcasing skills, projects, experience and achievements.";
 
   return (
     <>
@@ -141,10 +142,11 @@ const Home: React.FC = () => {
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
 
       <div
-        className={`mx-auto max-w-6xl px-4 pt-36 pb-16 ${
+        className={`mx-auto max-w-7xl px-4 pt-36 pb-16 ${
           isMobile ? "space-y-20" : "space-y-32"
         }`}
       >
+        {/* HERO */}
         {profileMaster.profile && (
           <Section id="hero" title="" head>
             <ProfileCard
@@ -154,13 +156,15 @@ const Home: React.FC = () => {
           </Section>
         )}
 
+        {/* ABOUT */}
         {profileMaster.profile?.aboutMe && (
           <Section id="about-me" title="About Me">
             <AboutMeCard profile={profileMaster.profile} />
           </Section>
         )}
 
-        {profileMaster.skills.length > 0 && (
+        {/* SKILLS (keep grid) */}
+        {profileMaster.skills?.length > 0 && (
           <Section
             id="skills"
             title="Skills"
@@ -174,89 +178,85 @@ const Home: React.FC = () => {
           </Section>
         )}
 
-        {profileMaster.experiences.length > 0 && (
+        {/* EXPERIENCE (converted to slider) */}
+        {profileMaster.experiences?.length > 0 && (
           <Section id="experience" title="Experience">
-            <div className={isMobile ? "space-y-6" : "space-y-10"}>
-              {profileMaster.experiences.map(exp => (
-                <ExperienceCard key={exp.id} experience={exp} />
-              ))}
-            </div>
+            <Slider
+              items={profileMaster.experiences}
+              desktopCards={1}
+              renderItem={(exp) => (
+                <ExperienceCard experience={exp} />
+              )}
+            />
           </Section>
         )}
 
-        {profileMaster.projects.length > 0 && (
-          <Section
-            id="projects"
-            title="Projects"
-            gridClass={`grid gap-10 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
-            {profileMaster.projects.map(project => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+        {/* PROJECTS */}
+        {profileMaster.projects?.length > 0 && (
+          <Section id="projects" title="Projects">
+            <Slider
+              items={profileMaster.projects}
+              desktopCards={2}
+              renderItem={(project) => (
+                <ProjectCard project={project} />
+              )}
+            />
           </Section>
         )}
 
-        {profileMaster.achievements.length > 0 && (
-          <Section
-            id="achievements"
-            title="Achievements"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
-            {profileMaster.achievements.map(a => (
-              <AchievementCard key={a.id} achievement={a} />
-            ))}
+        {/* ACHIEVEMENTS */}
+        {profileMaster.achievements?.length > 0 && (
+          <Section id="achievements" title="Achievements">
+            <Slider
+              items={profileMaster.achievements}
+              desktopCards={2}
+              renderItem={(a) => (
+                <AchievementCard achievement={a} />
+              )}
+            />
           </Section>
         )}
 
-        {profileMaster.certifications.length > 0 && (
-          <Section
-            id="certifications"
-            title="Certifications"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
-            {profileMaster.certifications.map(cert => (
-              <CertificationCard
-                key={cert.id}
-                certification={cert}
-              />
-            ))}
+        {/* CERTIFICATIONS */}
+        {profileMaster.certifications?.length > 0 && (
+          <Section id="certifications" title="Certifications">
+            <Slider
+              items={profileMaster.certifications}
+              desktopCards={2}
+              renderItem={(cert) => (
+                <CertificationCard certification={cert} />
+              )}
+            />
           </Section>
         )}
 
-        {profileMaster.educations.length > 0 && (
-          <Section
-            id="education"
-            title="Education"
-            gridClass={`grid gap-10 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
-            {profileMaster.educations.map(edu => (
-              <EducationCard key={edu.id} education={edu} />
-            ))}
+        {/* EDUCATION */}
+        {profileMaster.educations?.length > 0 && (
+          <Section id="education" title="Education">
+            <Slider
+              items={profileMaster.educations}
+              desktopCards={2}
+              renderItem={(edu) => (
+                <EducationCard education={edu} />
+              )}
+            />
           </Section>
         )}
 
-        {profileMaster.testimonials.length > 0 && (
-          <Section
-            id="testimonials"
-            title="Testimonials"
-            gridClass={`grid gap-10 ${
-              isMobile ? "grid-cols-1" : "grid-cols-3"
-            }`}
-          >
-            {profileMaster.testimonials.map(t => (
-              <TestimonialCard key={t.id} testimonial={t} />
-            ))}
+        {/* TESTIMONIALS */}
+        {profileMaster.testimonials?.length > 0 && (
+          <Section id="testimonials" title="Testimonials">
+            <Slider
+              items={profileMaster.testimonials}
+              desktopCards={2}
+              renderItem={(t) => (
+                <TestimonialCard testimonial={t} />
+              )}
+            />
           </Section>
         )}
 
+        {/* CONTACT */}
         <Section id="contact" title="Get In Touch">
           <ContactUsFormTemplate />
         </Section>
