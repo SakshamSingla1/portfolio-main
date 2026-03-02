@@ -50,11 +50,21 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   };
 
   return (
-    <div className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <div
+      className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      style={{
+        width: isMobile ? "160px" : "200px", // ✅ Fixed Width
+        minWidth: isMobile ? "160px" : "200px", // ✅ Prevent resize in slider
+        flexShrink: 0, // ✅ Prevent shrinking inside flex container
+      }}
+    >
+      {/* Gradient Border */}
       <div
         className="absolute inset-0 rounded-2xl opacity-60 group-hover:opacity-100 transition"
         style={{ background: g.cardBorderGradient }}
       />
+
+      {/* Card Content */}
       <div
         className={`relative rounded-2xl flex flex-col items-center text-center ${
           isMobile ? "p-5 gap-3" : "p-6 gap-3.5"
@@ -64,8 +74,10 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
           boxShadow: g.hoverGlowSoft,
         }}
       >
+        {/* Circular Progress */}
         <div className="relative">
           <svg width={size} height={size}>
+            {/* Background Circle */}
             <circle
               cx={size / 2}
               cy={size / 2}
@@ -74,6 +86,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
               strokeWidth={stroke}
               fill="none"
             />
+
+            {/* Progress Circle */}
             <circle
               cx={size / 2}
               cy={size / 2}
@@ -89,6 +103,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
                 transition: "stroke-dashoffset 1.2s ease-in-out",
               }}
             />
+
+            {/* Gradient Definition */}
             <defs>
               <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor={colors.primary300} />
@@ -97,6 +113,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
               </linearGradient>
             </defs>
           </svg>
+
+          {/* Skill Logo Center */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
               src={skill.logoUrl}
@@ -106,6 +124,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
           </div>
         </div>
 
+        {/* Skill Name */}
         <div
           className="font-semibold tracking-wide text-sm"
           style={{ color: colors.neutral50 }}
@@ -113,6 +132,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
           {skill.logoName}
         </div>
 
+        {/* Category */}
         <div
           className="text-xs opacity-80"
           style={{ color: colors.accent400 }}
@@ -120,6 +140,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
           {toTitleCase(skill.category)}
         </div>
 
+        {/* Level Badge */}
         <div
           className="px-3 py-1 text-[11px] rounded-full font-medium mt-1"
           style={{
