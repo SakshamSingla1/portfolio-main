@@ -161,67 +161,68 @@ const Home: React.FC = () => {
             <AboutMeCard profile={profileMaster.profile} />
           </Section>
         )}
-        {/* SKILLS (Mobile Auto Slider Only If >2 Skills) */}
-        {profileMaster.skills?.length > 0 && (
-          <Section id="skills" title="Skills">
-            {isMobile && profileMaster.skills.length > 2 ? (
-              <div
-                style={{
-                  overflow: "hidden",
-                  width: "100%",
-                  position: "relative",
-                }}
-              >
-                <style>
-                  {`
-            @keyframes autoScrollMobile {
-              0% { transform: translateX(0%); }
+        {/* SKILLS (Premium Mobile Marquee Slider) */}
+{profileMaster.skills?.length > 0 && (
+  <Section id="skills" title="Skills">
+    {isMobile && profileMaster.skills.length > 2 ? (
+      <div
+        style={{
+          overflow: "hidden",
+          width: "100%",
+        }}
+      >
+        <style>
+          {`
+            @keyframes scrollSkills {
+              0% { transform: translateX(0); }
               100% { transform: translateX(-50%); }
             }
           `}
-                </style>
+        </style>
 
-                <div
-                  style={{
-                    display: "flex",
-                    width: "max-content",
-                    animation: "autoScrollMobile 8s linear infinite",
-                  }}
-                >
-                  {[...profileMaster.skills, ...profileMaster.skills].map(
-                    (skill, index) => (
-                      <div
-                        key={`${skill.id}-${index}`}
-                        style={{
-                          flexShrink: 0,
-                          width: "50%", // 2 cards per screen in mobile
-                          padding: "0 12px",
-                        }}
-                      >
-                        <SkillCard skill={skill} />
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            ) : (
-              // Normal Grid (Desktop OR <=2 skills in mobile)
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",                  // ✅ 2px gap
+            width: "max-content",
+            animation: "scrollSkills 12s linear infinite",
+          }}
+        >
+          {[...profileMaster.skills, ...profileMaster.skills].map(
+            (skill, index) => (
               <div
+                key={`${skill.id}-${index}`}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: isMobile
-                    ? "repeat(2, 1fr)"
-                    : "repeat(4, 1fr)",
-                  gap: "20px",
+                  width: "160px",       // ✅ Fixed width
+                  minWidth: "160px",    // ✅ Prevent resize
+                  flexShrink: 0,        // ✅ Important
                 }}
               >
-                {profileMaster.skills.map((skill) => (
-                  <SkillCard key={skill.id} skill={skill} />
-                ))}
+                <SkillCard skill={skill} />
               </div>
-            )}
-          </Section>
-        )}
+            )
+          )}
+        </div>
+      </div>
+    ) : (
+      // Desktop OR <=2 skills
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile
+            ? "repeat(2, 1fr)"
+            : "repeat(4, 1fr)",
+          gap: "20px",
+          justifyItems: "center",
+        }}
+      >
+        {profileMaster.skills.map((skill) => (
+          <SkillCard key={skill.id} skill={skill} />
+        ))}
+      </div>
+    )}
+  </Section>
+)}
 
         {/* EXPERIENCE (converted to slider) */}
         {profileMaster.experiences?.length > 0 && (
