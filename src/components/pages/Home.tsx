@@ -142,9 +142,8 @@ const Home: React.FC = () => {
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950" />
 
       <div
-        className={`mx-auto max-w-7xl px-4 pt-36 pb-16 ${
-          isMobile ? "space-y-20" : "space-y-32"
-        }`}
+        className={`mx-auto max-w-7xl px-4 pt-36 pb-16 ${isMobile ? "space-y-20" : "space-y-32"
+          }`}
       >
         {/* HERO */}
         {profileMaster.profile && (
@@ -162,19 +161,65 @@ const Home: React.FC = () => {
             <AboutMeCard profile={profileMaster.profile} />
           </Section>
         )}
-
-        {/* SKILLS (keep grid) */}
+        {/* SKILLS (Mobile Auto Slider Only If >2 Skills) */}
         {profileMaster.skills?.length > 0 && (
-          <Section
-            id="skills"
-            title="Skills"
-            gridClass={`grid gap-8 ${
-              isMobile ? "grid-cols-2" : "grid-cols-4"
-            }`}
-          >
-            {profileMaster.skills.map(skill => (
-              <SkillCard key={skill.id} skill={skill} />
-            ))}
+          <Section id="skills" title="Skills">
+            {isMobile && profileMaster.skills.length > 2 ? (
+              <div
+                style={{
+                  overflow: "hidden",
+                  width: "100%",
+                  position: "relative",
+                }}
+              >
+                <style>
+                  {`
+            @keyframes autoScrollMobile {
+              0% { transform: translateX(0%); }
+              100% { transform: translateX(-50%); }
+            }
+          `}
+                </style>
+
+                <div
+                  style={{
+                    display: "flex",
+                    width: "max-content",
+                    animation: "autoScrollMobile 8s linear infinite",
+                  }}
+                >
+                  {[...profileMaster.skills, ...profileMaster.skills].map(
+                    (skill, index) => (
+                      <div
+                        key={`${skill.id}-${index}`}
+                        style={{
+                          flexShrink: 0,
+                          width: "50%", // 2 cards per screen in mobile
+                          padding: "0 12px",
+                        }}
+                      >
+                        <SkillCard skill={skill} />
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            ) : (
+              // Normal Grid (Desktop OR <=2 skills in mobile)
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: isMobile
+                    ? "repeat(2, 1fr)"
+                    : "repeat(4, 1fr)",
+                  gap: "20px",
+                }}
+              >
+                {profileMaster.skills.map((skill) => (
+                  <SkillCard key={skill.id} skill={skill} />
+                ))}
+              </div>
+            )}
           </Section>
         )}
 
