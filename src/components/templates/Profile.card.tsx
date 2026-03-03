@@ -153,7 +153,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     <div className="transition duration-300 hover:-translate-y-1 hover:scale-105">
                       <Button
                         label="View Resume"
-                        variant="primaryContained"
+                        variant="primaryOutlined"
                         onClick={handleViewResume}
                       />
                     </div>
@@ -163,7 +163,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     <div className="transition duration-300 hover:-translate-y-1 hover:scale-105">
                       <Button
                         label="Contact Me"
-                        variant="primaryContained"
+                        variant="primaryOutlined"
                         onClick={() =>
                           window.open(
                             `mailto:${profile.email}`,
@@ -182,23 +182,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     .filter((l) => l.status === Status.ACTIVE)
                     .sort((a, b) => Number(a.order) - Number(b.order))
                     .map((link) => (
-                      <a
+                      <Button
                         key={link.id}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={link.platform}
-                        className="flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                        style={{
-                          backgroundColor: `${colors.neutral800}cc`,
-                          border: `1px solid ${colors.accent500}44`,
-                          color: colors.accent400,
-                          boxShadow:"0 8px 20px rgba(0,0,0,0.4)",
-                          backdropFilter: "blur(12px)",
-                        }}
-                      >
-                        {getSocialIcon(link.platform)}
-                      </a>
+                        label=""
+                        onClick={() => window.open(link.url, "_blank")}
+                        leftIcon={getSocialIcon(link.platform)}
+                        variant="primaryOutlined"
+                      />
                     ))}
                 </div>
               </div>

@@ -5,7 +5,7 @@ import {
     FiCalendar,
     FiGlobe,
 } from "react-icons/fi";
-import { useColors } from "../../../utils/theme";
+import { useColors, gradients } from "../../../utils/theme";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 
 interface ImageCarouselProps {
@@ -32,12 +32,17 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     const colors = useColors();
     const isMobile = useIsMobile();
     const [index, setIndex] = useState(0);
+    const [openSkillDialog, setOpenSkillDialog] = useState<boolean>(false);
 
     if (!images?.length) return null;
 
     const prev = () => setIndex(i => (i === 0 ? images.length - 1 : i - 1));
 
     const next = () => setIndex(i => (i === images.length - 1 ? 0 : i + 1));
+
+    const MAX_VISIBLE_SKILLS = 3;
+    const visibleSkills = skills.slice(0, MAX_VISIBLE_SKILLS);
+    const remainingSkills = skills.slice(MAX_VISIBLE_SKILLS);
 
     return (
         <div
@@ -97,9 +102,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                 </div>
                             )}
                             {skills.length > 0 && (
-                                <div className="grid grid-cols-2 gap-2 mt-2">
-                                    {skills.map(skill => (
-                                        <div key={skill.logoName} className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    {visibleSkills.map(skill => (
+                                        <div
+                                            key={skill.logoName}
+                                            className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
                                             style={{
                                                 backgroundColor: "rgba(18,18,18,0.55)",
                                                 backdropFilter: "blur(2px)",
@@ -111,6 +118,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                                             {skill.logoName}
                                         </div>
                                     ))}
+
+                                    {remainingSkills.length > 0 && (
+                                        <button
+                                            onClick={() => setOpenSkillDialog(true)}
+                                            className="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium border"
+                                            style={{
+                                                backgroundColor: "rgba(18,18,18,0.55)",
+                                                backdropFilter: "blur(2px)",
+                                                color: colors.neutral200,
+                                                border: `1px solid ${colors.accent500}33`,
+                                            }}
+                                        >
+                                            +{remainingSkills.length} more
+                                        </button>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -154,6 +176,62 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                         <FiChevronRight size={18} />
                     </button>
                 </>
+            )}
+            {/* Skills Dialog */}
+            {openSkillDialog && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center z-50"
+                    style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+                >
+                    <div
+                        className="relative rounded-4xl p-6 w-80 max-w-full"
+                        style={{
+                            backgroundColor: colors.neutral900,
+                            border: `1px solid ${colors.neutral700}`,
+                        }}
+                    >
+                        {/* Cross Button */}
+                        <button
+                            onClick={() => setOpenSkillDialog(false)}
+                            className="absolute top-3 right-3 px-3.5 py-2 rounded-full hover:opacity-80"
+                            style={{
+                                background: gradients(colors).ctaGradient,
+                                color: colors.neutral50,
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        <h3
+                            className="text-sm font-semibold mb-4"
+                            style={{ color: colors.neutral50 }}
+                        >
+                            More Skills
+                        </h3>
+
+                        <div className="flex flex-wrap gap-2">
+                            {remainingSkills.map((skill) => (
+                                <div
+                                    key={skill.logoName}
+                                    className="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium"
+                                    style={{
+                                        backgroundColor: "rgba(18,18,18,0.55)",
+                                        backdropFilter: "blur(2px)",
+                                        color: colors.neutral200,
+                                        border: `1px solid ${colors.accent500}33`,
+                                    }}
+                                >
+                                    <img
+                                        src={skill.logoUrl}
+                                        alt={skill.logoName}
+                                        className="h-4 w-4"
+                                    />
+                                    {skill.logoName}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

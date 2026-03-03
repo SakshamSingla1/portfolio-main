@@ -1,167 +1,171 @@
-import React, { useMemo } from "react";
-import MuiButton, { type ButtonProps as MuiButtonProps } from "@mui/material/Button";
+import React, { memo, useMemo } from "react";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import { styled } from "@mui/system";
-import { useColors, gradients } from "../../../utils/theme";
+import { createUseStyles } from "react-jss";
 
-type CustomVariant =
-  | "primaryContained"
-  | "secondaryContained"
-  | "tertiaryContained"
-  | "primaryText"
-  | "secondaryText"
-  | "underlined"
-  | "tertiaryText";
+import { useColors, gradients, shadows } from "../../../utils/theme";
 
-type CustomSize = "extraSmall" | "small" | "medium" | "large";
-
-interface ButtonProps extends Omit<MuiButtonProps, "variant" | "size"> {
-  variant?: CustomVariant;
-  label?: React.ReactNode;
-  isLoading?: boolean;
-  iconButton?: React.ReactNode;
-  size?: CustomSize;
-  buttonWithImg?: boolean;
+interface ButtonV2Props {
+  label: string;
+  variant?:
+    | "primaryContained"
+    | "primaryOutlined"
+    | "secondaryContained"
+    | "ghost"
+    | "danger";
+  size?: "small" | "medium" | "large";
+  onClick?: () => void;
+  disabled?: boolean;
+  loading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
-const StyledButton = styled(MuiButton)<{
-  $variant: CustomVariant;
-  $size: CustomSize;
-  colors: any;
-  g: ReturnType<typeof gradients>;
-}>(({ colors, $variant, $size, g }) => ({
-  textTransform: "capitalize",
-  fontWeight: 500,
-  lineHeight: 1,
-  minWidth: "auto",
-  willChange: "transform, box-shadow",
-
-  ...({
-    extraSmall: { minHeight: 32, padding: "4px 12px", fontSize: 14, borderRadius: 6 },
-    small: { minHeight: 36, padding: "6px 16px", fontSize: 14, borderRadius: 6 },
-    medium: { minHeight: 40, padding: "8px 20px", fontSize: 16, borderRadius: 8 },
-    large: { minHeight: 48, padding: "12px 24px", fontSize: 16, borderRadius: 10 },
-  }[$size]),
-
-  ...({
-    primaryContained: {
-      background: g.ctaGradient,
-      color: colors.neutral50,
-      boxShadow: g.hoverGlowSoft,
-
-      "&:hover:not(.Mui-disabled)": {
-        boxShadow: g.hoverGlowMedium,
-      },
-
-      "&:active:not(.Mui-disabled)": {
-        boxShadow: g.hoverGlowSoft,
-      },
-    },
-
-    secondaryContained: {
-      backgroundColor: colors.neutral50,
-      color: colors.primary300,
-      border: `1px solid ${colors.primary300}`,
-
-      "&:hover:not(.Mui-disabled)": {
-        boxShadow: g.hoverGlowSoft,
-      },
-    },
-
-    tertiaryContained: {
-      backgroundColor: colors.neutral50,
-      color: colors.primary300,
-      border: `1px solid ${colors.neutral200}`,
-
-      "&:hover:not(.Mui-disabled)": {
-        backgroundColor: colors.neutral100,
-      },
-    },
-
-    primaryText: {
-      color: colors.primary300,
-
-      "&:hover:not(.Mui-disabled)": {
-        textDecoration: "underline",
-      },
-    },
-
-    secondaryText: {
-      color: colors.neutral700,
-
-      "&:hover:not(.Mui-disabled)": {
-        color: colors.primary300,
-      },
-    },
-
-    tertiaryText: {
-      color: colors.neutral700,
-
-      "&:hover:not(.Mui-disabled)": {
-        backgroundColor: colors.neutral50,
-      },
-    },
-
-    underlined: {
-      color: colors.neutral700,
-      textDecoration: "underline",
-    },
-  }[$variant]),
-
-  "&:focus-visible": {
-    outline: "none",
-    boxShadow: `
-      0 0 0 2px ${colors.neutral50},
-      0 0 0 4px ${colors.accent400}66
-    `,
+const useStyles = createUseStyles({
+  root: {
+    borderRadius: "18px",
+    labelTransform: "none",
+    fontWeight: 600,
+    letterSpacing: "0.4px",
+    transition: "all 0.3s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    position: "relative",
+    overflow: "hidden",
+    backdropFilter: "blur(10px)",
   },
 
-  "&.Mui-disabled": {
-    opacity: 0.6,
-    boxShadow: "none",
+  small: {
+    padding: "6px 16px",
+    fontSize: "13px",
+    borderRadius: "14px",
   },
-}));
 
-const Button: React.FC<ButtonProps> = ({
-  variant = "primaryContained",
-  size = "medium",
-  label,
-  iconButton,
-  isLoading,
-  buttonWithImg,
-  disabled,
-  ...props
-}) => {
-  const colors = useColors();
-  const g = gradients(colors);
+  medium: {
+    padding: "10px 24px",
+    fontSize: "14px",
+  },
 
-  const content = useMemo(() => {
-    if (isLoading) return <CircularProgress size={18} color="inherit" />;
-    if (buttonWithImg)
-      return (
-        <span className="inline-flex items-center gap-2">
-          {iconButton}
-          {label}
-        </span>
-      );
-    return iconButton || label;
-  }, [isLoading, buttonWithImg, iconButton, label]);
+  large: {
+    padding: "14px 30px",
+    fontSize: "16px",
+    borderRadius: "22px",
+  },
+});
 
-  return (
-    <StyledButton
-      colors={colors}
-      g={g}
-      $variant={variant}
-      $size={size}
-      variant="text"
-      disableRipple
-      disableElevation
-      disabled={disabled || isLoading}
-      {...props}
-    >
-      {content}
-    </StyledButton>
-  );
-};
+const ButtonV2: React.FC<ButtonV2Props> = memo(
+  ({
+    label,
+    variant = "primaryContained",
+    size = "medium",
+    onClick,
+    disabled = false,
+    loading = false,
+    leftIcon,
+    rightIcon,
+    fullWidth = false,
+  }) => {
+    const colors = useColors();
 
-export default Button;
+    const g = useMemo(() => gradients(colors), [colors]);
+    const s = useMemo(() => shadows(colors), [colors]);
+
+    const classes = useStyles();
+
+    /* ================= VARIANT STYLES ================= */
+
+    const variantStyle = useMemo(() => {
+      switch (variant) {
+        case "primaryContained":
+          return {
+            background: g.ctaGradient,
+            color: colors.neutral50,
+            boxShadow: s.soft,
+            border: "none",
+
+            "&:hover": {
+              boxShadow: s.medium,
+              transform: "translateY(-2px)",
+            },
+          };
+
+        case "primaryOutlined":
+          return {
+            background: "transparent",
+            color: colors.accent500,
+            border: `2px solid ${colors.accent500}`,
+            boxShadow: "none",
+
+            "&:hover": {
+              background: colors.accent50,
+              boxShadow: g.hoverGlowSoft,
+            },
+          };
+
+        case "secondaryContained":
+          return {
+            background: `linear-gradient(135deg, ${colors.secondary500}, ${colors.accent500})`,
+            color: colors.neutral50,
+            boxShadow: s.soft,
+
+            "&:hover": {
+              boxShadow: s.medium,
+              transform: "translateY(-2px)",
+            },
+          };
+
+        case "ghost":
+          return {
+            background: "transparent",
+            color: colors.neutral800,
+            border: `1px solid ${colors.neutral300}`,
+
+            "&:hover": {
+              background: colors.neutral100,
+              boxShadow: g.hoverGlowInset,
+            },
+          };
+
+        case "danger":
+          return {
+            background: `linear-gradient(135deg, ${colors.error500}, ${colors.error700})`,
+            color: colors.neutral50,
+            boxShadow: `0 20px 50px -25px ${colors.error400}66`,
+
+            "&:hover": {
+              transform: "translateY(-2px)",
+              boxShadow: `0 30px 70px -20px ${colors.error500}77`,
+            },
+          };
+
+        default:
+          return {};
+      }
+    }, [variant, colors, g, s]);
+
+    return (
+      <Button
+        onClick={onClick}
+        disabled={disabled || loading}
+        fullWidth={fullWidth}
+        className={`${classes.root} ${classes[size]}`}
+        style={variantStyle}
+      >
+        {loading ? (
+          <CircularProgress size={20} style={{ color: colors.neutral50 }} />
+        ) : (
+          <>
+            {leftIcon}
+            {label}
+            {rightIcon}
+          </>
+        )}
+      </Button>
+    );
+  }
+);
+
+export default ButtonV2;

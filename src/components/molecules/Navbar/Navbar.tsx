@@ -62,21 +62,21 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
   return (
     <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
       <div
-        className="w-full max-w-7xl rounded-2xl p-px transition-all"
+        className="w-full max-w-7xl rounded-3xl p-px transition-all"
         style={{
           backgroundImage: g.cardBorderGradient,
           boxShadow: isScrolled ? g.hoverGlowSoft : "none",
         }}
       >
-        <div className="flex items-center justify-between rounded-2xl px-6 py-3" style={{ backgroundColor: `${colors.neutral900}CC`, backdropFilter: "blur(14px)"}}>
+        <div className="flex items-center justify-between rounded-3xl px-8 py-6" style={{ backgroundColor: `${colors.neutral900}CC`, backdropFilter: "blur(14px)"}}>
           <button onClick={() => navigateToSection("hero")} className="group flex items-center gap-3">
             {profile?.logoUrl && (
-              <img src={profile.logoUrl} alt="Profile Logo" className="h-8 w-8 rounded-full object-cover"/>
+              <img src={profile.logoUrl} alt="Profile Logo" className="h-10 w-10 rounded-full object-cover"/>
             )}
-            <span className="text-sm font-semibold tracking-wide" style={{ color: colors.neutral50 }}>{profile?.fullName || "Profile"}</span>
+            <span className="text-base font-semibold tracking-wide" style={{ color: colors.neutral50 }}>{profile?.fullName || "Profile"}</span>
           </button>
 
-          <ul className="hidden md:flex items-center gap-6 text-sm">
+          <ul className="hidden md:flex items-center gap-6 text-base">
             {navItems.map(item => {
               const isActive = activeSection === item.section;
               return (
@@ -92,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
 
           <button
             onClick={() => setOpen(v => !v)}
-            className="md:hidden text-lg"
+            className="md:hidden text-xl"
             style={{ color: colors.neutral200 }}
           >
             ☰

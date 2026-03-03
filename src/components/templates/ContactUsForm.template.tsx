@@ -106,7 +106,7 @@ const ContactUsFormTemplate: React.FC = () => {
                 <div className="flex justify-end">
                     <Button
                         label={formik.isSubmitting ? "Sending…" : "Send message"}
-                        variant="primaryContained"
+                        variant="primaryOutlined"
                         onClick={() => formik.handleSubmit()}
                         disabled={formik.isSubmitting}
                     />
