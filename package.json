@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@types/react-jss": "^8.6.4",
     "@types/yup": "^0.29.14",
+    "@vercel/analytics": "^1.6.1",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",

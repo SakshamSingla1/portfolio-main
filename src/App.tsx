@@ -1,5 +1,6 @@
 import Home from "./components/pages/Home";
 import { useColors } from "./utils/theme";
+import { Analytics } from "@vercel/analytics/next";
 
 const AppContent = () => {
   const colors = useColors();
@@ -18,7 +19,10 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AppContent />
+    <>
+      <AppContent />
+      <Analytics />
+    </>
   );
 }
 
