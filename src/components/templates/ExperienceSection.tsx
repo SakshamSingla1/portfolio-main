@@ -111,7 +111,12 @@ export const ExperienceSection = ({ experiences }: Props) => {
                   </div>
                 </div>
 
-                <p className="text-sm leading-relaxed mb-4" style={{ color: `${colors.neutral400}CC` }}>{exp.description}</p>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: `${colors.neutral400}CC` }}>
+                  <div
+                    className="preview"
+                    dangerouslySetInnerHTML={{ __html: exp.description || "" }}
+                  />
+                </p>
 
                 {exp.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">

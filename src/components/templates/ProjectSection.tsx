@@ -143,7 +143,10 @@ export const ProjectsSection = ({ projects }: Props) => {
                       {project.projectName}
                     </h3>
                     <p className="text-sm mb-5 leading-relaxed" style={{ color: `${colors.neutral400}CC` }}>
-                      {project.projectDescription}
+                      <div
+                        className="preview"
+                        dangerouslySetInnerHTML={{ __html: project.projectDescription || "" }}
+                      />
                     </p>
 
                     {/* Case study toggle */}

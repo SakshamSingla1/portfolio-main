@@ -43,9 +43,17 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="text-lg md:text-xl leading-relaxed mb-8 italic font-light" style={{ color: `${colors.neutral300}E6` }}>
-                "{testimonials[active].message}"
-              </p>
+              <div
+                className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+                style={{ color: `${colors.neutral300}E6` }}
+              >
+                <span>"</span>
+                <span
+                  className="preview inline"
+                  dangerouslySetInnerHTML={{ __html: testimonials[active].message || "" }}
+                />
+                <span>"</span>
+              </div>
               <div className="flex items-center gap-4">
                 {testimonials[active].imageUrl && (
                   <div className="relative">

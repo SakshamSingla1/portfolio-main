@@ -74,7 +74,12 @@ export const EducationSection = ({ educations }: Props) => {
                   )}
 
                   {edu.description && (
-                    <p className="mt-3 text-sm leading-relaxed" style={{ color: colors.neutral400 }}>{edu.description}</p>
+                    <p className="mt-3 text-sm leading-relaxed" style={{ color: colors.neutral400 }}>
+                      <div
+                        className="preview"
+                        dangerouslySetInnerHTML={{ __html: edu.description || "" }}
+                      />
+                    </p>
                   )}
                 </div>
               </div>

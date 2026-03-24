@@ -4,7 +4,6 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { Code, Palette, Zap, Coffee } from "lucide-react";
 import { useColors } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
-import { sanitizeHtml } from "../../utils/helper";
 
 interface Props {
   profile: ProfileRequest;
@@ -72,7 +71,10 @@ export const AboutSection = ({ profile }: Props) => {
         )}
         <FadeInView delay={0.15} className="md:col-span-3 space-y-6">
           <p className="text-base md:text-lg leading-relaxed" style={{ color: `${colors.neutral300}E6` }}>
-            {sanitizeHtml(profile.aboutMe)}
+            <div
+              className="preview"
+              dangerouslySetInnerHTML={{ __html: profile.aboutMe || "" }}
+            />
           </p>
           <div className="grid grid-cols-2 gap-3 pt-2">
             {highlights.map((h, i) => {

@@ -4,7 +4,6 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { FadeInView } from "../molecules/FadeInView/FadeInView";
 import { useColors } from "../../utils/theme";
 import type { Achievement, Certification } from "../../utils/types";
-import { sanitizeHtml } from "../../utils/helper";
 
 export const AchievementsSection = ({ achievements }: { achievements: Achievement[] }) => {
   const colors = useColors();
@@ -34,7 +33,12 @@ export const AchievementsSection = ({ achievements }: { achievements: Achievemen
                     <Calendar className="w-3 h-3" /> {a.achievedAt}
                   </span>
                 )}
-                <p className="text-sm mt-3 leading-relaxed" style={{ color: colors.neutral400 }}>{sanitizeHtml(a.description)}</p>
+                <p className="text-sm mt-3 leading-relaxed" style={{ color: colors.neutral400 }}>
+                  <div
+                    className="preview"
+                    dangerouslySetInnerHTML={{ __html: a.description || "" }}
+                  />
+                </p>
               </div>
             </motion.div>
           </FadeInView>
