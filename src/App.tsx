@@ -1,29 +1,30 @@
-import Home from "./components/pages/Home";
-import { useColors } from "./utils/theme";
-import { Analytics } from "@vercel/analytics/next";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster as Sonner } from "./components/molecules/Sonner/Sonner";
+import { Toaster } from "./components/molecules/Toaster/Toaster";
+import { TooltipProvider } from "./components/molecules/Tooltip/Tooltip";
+import { DefaultColorThemeProvider } from "./contexts/DefaultColorThemeContext";
+import Index from "./components/pages/Index";
+import NotFound from "./components/pages/NotFound";
 
-const AppContent = () => {
-  const colors = useColors();
+const queryClient = new QueryClient();
 
-  return (
-    <div
-      className="min-h-screen transition-colors duration-300"
-      style={{
-        backgroundColor: colors.neutral900,
-      }}
-    >
-      <Home />
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <>
-      <AppContent />
-      <Analytics />
-    </>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <DefaultColorThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </DefaultColorThemeProvider>
+  </QueryClientProvider>
+);
 
 export default App;

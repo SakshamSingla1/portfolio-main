@@ -1,144 +1,146 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
-import type { ProfileRequest } from "../../../utils/types";
+import type { NavItem } from "../../../utils/types";
 
-export interface NavItem {
-  label: string;
-  section: string;
+interface Props {
+  items: NavItem[];
+  profileName?: string;
 }
 
-export interface NavbarProps {
-  profile: ProfileRequest | null;
-  navItems: NavItem[];
-}
-
-const Navbar: React.FC<NavbarProps> = ({ profile, navItems }) => {
+export const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
   const colors = useColors();
   const g = gradients(colors);
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeSection = searchParams.get("section") ?? "hero";
-
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const navigateToSection = (section: string) => {
-    setSearchParams({ section });
-    const el = document.getElementById(section);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50);
+      for (const item of [...items].reverse()) {
+        const el = document.getElementById(item.section);
+        if (el && el.getBoundingClientRect().top <= 150) {
+          setActiveSection(item.section);
+          break;
+        }
+      }
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [items]);
 
-  useEffect(() => {
-    const sections = navItems
-      .map(item => document.getElementById(item.section))
-      .filter(Boolean) as HTMLElement[];
-
-    if (!sections.length) return;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setSearchParams({ section: entry.target.id }, { replace: true });
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 }
-    );
-
-    sections.forEach(section => observer.observe(section));
-    return () => observer.disconnect();
-  }, [navItems, setSearchParams]);
+  const scrollTo = (section: string) => {
+    document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
+    setMobileOpen(false);
+  };
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-      <div
-        className="w-full max-w-7xl rounded-3xl p-px transition-all"
-        style={{
-          backgroundImage: g.cardBorderGradient,
-          boxShadow: isScrolled ? g.hoverGlowSoft : "none",
-        }}
-      >
-        <div className="flex items-center justify-between rounded-3xl px-8 py-6" style={{ backgroundColor: `${colors.neutral900}CC`, backdropFilter: "blur(14px)"}}>
-          <button onClick={() => navigateToSection("hero")} className="group flex items-center gap-3">
-            {profile?.logoUrl && (
-              <img src={profile.logoUrl} alt="Profile Logo" className="h-10 w-10 rounded-full object-cover"/>
-            )}
-            <span className="text-base font-semibold tracking-wide" style={{ color: colors.neutral50 }}>{profile?.fullName || "Profile"}</span>
-          </button>
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      style={scrolled ? {
+        backgroundColor: `${colors.neutral900}CC`,
+        backdropFilter: "blur(24px) saturate(180%)",
+        borderBottom: `1px solid ${colors.neutral700}33`,
+        boxShadow: `0 4px 30px ${colors.neutral900}80`,
+      } : undefined}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <motion.span
+          whileHover={{ scale: 1.05 }}
+          className="font-display font-bold text-lg cursor-pointer bg-clip-text text-transparent"
+          style={{ backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})` }}
+          onClick={() => scrollTo("hero")}
+        >
+          {profileName.split(" ")[0]}
+          <span className="text-primary">.</span>
+        </motion.span>
 
-          <ul className="hidden md:flex items-center gap-6 text-base">
-            {navItems.map(item => {
-              const isActive = activeSection === item.section;
-              return (
-                <li key={item.section} className="relative">
-                  <button onClick={() => navigateToSection(item.section)} className="relative px-1 py-1 transition-colors" style={{ color: isActive ? colors.accent400 : colors.neutral300 }}>
-                    {item.label}
-                    <span className="absolute left-0 -bottom-1 h-[2px] w-full rounded-full" style={{ background: isActive ? g.dividerGradient : "transparent", opacity: isActive ? 1 : 0 }} />
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          <button
-            onClick={() => setOpen(v => !v)}
-            className="md:hidden text-xl"
-            style={{ color: colors.neutral200 }}
-          >
-            ☰
-          </button>
+        <div
+          className="hidden md:flex items-center gap-0.5 rounded-full px-1.5 py-1 backdrop-blur-sm"
+          style={{
+            backgroundColor: `${colors.neutral800}60`,
+            border: `1px solid ${colors.neutral700}33`,
+          }}
+        >
+          {items.map((item) => (
+            <button
+              key={item.section}
+              onClick={() => scrollTo(item.section)}
+              className="relative text-xs px-3 py-1.5 rounded-full transition-all duration-300"
+              style={{ color: activeSection === item.section ? colors.primary400 : colors.neutral500 }}
+            >
+              {activeSection === item.section && (
+                <motion.div
+                  layoutId="activeNav"
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: `${colors.primary500}1A`, border: `1px solid ${colors.primary500}26` }}
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                />
+              )}
+              <span className="relative z-10 font-medium">{item.label}</span>
+            </button>
+          ))}
         </div>
 
-        {open && (
-          <div
-            className="md:hidden mt-2 rounded-2xl p-4"
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => scrollTo("contact")}
+          className="hidden md:flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl font-semibold text-white transition-all"
+          style={{ background: g.ctaGradient }}
+        >
+          Hire Me <ArrowUpRight className="w-3 h-3" />
+        </motion.button>
+
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden p-2 rounded-lg transition-colors"
+          style={{ color: colors.neutral200, backgroundColor: mobileOpen ? `${colors.neutral800}80` : "transparent" }}
+        >
+          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden overflow-hidden"
             style={{
-              backgroundColor: `${colors.neutral900}EE`,
-              backdropFilter: "blur(14px)",
-              border: `1px solid ${colors.neutral800}`,
+              backgroundColor: `${colors.neutral900}F2`,
+              backdropFilter: "blur(24px)",
+              borderBottom: `1px solid ${colors.neutral700}33`,
             }}
           >
-            <ul className="flex flex-col gap-4 text-sm">
-              {navItems.map(item => {
-                const isActive = activeSection === item.section;
-                return (
-                  <li key={item.section}>
-                    <button
-                      onClick={() => {
-                        navigateToSection(item.section);
-                        setOpen(false);
-                      }}
-                      className="block w-full text-left rounded-lg px-3 py-2"
-                      style={{
-                        backgroundColor: isActive
-                          ? `${colors.accent500}22`
-                          : "transparent",
-                        color: isActive
-                          ? colors.accent400
-                          : colors.neutral300,
-                      }}
-                    >
-                      {item.label}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+            <div className="px-4 py-4 space-y-1">
+              {items.map((item, i) => (
+                <motion.button
+                  key={item.section}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => scrollTo(item.section)}
+                  className="block w-full text-left py-2.5 px-3 text-sm rounded-xl transition-all"
+                  style={
+                    activeSection === item.section
+                      ? { backgroundColor: `${colors.primary500}1A`, color: colors.primary400, fontWeight: 500 }
+                      : { color: colors.neutral500 }
+                  }
+                >
+                  {item.label}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
         )}
-      </div>
-    </header>
+      </AnimatePresence>
+    </motion.nav>
   );
 };
-
-export default Navbar;

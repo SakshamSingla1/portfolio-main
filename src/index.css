@@ -1,16 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* ================= ROOT ================= */
+@layer base {
+  :root {
+    --background: 230 25% 5%;
+    --foreground: 220 20% 95%;
+
+    --card: 230 20% 8%;
+    --card-foreground: 220 20% 95%;
+
+    --popover: 230 20% 8%;
+    --popover-foreground: 220 20% 95%;
+
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 230 20% 14%;
+    --secondary-foreground: 220 20% 90%;
+
+    --muted: 230 15% 16%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 280 70% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 15% 18%;
+    --input: 230 15% 18%;
+    --ring: 239 84% 67%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(239 84% 67%), hsl(280 70% 65%));
+    --gradient-subtle: linear-gradient(135deg, hsl(239 84% 67% / 0.15), hsl(280 70% 65% / 0.15));
+    --gradient-card: linear-gradient(145deg, hsl(230 20% 10%), hsl(230 20% 7%));
+    --gradient-card-hover: linear-gradient(145deg, hsl(230 20% 12%), hsl(230 20% 9%));
+
+    --shadow-card-hover: 0 20px 40px -15px hsl(239 84% 67% / 0.15);
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 }
 
-.animate-fade-in {
-  animation: fade-in 600ms ease forwards;
+/* ================= BASE ================= */
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+}
+
+/* ================= COMPONENTS ================= */
+@layer components {
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  .glass-card {
+    @apply rounded-2xl backdrop-blur-xl;
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .glass-card:hover {
+    background: var(--gradient-card-hover);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .section-container {
+    @apply max-w-6xl mx-auto px-4 py-20;
+  }
+
+  .grid-bg {
+    background-image: 
+      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .btn-gradient {
+    @apply px-6 py-3 rounded-xl font-semibold text-sm;
+    background: var(--gradient-primary);
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px hsl(var(--primary) / 0.5);
+  }
+
+  .input-styled {
+    @apply w-full px-4 py-3 rounded-xl;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.5);
+    color: hsl(var(--foreground));
+  }
+
+  .input-styled::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .input-styled:focus {
+    outline: none;
+    border-color: hsl(var(--primary));
+  }
+
+  .skill-badge {
+    @apply text-xs px-3 py-1 rounded-full;
+    background: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+
+  .noise-overlay::after {
+    content: '';
+    @apply fixed inset-0 pointer-events-none;
+    opacity: 0.02;
+  }
 }
