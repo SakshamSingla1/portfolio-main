@@ -4,6 +4,7 @@ import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface Props {
   testimonials: Testimonial[];
@@ -47,12 +48,12 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
                 className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
                 style={{ color: `${colors.neutral300}E6` }}
               >
-                <span>"</span>
-                <span
-                  className="preview inline"
-                  dangerouslySetInnerHTML={{ __html: testimonials[active].message || "" }}
+                <ReadMoreText
+                  text={testimonials[active].message || ""}
+                  limit={100}
+                  mobileLimit={50}
+                  className="italic text-sm leading-relaxed border-l-4 pl-4"
                 />
-                <span>"</span>
               </div>
               <div className="flex items-center gap-4">
                 {testimonials[active].imageUrl && (

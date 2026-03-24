@@ -4,6 +4,7 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Education } from "../../utils/types";
 import { getEducationLabel } from "../../utils/helper";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface Props {
   educations: Education[];
@@ -75,10 +76,7 @@ export const EducationSection = ({ educations }: Props) => {
 
                   {edu.description && (
                     <p className="mt-3 text-sm leading-relaxed" style={{ color: colors.neutral400 }}>
-                      <div
-                        className="preview"
-                        dangerouslySetInnerHTML={{ __html: edu.description || "" }}
-                      />
+                      <ReadMoreText text={edu.description || ""} limit={100} mobileLimit={50} />
                     </p>
                   )}
                 </div>

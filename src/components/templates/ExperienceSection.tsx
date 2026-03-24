@@ -3,6 +3,7 @@ import { Briefcase, MapPin, ChevronRight, Clock } from "lucide-react";
 import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { ExperienceResponse } from "../../utils/types";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface Props {
   experiences: ExperienceResponse[];
@@ -112,10 +113,7 @@ export const ExperienceSection = ({ experiences }: Props) => {
                 </div>
 
                 <p className="text-sm leading-relaxed mb-4" style={{ color: `${colors.neutral400}CC` }}>
-                  <div
-                    className="preview"
-                    dangerouslySetInnerHTML={{ __html: exp.description || "" }}
-                  />
+                  <ReadMoreText text={exp.description || ""} limit={100} mobileLimit={50} />
                 </p>
 
                 {exp.skills.length > 0 && (

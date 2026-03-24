@@ -4,6 +4,7 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { Code, Palette, Zap, Coffee } from "lucide-react";
 import { useColors } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface Props {
   profile: ProfileRequest;
@@ -42,7 +43,6 @@ export const AboutSection = ({ profile }: Props) => {
                   className="w-full h-72 md:h-96 object-cover"
                 />
               </div>
-              {/* Floating elements */}
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -55,7 +55,6 @@ export const AboutSection = ({ profile }: Props) => {
                 className="absolute -top-3 -left-3 w-14 h-14 rounded-2xl backdrop-blur-sm -z-10"
                 style={{ backgroundColor: `${colors.accent500}0A`, border: `1px solid ${colors.accent500}15` }}
               />
-              {/* Badge */}
               <motion.div
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
@@ -63,7 +62,7 @@ export const AboutSection = ({ profile }: Props) => {
                 transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
                 className="absolute -right-2 top-6 glass-card px-4 py-2.5 text-center"
               >
-                <p className="text-2xl font-display font-bold" style={{ color: colors.primary400 }}>6+</p>
+                <p className="text-2xl font-display font-bold" style={{ color: colors.primary400 }}>1+</p>
                 <p className="text-[10px]" style={{ color: `${colors.neutral500}B3` }}>Years Exp</p>
               </motion.div>
             </div>
@@ -71,9 +70,9 @@ export const AboutSection = ({ profile }: Props) => {
         )}
         <FadeInView delay={0.15} className="md:col-span-3 space-y-6">
           <p className="text-base md:text-lg leading-relaxed" style={{ color: `${colors.neutral300}E6` }}>
-            <div
+            <ReadMoreText
+              text={profile.aboutMe || ""}
               className="preview"
-              dangerouslySetInnerHTML={{ __html: profile.aboutMe || "" }}
             />
           </p>
           <div className="grid grid-cols-2 gap-3 pt-2">

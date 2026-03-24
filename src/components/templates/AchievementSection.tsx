@@ -4,6 +4,7 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { FadeInView } from "../molecules/FadeInView/FadeInView";
 import { useColors } from "../../utils/theme";
 import type { Achievement, Certification } from "../../utils/types";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 export const AchievementsSection = ({ achievements }: { achievements: Achievement[] }) => {
   const colors = useColors();
@@ -34,10 +35,7 @@ export const AchievementsSection = ({ achievements }: { achievements: Achievemen
                   </span>
                 )}
                 <p className="text-sm mt-3 leading-relaxed" style={{ color: colors.neutral400 }}>
-                  <div
-                    className="preview"
-                    dangerouslySetInnerHTML={{ __html: a.description || "" }}
-                  />
+                  <ReadMoreText text={a.description || ""} limit={100} mobileLimit={50} />
                 </p>
               </div>
             </motion.div>

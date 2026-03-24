@@ -5,6 +5,7 @@ import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
 import { FadeInView } from "../molecules/FadeInView/FadeInView";
 import { useColors, gradients } from "../../utils/theme";
 import type { ProjectResponse } from "../../utils/types";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface Props {
   projects: ProjectResponse[];
@@ -143,10 +144,7 @@ export const ProjectsSection = ({ projects }: Props) => {
                       {project.projectName}
                     </h3>
                     <p className="text-sm mb-5 leading-relaxed" style={{ color: `${colors.neutral400}CC` }}>
-                      <div
-                        className="preview"
-                        dangerouslySetInnerHTML={{ __html: project.projectDescription || "" }}
-                      />
+                      <ReadMoreText text={project.projectDescription || ""} limit={100} mobileLimit={50} />
                     </p>
 
                     {/* Case study toggle */}
