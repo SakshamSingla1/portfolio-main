@@ -126,7 +126,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                 />
 
                 <div
-                  className="relative w-52 h-52 sm:w-60 sm:h-60 md:w-68 md:h-68 lg:w-80 lg:h-80 rounded-3xl overflow-hidden"
+                  className="relative w-80 h-80 sm:w-80 sm:h-80 md:w-80 md:h-80 lg:w-80 lg:h-80 rounded-3xl overflow-hidden"
                   style={{ border: `2px solid ${colors.neutral700}50` }}
                 >
                   <img src={profile.profileImageUrl} alt={profile.fullName} className="w-full h-full object-cover" />
@@ -135,17 +135,28 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
 
                 {/* Status badge */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0, y: 10 }}
+                  initial={{ opacity: 0, scale: 0.85, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
-                  className="absolute -bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-full glass-card-premium text-xs font-medium"
-                  style={{ border: `1px solid ${colors.success500}26`, color: colors.success400 }}
+                  transition={{ delay: 0.8, type: "spring", stiffness: 180 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold backdrop-blur-lg shadow-lg"
+                  style={{
+                    border: `1px solid ${colors.success500}40`,
+                    color: colors.success400,
+                    background: `linear-gradient(135deg, ${colors.neutral900}CC, ${colors.neutral800}AA)`,
+                  }}
                 >
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ backgroundColor: colors.success400 }} />
-                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: colors.success400 }} />
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span
+                      className="absolute inline-flex h-full w-full rounded-full opacity-50 animate-ping"
+                      style={{ backgroundColor: colors.success400 }}
+                    />
+                    <span
+                      className="relative inline-flex rounded-full h-2.5 w-2.5 shadow-md"
+                      style={{ backgroundColor: colors.success400 }}
+                    />
                   </span>
-                  Available for work
+                  <span className="tracking-wide">Available</span>
                 </motion.div>
               </div>
             )}
@@ -183,17 +194,9 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               className="text-lg md:text-xl lg:text-2xl font-light mb-4 h-8"
               style={{ color: colors.neutral400 }}
             >
-              <TypewriterText words={["Full-Stack Developer", "Creative Technologist", "Open Source Contributor", "UI/UX Enthusiast"]} colors={colors} />
+              <TypewriterText words={["Full-Stack Developer", "UI/UX Enthusiast", profile.title]} colors={colors} />
             </motion.div>
-
-            <motion.p
-              variants={stagger.item}
-              className="text-sm max-w-lg mb-6 lg:mx-0 mx-auto leading-relaxed"
-              style={{ color: `${colors.neutral500}CC` }}
-            >
-              {profile.title}
-            </motion.p>
-
+            
             <motion.div
               variants={stagger.item}
               className="flex items-center gap-2 mb-8 justify-center lg:justify-start"
