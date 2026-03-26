@@ -7,9 +7,10 @@ import type { NavItem } from "../../../utils/types";
 interface Props {
   items: NavItem[];
   profileName?: string;
+  logoUrl?: string;
 }
 
-const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
+const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
   const colors = useColors();
   const g = gradients(colors);
 
@@ -69,7 +70,14 @@ const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
           }}
           onClick={() => scrollTo("hero")}
         >
-          {profileName.split(" ")[0]}.
+          {logoUrl ? (
+            <>
+              <img src={logoUrl} alt="Logo" className="h-8 w-8 rounded-full" />
+              {profileName}
+            </>
+          ) : (
+            profileName
+          )}
         </span>
 
         <div

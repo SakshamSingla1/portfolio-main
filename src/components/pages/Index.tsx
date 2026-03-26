@@ -218,7 +218,7 @@ const Index = () => {
       <div className="relative z-10">
         <MouseGlow />
 
-        <Navbar items={navItems || []} profileName={profile.fullName || ""} />
+        <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} />
 
         <main className="px-4 md:px-8 lg:px-16 xl:px-24">
           {sections}

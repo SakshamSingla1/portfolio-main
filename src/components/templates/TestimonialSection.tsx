@@ -27,7 +27,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
   const current = testimonials[active];
 
   return (
-    <section id="testimonials" className="section-container !pt-0">
+    <section id="testimonials" className="section-container pt-0!">
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
       <div className="max-w-3xl mx-auto">
