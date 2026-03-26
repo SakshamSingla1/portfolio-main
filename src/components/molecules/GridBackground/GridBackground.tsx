@@ -13,24 +13,31 @@ const GridBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
+    const particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+    }[] = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+
     resize();
     window.addEventListener("resize", resize);
 
-    // Fewer particles for better performance
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 45; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        size: Math.random() * 1.5 + 0.5,
-        opacity: Math.random() * 0.3 + 0.05,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        size: Math.random() * 2.5 + 1.5,
+        opacity: Math.random() * 0.35 + 0.1,
       });
     }
 
@@ -45,35 +52,54 @@ const GridBackground = () => {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
+
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
+        const gradient = ctx.createRadialGradient(
+          p.x,
+          p.y,
+          0,
+          p.x,
+          p.y,
+          p.size * 4
+        );
+        gradient.addColorStop(0, `rgba(${particleColor}, ${p.opacity})`);
+        gradient.addColorStop(1, `rgba(${particleColor}, 0)`);
+
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${particleColor}, ${p.opacity})`;
+        ctx.fillStyle = gradient;
         ctx.fill();
       });
 
       particles.forEach((a, i) => {
-        particles.slice(i + 1).forEach((b) => {
+        for (let j = i + 1; j < particles.length; j++) {
+          const b = particles[j];
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
-          if (dist < 100) {
+
+          if (dist < 120) {
+            const opacity = 0.08 * (1 - dist / 120);
+
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(${particleColor}, ${0.04 * (1 - dist / 100)})`;
+            ctx.strokeStyle = `rgba(${particleColor}, ${opacity})`;
+            ctx.lineWidth = 1;
             ctx.stroke();
           }
-        });
+        }
       });
 
       animationId = requestAnimationFrame(draw);
     };
+
     draw();
 
     return () => {
@@ -82,7 +108,12 @@ const GridBackground = () => {
     };
   }, [colors.primary400]);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-80" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-0 opacity-90"
+    />
+  );
 };
 
 export default React.memo(GridBackground);
