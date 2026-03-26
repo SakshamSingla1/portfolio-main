@@ -24,7 +24,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
       <div className="max-w-3xl mx-auto">
-        <div className="glass-card-premium p-8 md:p-10 relative">
+        <div className="glass-card-premium relative">
           <div className="absolute top-6 right-6 opacity-10">
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
           </div>

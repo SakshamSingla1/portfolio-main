@@ -9,15 +9,23 @@ import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface AboutSectionProps {
   profile: ProfileRequest;
+  totalExp: {
+    value: string;
+    label: string;
+  };
+  totalProjects: {
+    value: string;
+    label: string;
+  };
 }
 
-const AboutSection = ({ profile }: AboutSectionProps) => {
+const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) => {
   const colors = useColors();
   const g = gradients(colors);
 
   const stats = [
-    { icon: FiCode, value: "5+", label: "Years Experience", color: colors.primary500 },
-    { icon: FiZap, value: "20+", label: "Projects Shipped", color: colors.accent500 },
+    { icon: FiCode, value: totalExp.value, label: totalExp.label, color: colors.primary500 },
+    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.accent500 },
     { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.secondary500 },
   ];
 

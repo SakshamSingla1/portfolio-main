@@ -3,6 +3,7 @@ import { generateNavItems } from "../../utils/helper";
 import { Status } from "../../utils/types";
 import type { ProfileMaster } from "../../utils/types";
 import { useColors } from "../../utils/theme";
+import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 
 import Navbar from "../molecules/Navbar/Navbar";
 import HeroSection from "../templates/HeroSection";
@@ -27,6 +28,7 @@ import { HTTP_STATUS } from "../../utils/constants";
 const Index = () => {
   const colors = useColors();
   const profileService = useProfileMasterService();
+  const { setDefaultTheme } = useDefaultColorTheme();
 
   const [data, setData] = useState<ProfileMaster | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,11 +40,31 @@ const Index = () => {
 
       if (res?.status === HTTP_STATUS.OK) {
         setData(res.data.data);
+        setDefaultTheme(res.data.data?.colorTheme || "default");
       }
     } finally {
       setLoading(false);
     }
   };
+
+  const totalExperience = useMemo(() => {
+    if (!data?.experiences?.length) return "0";
+    const totalMonths = data.experiences.reduce((acc, exp) => {
+      if (!exp.startDate) return acc;
+      const start = new Date(exp.startDate);
+      const isCurrent = !exp.endDate || exp.employmentStatus === "CURRENT";
+      const end = isCurrent ? new Date() : new Date(exp.endDate || "");
+      const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+      return acc + Math.max(months, 0);
+    }, 0);
+    return (totalMonths / 12).toFixed(1);
+  }, [data?.experiences]);
+
+  const displayExperience = useMemo(() => {
+    return Number(totalExperience) < 1 ? "Fresher" : `${totalExperience}+ Years`;
+  }, [totalExperience]);
+
+  const totalProjects = data?.projects?.length || 0;
 
   useEffect(() => {
     fetchProfile();
@@ -100,22 +122,32 @@ const Index = () => {
   const sections: React.ReactNode[] = [];
 
   sections.push(
-    <div key="hero" className="mb-10">
+    <div key="hero" className="mb-15">
       <HeroSection profile={profile} socialLinks={activeSocialLinks} />
     </div>
   );
 
   if (profile.aboutMe) {
     sections.push(
-      <div key="about" className="mb-10">
-        <AboutSection profile={profile} />
+      <div key="about" className="mb-15">
+        <AboutSection
+          profile={profile}
+          totalExp={{
+            value: displayExperience,
+            label: displayExperience === "Fresher" ? "" : "Years of Experience",
+          }}
+          totalProjects={{
+            value: `${totalProjects}+`,
+            label: "Projects Shipped",
+          }}
+        />
       </div>
     );
   }
 
   if (data.skills.length > 0) {
     sections.push(
-      <div key="skills" className="mb-10">
+      <div key="skills" className="mb-15">
         <SkillsSection skills={data.skills} />
       </div>
     );
@@ -123,7 +155,7 @@ const Index = () => {
 
   if (data.experiences.length > 0) {
     sections.push(
-      <div key="experience" className="mb-10">
+      <div key="experience" className="mb-15">
         <ExperienceSection experiences={data.experiences} />
       </div>
     );
@@ -131,7 +163,7 @@ const Index = () => {
 
   if (data.projects.length > 0) {
     sections.push(
-      <div key="projects" className="mb-10">
+      <div key="projects" className="mb-15">
         <ProjectsSection projects={data.projects} />
       </div>
     );
@@ -139,7 +171,7 @@ const Index = () => {
 
   if (activeAchievements.length > 0) {
     sections.push(
-      <div key="achievements" className="mb-10">
+      <div key="achievements" className="mb-15">
         <AchievementsSection achievements={activeAchievements} />
       </div>
     );
@@ -147,7 +179,7 @@ const Index = () => {
 
   if (activeCertifications.length > 0) {
     sections.push(
-      <div key="certifications" className="mb-10">
+      <div key="certifications" className="mb-15">
         <CertificationsSection certifications={activeCertifications} />
       </div>
     );
@@ -155,7 +187,7 @@ const Index = () => {
 
   if (data.educations.length > 0) {
     sections.push(
-      <div key="education" className="mb-10">
+      <div key="education" className="mb-15">
         <EducationSection educations={data.educations} />
       </div>
     );
@@ -163,14 +195,14 @@ const Index = () => {
 
   if (activeTestimonials.length > 0) {
     sections.push(
-      <div key="testimonials" className="mb-10">
+      <div key="testimonials" className="mb-15">
         <TestimonialsSection testimonials={activeTestimonials} />
       </div>
     );
   }
 
   sections.push(
-    <div key="contact" className="mb-10">
+    <div key="contact" className="mb-15">
       <ContactSection profile={profile} />
     </div>
   );
