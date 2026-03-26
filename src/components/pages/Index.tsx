@@ -56,16 +56,16 @@ const Index = () => {
         className="min-h-screen flex items-center justify-center"
         style={{ background: colors.neutral900 }}
       >
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-6">
           <div
-            className="w-10 h-10 rounded-full animate-spin"
+            className="w-12 h-12 rounded-full animate-spin"
             style={{
-              border: `2px solid ${colors.primary500}`,
+              border: `3px solid ${colors.primary500}`,
               borderTopColor: "transparent",
             }}
           />
-          <p className="font-mono text-sm" style={{ color: colors.neutral500 }}>
-            Loading...
+          <p className="font-mono text-sm tracking-wider animate-pulse" style={{ color: colors.neutral500 }}>
+            Loading your portfolio...
           </p>
         </div>
       </div>
@@ -78,14 +78,11 @@ const Index = () => {
         className="min-h-screen flex items-center justify-center"
         style={{ background: colors.neutral900 }}
       >
-        <div className="text-center">
-          <h1
-            className="text-6xl font-display font-bold mb-3"
-            style={{ color: colors.primary500 }}
-          >
+        <div className="text-center space-y-3">
+          <h1 className="text-7xl font-bold" style={{ color: colors.primary500 }}>
             404
           </h1>
-          <p className="font-mono" style={{ color: colors.neutral500 }}>
+          <p className="text-sm tracking-wide" style={{ color: colors.neutral500 }}>
             Profile not found
           </p>
         </div>
@@ -95,83 +92,92 @@ const Index = () => {
 
   const profile = data.profile;
 
-  const activeSocialLinks = data.socialLinks.filter(
-    (l) => l.status === Status.ACTIVE
-  );
-  const activeTestimonials = data.testimonials.filter(
-    (t) => t.status === Status.ACTIVE
-  );
-  const activeAchievements = data.achievements.filter(
-    (a) => a.status === Status.ACTIVE
-  );
-  const activeCertifications = data.certifications.filter(
-    (c) => c.status === Status.ACTIVE
-  );
+  const activeSocialLinks = data.socialLinks.filter((l) => l.status === Status.ACTIVE);
+  const activeTestimonials = data.testimonials.filter((t) => t.status === Status.ACTIVE);
+  const activeAchievements = data.achievements.filter((a) => a.status === Status.ACTIVE);
+  const activeCertifications = data.certifications.filter((c) => c.status === Status.ACTIVE);
 
   const sections: React.ReactNode[] = [];
 
   sections.push(
-    <HeroSection key="hero" profile={profile} socialLinks={activeSocialLinks} />
+    <div key="hero" className="mb-20">
+      <HeroSection profile={profile} socialLinks={activeSocialLinks} />
+    </div>
   );
 
   if (profile.aboutMe) {
-    sections.push(<AboutSection key="about" profile={profile} />);
+    sections.push(
+      <div key="about" className="mb-20">
+        <AboutSection profile={profile} />
+      </div>
+    );
   }
 
   if (data.skills.length > 0) {
-    sections.push(<SkillsSection key="skills" skills={data.skills} />);
+    sections.push(
+      <div key="skills" className="mb-20">
+        <SkillsSection skills={data.skills} />
+      </div>
+    );
   }
 
   if (data.experiences.length > 0) {
     sections.push(
-      <ExperienceSection key="experience" experiences={data.experiences} />
+      <div key="experience" className="mb-20">
+        <ExperienceSection experiences={data.experiences} />
+      </div>
     );
   }
 
   if (data.projects.length > 0) {
     sections.push(
-      <ProjectsSection key="projects" projects={data.projects} />
+      <div key="projects" className="mb-20">
+        <ProjectsSection projects={data.projects} />
+      </div>
     );
   }
 
   if (activeAchievements.length > 0) {
     sections.push(
-      <AchievementsSection
-        key="achievements"
-        achievements={activeAchievements}
-      />
+      <div key="achievements" className="mb-20">
+        <AchievementsSection achievements={activeAchievements} />
+      </div>
     );
   }
 
   if (activeCertifications.length > 0) {
     sections.push(
-      <CertificationsSection
-        key="certifications"
-        certifications={activeCertifications}
-      />
+      <div key="certifications" className="mb-20">
+        <CertificationsSection certifications={activeCertifications} />
+      </div>
     );
   }
 
   if (data.educations.length > 0) {
     sections.push(
-      <EducationSection key="education" educations={data.educations} />
+      <div key="education" className="mb-20">
+        <EducationSection educations={data.educations} />
+      </div>
     );
   }
 
   if (activeTestimonials.length > 0) {
     sections.push(
-      <TestimonialsSection
-        key="testimonials"
-        testimonials={activeTestimonials}
-      />
+      <div key="testimonials" className="mb-20">
+        <TestimonialsSection testimonials={activeTestimonials} />
+      </div>
     );
   }
 
-  sections.push(<ContactSection key="contact" profile={profile} />);
+  sections.push(
+    <div key="contact" className="mb-24">
+      <ContactSection profile={profile} />
+    </div>
+  );
 
   return (
     <div
-      className="min-h-screen relative"
+      className="min-h-screen relative overflow-x-hidden"
       style={{ background: colors.neutral900, color: colors.neutral100 }}
     >
       <GridBackground />
@@ -179,9 +185,15 @@ const Index = () => {
 
       <div className="relative z-10">
         <MouseGlow />
+
         <Navbar items={navItems || []} profileName={profile.fullName || ""} />
-        <main>{sections}</main>
+
+        <main className="px-4 md:px-8 lg:px-16 xl:px-24">
+          {sections}
+        </main>
+
         <Footer profile={profile} socialLinks={activeSocialLinks} />
+
         <ScrollToTop />
       </div>
     </div>

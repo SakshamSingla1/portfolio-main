@@ -121,7 +121,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                     className={inputFocusClass}
                     style={inputStyle}
-                    placeholder="John Doe"
+                    placeholder="Enter your name"
                     onFocus={(e) => { e.currentTarget.style.borderColor = `${colors.primary500}50`; e.currentTarget.style.boxShadow = `0 0 0 2px ${colors.primary500}15`; }}
                     onBlur={(e) => { e.currentTarget.style.borderColor = `${colors.neutral600}40`; e.currentTarget.style.boxShadow = "none"; }}
                   />
@@ -135,7 +135,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                     className={inputFocusClass}
                     style={inputStyle}
-                    placeholder="john@example.com"
+                    placeholder="Enter your email"
                     onFocus={(e) => { e.currentTarget.style.borderColor = `${colors.primary500}50`; e.currentTarget.style.boxShadow = `0 0 0 2px ${colors.primary500}15`; }}
                     onBlur={(e) => { e.currentTarget.style.borderColor = `${colors.neutral600}40`; e.currentTarget.style.boxShadow = "none"; }}
                   />
@@ -150,7 +150,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                   className={inputFocusClass}
                   style={inputStyle}
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="Enter your phone number"
                   onFocus={(e) => { e.currentTarget.style.borderColor = `${colors.primary500}50`; e.currentTarget.style.boxShadow = `0 0 0 2px ${colors.primary500}15`; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = `${colors.neutral600}40`; e.currentTarget.style.boxShadow = "none"; }}
                 />
@@ -165,7 +165,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                   className={inputFocusClass + " resize-none"}
                   style={inputStyle}
-                  placeholder="Tell me about your project..."
+                  placeholder="Enter your message"
                   onFocus={(e) => { e.currentTarget.style.borderColor = `${colors.primary500}50`; e.currentTarget.style.boxShadow = `0 0 0 2px ${colors.primary500}15`; }}
                   onBlur={(e) => { e.currentTarget.style.borderColor = `${colors.neutral600}40`; e.currentTarget.style.boxShadow = "none"; }}
                 />
