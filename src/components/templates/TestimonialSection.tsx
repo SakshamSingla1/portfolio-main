@@ -32,7 +32,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
 
       <div className="max-w-3xl mx-auto">
         <div className="glass-card-premium relative">
-          <div className="absolute top-6 right-6 opacity-10">
+          <div className="absolute -top-2 -right-2 opacity-30">
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
           </div>
 
