@@ -50,8 +50,8 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               >
                 <ReadMoreText
                   text={testimonials[active].message || ""}
-                  limit={100}
-                  mobileLimit={50}
+                  limit={200}
+                  mobileLimit={100}
                   className="italic text-sm leading-relaxed border-l-4 pl-4"
                 />
               </div>

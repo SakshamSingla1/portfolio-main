@@ -7,6 +7,7 @@ import { getEducationLabel, normalizePercentage } from "../../utils/helper";
 import { HiOutlineAcademicCap } from "react-icons/hi";
 import { useColors, shadows } from "../../utils/theme";
 import React from "react";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface EducationSectionProps {
   educations: Education[];
@@ -77,9 +78,17 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                   )}
 
                   {edu.description && (
-                    <p className="text-sm leading-relaxed" style={{ color: colors.neutral300 }}>
-                      {edu.description}
-                    </p>
+                    <div
+                      className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+                      style={{ color: `${colors.neutral300}E6` }}
+                    >
+                      <ReadMoreText
+                        text={edu.description || ""}
+                        limit={200}
+                        mobileLimit={100}
+                        className="italic text-sm leading-relaxed border-l-4 pl-4"
+                      />
+                    </div>
                   )}
                 </motion.div>
               </FadeInView>

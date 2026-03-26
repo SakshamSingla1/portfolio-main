@@ -6,6 +6,7 @@ import { formatDate, toTitleCase } from "../../utils/helper";
 import { useColors, shadows } from "../../utils/theme";
 import { FiBriefcase } from "react-icons/fi";
 import React from "react";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface ExperienceSectionProps {
   experiences: ExperienceResponse[];
@@ -89,11 +90,17 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                       </span>
                     </div>
                   </div>
-
-                  <p className="text-sm leading-relaxed mb-4" style={{ color: colors.neutral300 }}>
-                    {exp.description}
-                  </p>
-
+                  <div
+                    className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+                    style={{ color: `${colors.neutral300}E6` }}
+                  >
+                    <ReadMoreText
+                      text={exp.description || ""}
+                      limit={200}
+                      mobileLimit={100}
+                      className="italic text-sm leading-relaxed border-l-4 pl-4"
+                    />
+                  </div>
                   {exp.skills.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
                       {exp.skills.map((skill) => (

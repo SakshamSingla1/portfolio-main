@@ -16,7 +16,6 @@ import EducationSection from "../templates/EducationSection";
 import TestimonialsSection from "../templates/TestimonialSection";
 import ContactSection from "../templates/ContactSection";
 import Footer from "../molecules/Footer/Footer";
-import SectionDivider from "../molecules/SectionDivider/SectionDivider";
 import ScrollToTop from "../molecules/ScrollToTop/ScrollToTop";
 import MouseGlow from "../molecules/MouseGlow/MouseGlow";
 
@@ -116,31 +115,26 @@ const Index = () => {
   );
 
   if (profile.aboutMe) {
-    sections.push(<SectionDivider key="div-about" />);
     sections.push(<AboutSection key="about" profile={profile} />);
   }
 
   if (data.skills.length > 0) {
-    sections.push(<SectionDivider key="div-skills" />);
     sections.push(<SkillsSection key="skills" skills={data.skills} />);
   }
 
   if (data.experiences.length > 0) {
-    sections.push(<SectionDivider key="div-exp" />);
     sections.push(
       <ExperienceSection key="experience" experiences={data.experiences} />
     );
   }
 
   if (data.projects.length > 0) {
-    sections.push(<SectionDivider key="div-proj" />);
     sections.push(
       <ProjectsSection key="projects" projects={data.projects} />
     );
   }
 
   if (activeAchievements.length > 0) {
-    sections.push(<SectionDivider key="div-ach" />);
     sections.push(
       <AchievementsSection
         key="achievements"
@@ -150,7 +144,6 @@ const Index = () => {
   }
 
   if (activeCertifications.length > 0) {
-    sections.push(<SectionDivider key="div-cert" />);
     sections.push(
       <CertificationsSection
         key="certifications"
@@ -160,14 +153,12 @@ const Index = () => {
   }
 
   if (data.educations.length > 0) {
-    sections.push(<SectionDivider key="div-edu" />);
     sections.push(
       <EducationSection key="education" educations={data.educations} />
     );
   }
 
   if (activeTestimonials.length > 0) {
-    sections.push(<SectionDivider key="div-test" />);
     sections.push(
       <TestimonialsSection
         key="testimonials"
@@ -176,7 +167,6 @@ const Index = () => {
     );
   }
 
-  sections.push(<SectionDivider key="div-contact" />);
   sections.push(<ContactSection key="contact" profile={profile} />);
 
   return (

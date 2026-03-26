@@ -7,6 +7,7 @@ import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight } from "react-i
 import { toTitleCase } from "../../utils/helper";
 import { useColors, shadows } from "../../utils/theme";
 import React from "react";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface ProjectsSectionProps {
   projects: ProjectResponse[];
@@ -107,10 +108,17 @@ const ProjectCard = React.memo(({ project, idx, colors, s }: {
           <h3 className="text-xl font-display font-bold mb-2" style={{ color: colors.neutral50 }}>
             {project.projectName}
           </h3>
-          <p className="text-sm leading-relaxed mb-4 line-clamp-3" style={{ color: colors.neutral400 }}>
-            {project.projectDescription}
-          </p>
-
+          <div
+            className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+            style={{ color: `${colors.neutral300}E6` }}
+          >
+            <ReadMoreText
+              text={project.projectDescription || ""}
+              limit={200}
+              mobileLimit={100}
+              className="italic text-sm leading-relaxed border-l-4 pl-4"
+            />
+          </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {project.skills.map((skill) => (
               <span

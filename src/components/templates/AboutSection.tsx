@@ -5,6 +5,7 @@ import FadeInView from "../molecules/FadeInView/FadeInView";
 import { useColors, gradients } from "../../utils/theme";
 import { FiCode, FiCoffee, FiZap } from "react-icons/fi";
 import React from "react";
+import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 
 interface AboutSectionProps {
   profile: ProfileRequest;
@@ -88,12 +89,17 @@ const AboutSection = ({ profile }: AboutSectionProps) => {
                 <span style={{ color: colors.neutral600 }}>=</span>{" "}
                 <span style={{ color: colors.success400 }}>{"{"}</span>
               </div>
-              <p
-                className="leading-relaxed text-base md:text-lg pl-4 border-l-2"
-                style={{ color: `${colors.neutral200}DD`, borderColor: `${colors.primary500}25` }}
+              <div
+                className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+                style={{ color: `${colors.neutral300}E6` }}
               >
-                {profile.aboutMe}
-              </p>
+                <ReadMoreText
+                  text={profile.aboutMe || ""}
+                  limit={200}
+                  mobileLimit={100}
+                  className="italic text-sm leading-relaxed border-l-4 pl-4"
+                />
+              </div>
               <div className="font-mono text-xs mt-3" style={{ color: colors.success400 }}>{"}"}</div>
             </div>
 
