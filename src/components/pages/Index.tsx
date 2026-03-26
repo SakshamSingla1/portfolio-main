@@ -87,7 +87,7 @@ const Index = () => {
             }}
           />
           <p className="font-mono text-sm tracking-wider animate-pulse" style={{ color: colors.neutral500 }}>
-            Loading your portfolio...
+            Loading portfolio...
           </p>
         </div>
       </div>
