@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
-import { Heart, ArrowUp, Code2 } from "lucide-react";
-import { useColors } from "../../../utils/theme";
+import { useColors, gradients } from "../../../utils/theme";
 import type { ProfileRequest, SocialLinkResponse } from "../../../utils/types";
 import { SocialLinkPlatform } from "../../../utils/constants";
 import { FaGithub, FaLinkedin, FaGlobe, FaGitlab, FaBitbucket, FaStackOverflow, FaHackerrank, FaInstagram, FaFacebook, FaLink } from "react-icons/fa";
 import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
+import React from "react";
+import { FiHeart } from "react-icons/fi";
 
 interface Props {
   profile: ProfileRequest;
@@ -46,89 +46,63 @@ const getSocialIcon = (platform: string) => {
   }
 };
 
-export const Footer = ({ profile, socialLinks }: Props) => {
+const Footer = ({ profile, socialLinks }: Props) => {
   const colors = useColors();
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const g = gradients(colors);
 
   return (
-    <footer className="relative overflow-hidden">
-      {/* Top gradient line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(to right, transparent, ${colors.primary500}80, ${colors.accent500}80, transparent)` }}
-      />
+    <footer className="relative py-10 px-4 md:px-8" style={{ background: colors.neutral900 }}>
+      <div className="absolute top-0 inset-x-0 h-px" style={{ background: g.dividerGradient, opacity: 0.2 }} />
 
-      {/* Background glow */}
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-48 blur-[120px] rounded-full"
-        style={{ backgroundColor: `${colors.primary500}08` }}
-      />
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 relative z-10">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
-          <div>
-            <p
-              className="font-display text-xl font-bold mb-2 bg-clip-text text-transparent"
-              style={{ backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})` }}
-            >
-              {profile.fullName.split(" ")[0]}<span className="text-primary">.</span>
-            </p>
-            <p className="text-sm" style={{ color: colors.neutral500 }}>{profile.title}</p>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+          <div className="font-display font-bold text-xl" style={{ color: colors.neutral100 }}>
+            <span style={{ color: colors.primary500 }}>{"<"}</span>
+            {profile.userName}
+            <span style={{ color: colors.primary500 }}>{" />"}</span>
           </div>
 
-          <div className="flex items-center justify-center gap-2">
-            {socialLinks.map((link) => {
-              const Icon = getSocialIcon(link.platform);
-              return (
-                <motion.a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -3, scale: 1.1 }}
-                  className="p-2.5 rounded-xl transition-all"
-                  style={{
-                    border: `1px solid ${colors.neutral700}33`,
-                    backgroundColor: `${colors.neutral800}4D`,
-                    color: colors.neutral400,
-                  }}
-                >
-                  {Icon}
-                </motion.a>
-              );
-            })}
-          </div>
-
-          <div className="flex md:justify-end">
-            <motion.button
-              whileHover={{ y: -2, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={scrollToTop}
-              className="text-xs flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all duration-300"
-              style={{
-                border: `1px solid ${colors.primary500}4D`,
-                color: colors.primary400,
-                backgroundColor: `${colors.primary500}08`,
-              }}
-            >
-              <ArrowUp className="w-3.5 h-3.5" /> Back to Top
-            </motion.button>
+          <div className="flex items-center gap-3">
+            {socialLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all duration-300"
+                style={{
+                  color: colors.neutral500,
+                  background: `${colors.neutral800}60`,
+                  border: `1px solid ${colors.neutral700}25`,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = colors.primary400;
+                  e.currentTarget.style.borderColor = `${colors.primary500}40`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = colors.neutral500;
+                  e.currentTarget.style.borderColor = `${colors.neutral700}25`;
+                }}
+              >
+                {getSocialIcon(link.platform)}
+              </a>
+            ))}
           </div>
         </div>
 
-        <div
-          className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderTop: `1px solid ${colors.neutral700}26` }}
-        >
-          <p className="text-xs flex items-center gap-1" style={{ color: colors.neutral500 }}>
+        <div className="h-px mb-6" style={{ background: `${colors.neutral700}30` }} />
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <p className="font-mono text-xs" style={{ color: colors.neutral600 }}>
             © {new Date().getFullYear()} {profile.fullName}. All rights reserved.
           </p>
-          <p className="text-xs flex items-center gap-1.5" style={{ color: colors.neutral500 }}>
-            <Code2 className="w-3 h-3" style={{ color: `${colors.primary400}80` }} />
-            Crafted with <Heart className="w-3 h-3" style={{ color: colors.error400, fill: colors.error400 }} /> and lots of coffee
+          <p className="font-mono text-xs flex items-center gap-1.5" style={{ color: colors.neutral600 }}>
+            Built with <FiHeart size={12} style={{ color: colors.primary500 }} /> and lots of code
           </p>
         </div>
       </div>
     </footer>
   );
 };
+
+export default React.memo(Footer);

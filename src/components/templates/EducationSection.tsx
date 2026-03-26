@@ -1,90 +1,94 @@
 import { motion } from "framer-motion";
-import { GraduationCap, MapPin, Award, BookOpen } from "lucide-react";
-import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
-import { useColors } from "../../utils/theme";
 import type { Education } from "../../utils/types";
-import { getEducationLabel } from "../../utils/helper";
-import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import SectionHeading from "../molecules/SectionHeading/SectionHeading";
+import FadeInView from "../molecules/FadeInView/FadeInView";
+import { FiMapPin } from "react-icons/fi";
+import { getEducationLabel, normalizePercentage } from "../../utils/helper";
+import { HiOutlineAcademicCap } from "react-icons/hi";
+import { useColors, shadows } from "../../utils/theme";
+import React from "react";
 
-interface Props {
+interface EducationSectionProps {
   educations: Education[];
 }
 
-export const EducationSection = ({ educations }: Props) => {
+const EducationSection = ({ educations }: EducationSectionProps) => {
   const colors = useColors();
+  const s = shadows(colors);
 
   return (
-    <section id="education" className="section-container">
-      <SectionHeading title="Education" subtitle="Academic background and qualifications" />
-      <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        {educations.map((edu, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.15, duration: 0.5 }}
-            whileHover={{ y: -6, scale: 1.01 }}
-            className="glass-card-premium p-6 relative overflow-hidden group"
-          >
-            {/* Decorative background */}
-            <div
-              className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] transition-opacity duration-500 opacity-0 group-hover:opacity-100"
-              style={{ backgroundColor: `${colors.primary500}0D` }}
-            />
+    <section id="education" className="section-padding relative">
+      <div className="max-w-4xl mx-auto">
+        <SectionHeading title="Education" subtitle="Academic background and qualifications" />
 
-            <div className="relative z-10">
-              <div className="flex items-start gap-4">
-                <motion.div
-                  whileHover={{ rotate: 12 }}
-                  className="p-3 rounded-xl shrink-0"
-                  style={{ backgroundColor: `${colors.primary500}1A`, color: colors.primary400 }}
+        <div className="relative">
+          <div
+            className="absolute left-4 md:left-6 top-0 bottom-0 w-px"
+            style={{ background: `linear-gradient(to bottom, ${colors.accent500}50, ${colors.neutral700}30, transparent)` }}
+          />
+
+          <div className="space-y-6">
+            {educations.map((edu, idx) => (
+              <FadeInView key={edu.id} delay={idx * 0.1} className="relative pl-12 md:pl-16">
+                <div
+                  className="absolute left-2 md:left-3.5 top-2 w-5 h-5 rounded-full flex items-center justify-center"
+                  style={{
+                    background: `${colors.accent500}20`,
+                    border: `1px solid ${colors.accent500}40`,
+                  }}
                 >
-                  <GraduationCap className="w-6 h-6" />
-                </motion.div>
-                <div className="flex-1">
-                  <h3 className="font-display font-bold text-lg" style={{ color: colors.neutral100 }}>
-                    {edu.institution}
-                  </h3>
-                  <p className="text-sm font-medium mt-1 flex items-center gap-1" style={{ color: `${colors.primary400}CC` }}>
-                    <BookOpen className="w-3 h-3" />
-                    {getEducationLabel(edu.degree)}
-                  </p>
-                  <p className="text-sm" style={{ color: colors.neutral400 }}>{edu.fieldOfStudy}</p>
+                  <HiOutlineAcademicCap style={{ color: colors.accent400 }} className="text-xs" />
+                </div>
 
-                  <div className="flex flex-wrap items-center gap-2 mt-3">
-                    <span
-                      className="text-xs font-mono px-2.5 py-1 rounded-md"
-                      style={{ color: colors.neutral400, backgroundColor: `${colors.neutral700}60`, border: `1px solid ${colors.neutral700}4D` }}
-                    >
-                      {edu.startYear} — {edu.endYear}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs" style={{ color: colors.neutral500 }}>
-                      <MapPin className="w-3 h-3" />{edu.location}
-                    </span>
+                <motion.div
+                  whileHover={{ boxShadow: s.card }}
+                  className="rounded-xl p-5 backdrop-blur-md transition-all duration-300"
+                  style={{
+                    background: `${colors.neutral800}60`,
+                    border: `1px solid ${colors.neutral700}40`,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${colors.accent500}30`; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `${colors.neutral700}40`; }}
+                >
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
+                    <div>
+                      <h3 className="font-display font-bold" style={{ color: colors.neutral50 }}>{edu.institution}</h3>
+                      <p className="text-sm font-mono" style={{ color: colors.primary400 }}>
+                        {getEducationLabel(edu.degree)} — {edu.fieldOfStudy}
+                      </p>
+                    </div>
+                    <div className="text-right font-mono text-xs" style={{ color: colors.neutral400 }}>
+                      <div>{edu.startYear} — {edu.endYear}</div>
+                      {edu.location && (
+                        <div className="flex items-center gap-1 mt-1 md:justify-end">
+                          <FiMapPin size={10} /> {edu.location}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {edu.grade && (
-                    <div
-                      className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded-full"
-                      style={{ backgroundColor: `${colors.success500}1A`, border: `1px solid ${colors.success500}26` }}
+                    <span
+                      className="inline-block text-xs font-mono rounded px-2 py-0.5 mb-2"
+                      style={{ color: colors.primary400, background: `${colors.primary500}15` }}
                     >
-                      <Award className="w-3.5 h-3.5" style={{ color: colors.success400 }} />
-                      <span className="text-sm font-semibold" style={{ color: colors.success400 }}>{edu.grade}</span>
-                    </div>
+                      {normalizePercentage(edu.grade)}
+                    </span>
                   )}
 
                   {edu.description && (
-                    <p className="mt-3 text-sm leading-relaxed" style={{ color: colors.neutral400 }}>
-                      <ReadMoreText text={edu.description || ""} limit={100} mobileLimit={50} />
+                    <p className="text-sm leading-relaxed" style={{ color: colors.neutral300 }}>
+                      {edu.description}
                     </p>
                   )}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+                </motion.div>
+              </FadeInView>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 };
+
+export default React.memo(EducationSection);

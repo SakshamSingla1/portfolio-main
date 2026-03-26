@@ -68,3 +68,14 @@ export const normalizePercentage = (grade?: string): string => {
   return grade.trim();
 };
 
+export const formatDate = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return "Present";
+  try {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+};

@@ -9,6 +9,7 @@ import { SocialLinkPlatform } from "../../utils/constants";
 import { FaGithub, FaLinkedin, FaGlobe, FaGitlab, FaBitbucket, FaStackOverflow, FaHackerrank, FaInstagram, FaFacebook, FaLink } from "react-icons/fa";
 import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
+import React from "react";
 
 interface Props {
   profile: ProfileRequest;
@@ -71,7 +72,7 @@ const stagger = {
   },
 };
 
-export const HeroSection = ({ profile, socialLinks }: Props) => {
+const HeroSection = ({ profile, socialLinks }: Props) => {
   const colors = useColors();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -296,3 +297,5 @@ export const HeroSection = ({ profile, socialLinks }: Props) => {
     </section>
   );
 };
+
+export default React.memo(HeroSection);

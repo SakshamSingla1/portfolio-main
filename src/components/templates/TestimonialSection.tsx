@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
+import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
@@ -10,7 +10,7 @@ interface Props {
   testimonials: Testimonial[];
 }
 
-export const TestimonialsSection = ({ testimonials }: Props) => {
+const TestimonialsSection = ({ testimonials }: Props) => {
   const colors = useColors();
   const [active, setActive] = useState(0);
 
@@ -142,3 +142,5 @@ export const TestimonialsSection = ({ testimonials }: Props) => {
     </section>
   );
 };
+
+export default React.memo(TestimonialsSection);

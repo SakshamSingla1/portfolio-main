@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useColors } from "../../../utils/theme";
+import React from "react";
 
-export const GridBackground = () => {
+const GridBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const colors = useColors();
 
@@ -83,3 +84,5 @@ export const GridBackground = () => {
 
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-80" />;
 };
+
+export default React.memo(GridBackground);

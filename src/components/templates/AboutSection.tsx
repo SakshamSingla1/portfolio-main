@@ -1,107 +1,133 @@
 import { motion } from "framer-motion";
-import { FadeInView } from "../molecules/FadeInView/FadeInView";
-import { SectionHeading } from "../molecules/SectionHeading/SectionHeading";
-import { Code, Palette, Zap, Coffee } from "lucide-react";
-import { useColors } from "../../utils/theme";
 import type { ProfileRequest } from "../../utils/types";
-import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import SectionHeading from "../molecules/SectionHeading/SectionHeading";
+import FadeInView from "../molecules/FadeInView/FadeInView";
+import { useColors, gradients } from "../../utils/theme";
+import { FiCode, FiCoffee, FiZap } from "react-icons/fi";
+import React from "react";
 
-interface Props {
+interface AboutSectionProps {
   profile: ProfileRequest;
 }
 
-const highlights = [
-  { icon: Code, title: "Clean Code", desc: "Well-architected, maintainable solutions", color: "primary" },
-  { icon: Zap, title: "Performance", desc: "Optimized for speed and scalability", color: "warning" },
-  { icon: Palette, title: "Design-Driven", desc: "Beautiful, intuitive user experiences", color: "accent" },
-  { icon: Coffee, title: "Passionate", desc: "Driven by curiosity and craftsmanship", color: "success" },
-];
-
-export const AboutSection = ({ profile }: Props) => {
+const AboutSection = ({ profile }: AboutSectionProps) => {
   const colors = useColors();
+  const g = gradients(colors);
 
-  const colorMap: Record<string, { bg: string; icon: string }> = {
-    primary: { bg: `${colors.primary500}0A`, icon: colors.primary400 },
-    warning: { bg: `${colors.warning500}0A`, icon: colors.warning400 },
-    accent: { bg: `${colors.accent500}0A`, icon: colors.accent400 },
-    success: { bg: `${colors.success500}0A`, icon: colors.success400 },
-  };
+  const stats = [
+    { icon: FiCode, value: "5+", label: "Years Experience", color: colors.primary500 },
+    { icon: FiZap, value: "20+", label: "Projects Shipped", color: colors.accent500 },
+    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.secondary500 },
+  ];
 
   return (
-    <section id="about-me" className="section-container">
-      <SectionHeading title="About Me" subtitle="A little bit about who I am" />
-      <div className="grid md:grid-cols-5 gap-10 items-center">
-        {profile.aboutMeImageUrl && (
-          <FadeInView className="md:col-span-2">
-            <div className="relative group">
-              <div className="rounded-2xl overflow-hidden glow-border">
-                <motion.img
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  src={profile.aboutMeImageUrl}
-                  alt="About"
-                  className="w-full h-72 md:h-96 object-cover"
-                />
-              </div>
+    <section id="about-me" className="section-padding relative">
+      <div className="max-w-6xl mx-auto">
+        <SectionHeading title="About Me" />
+
+        <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
+          {profile.aboutMeImageUrl && (
+            <FadeInView className="relative group">
               <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-3 -right-3 w-20 h-20 rounded-2xl backdrop-blur-sm -z-10"
-                style={{ backgroundColor: `${colors.primary500}0A`, border: `1px solid ${colors.primary500}15` }}
+                className="absolute -inset-4 rounded-2xl opacity-0 group-hover:opacity-40 blur-2xl transition-opacity duration-700"
+                style={{ background: g.cardBorderGradient }}
               />
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-3 -left-3 w-14 h-14 rounded-2xl backdrop-blur-sm -z-10"
-                style={{ backgroundColor: `${colors.accent500}0A`, border: `1px solid ${colors.accent500}15` }}
-              />
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                className="absolute -right-2 top-6 glass-card px-4 py-2.5 text-center"
+              <div
+                className="relative rounded-2xl overflow-hidden"
+                style={{ border: `1px solid ${colors.neutral700}30` }}
               >
-                <p className="text-2xl font-display font-bold" style={{ color: colors.primary400 }}>1+</p>
-                <p className="text-[10px]" style={{ color: `${colors.neutral500}B3` }}>Years Exp</p>
-              </motion.div>
+                <img
+                  src={profile.aboutMeImageUrl}
+                  alt="About me"
+                  className="w-full h-80 lg:h-96 object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0" style={{
+                  background: `linear-gradient(135deg, ${colors.primary900}60 0%, transparent 50%, ${colors.accent900}40 100%)`,
+                }} />
+                <div className="absolute inset-0" style={{
+                  background: `linear-gradient(to top, ${colors.neutral900}90, transparent 50%)`,
+                }} />
+                <div
+                  className="absolute bottom-4 left-4 px-4 py-2 rounded-lg backdrop-blur-md font-mono text-xs"
+                  style={{
+                    background: `${colors.neutral900}90`,
+                    border: `1px solid ${colors.neutral700}40`,
+                    color: colors.primary400,
+                  }}
+                >
+                  <span style={{ color: colors.success500 }}>●</span> Currently building cool stuff
+                </div>
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-12 h-12 border-b-2 border-r-2 rounded-br-xl"
+                style={{ borderColor: `${colors.primary500}25` }} />
+              <div className="absolute -top-2 -left-2 w-12 h-12 border-t-2 border-l-2 rounded-tl-xl"
+                style={{ borderColor: `${colors.accent500}25` }} />
+            </FadeInView>
+          )}
+
+          <FadeInView delay={0.15} className="space-y-6">
+            <div
+              className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden"
+              style={{
+                background: `${colors.neutral800}50`,
+                border: `1px solid ${colors.neutral700}40`,
+              }}
+            >
+              <div className="flex items-center gap-2 mb-5 pb-4" style={{ borderBottom: `1px solid ${colors.neutral700}30` }}>
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full" style={{ background: `${colors.error500}80` }} />
+                  <div className="w-3 h-3 rounded-full" style={{ background: `${colors.warning500}80` }} />
+                  <div className="w-3 h-3 rounded-full" style={{ background: `${colors.success500}80` }} />
+                </div>
+                <span className="font-mono text-xs ml-2" style={{ color: colors.neutral500 }}>about.ts</span>
+              </div>
+
+              <div className="font-mono text-xs mb-3" style={{ color: colors.neutral500 }}>
+                <span style={{ color: colors.accent400 }}>const</span>{" "}
+                <span style={{ color: colors.primary400 }}>aboutMe</span>{" "}
+                <span style={{ color: colors.neutral600 }}>=</span>{" "}
+                <span style={{ color: colors.success400 }}>{"{"}</span>
+              </div>
+              <p
+                className="leading-relaxed text-base md:text-lg pl-4 border-l-2"
+                style={{ color: `${colors.neutral200}DD`, borderColor: `${colors.primary500}25` }}
+              >
+                {profile.aboutMe}
+              </p>
+              <div className="font-mono text-xs mt-3" style={{ color: colors.success400 }}>{"}"}</div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              {stats.map((stat) => (
+                <motion.div
+                  key={stat.label}
+                  whileHover={{ y: -4, boxShadow: `0 8px 24px ${stat.color}18` }}
+                  className="rounded-xl p-4 text-center backdrop-blur-md transition-all duration-300"
+                  style={{
+                    background: `${colors.neutral800}50`,
+                    border: `1px solid ${colors.neutral700}35`,
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${stat.color}35`; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `${colors.neutral700}35`; }}
+                >
+                  <stat.icon size={18} style={{ color: stat.color }} className="mx-auto mb-2" />
+                  <div
+                    className="text-2xl font-bold font-display bg-clip-text text-transparent"
+                    style={{ backgroundImage: `linear-gradient(135deg, ${stat.color}, ${colors.accent400})` }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral500 }}>
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </FadeInView>
-        )}
-        <FadeInView delay={0.15} className="md:col-span-3 space-y-6">
-          <p className="text-base md:text-lg leading-relaxed" style={{ color: `${colors.neutral300}E6` }}>
-            <ReadMoreText
-              text={profile.aboutMe || ""}
-              className="preview"
-            />
-          </p>
-          <div className="grid grid-cols-2 gap-3 pt-2">
-            {highlights.map((h, i) => {
-              const c = colorMap[h.color];
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 + i * 0.08 }}
-                  whileHover={{ y: -3 }}
-                  className="glass-card-premium p-4 cursor-default"
-                >
-                  <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
-                    style={{ backgroundColor: c.bg }}
-                  >
-                    <h.icon className="w-4 h-4" style={{ color: c.icon }} />
-                  </div>
-                  <h4 className="font-display text-sm font-semibold mb-1" style={{ color: colors.neutral100 }}>{h.title}</h4>
-                  <p className="text-xs leading-relaxed" style={{ color: `${colors.neutral500}CC` }}>{h.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </FadeInView>
+        </div>
       </div>
     </section>
   );
 };
+
+export default React.memo(AboutSection);

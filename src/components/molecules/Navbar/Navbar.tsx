@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
@@ -9,7 +9,7 @@ interface Props {
   profileName?: string;
 }
 
-export const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
+const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
   const colors = useColors();
   const g = gradients(colors);
   const [scrolled, setScrolled] = useState(false);
@@ -144,3 +144,5 @@ export const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
     </motion.nav>
   );
 };
+
+export default React.memo(Navbar);

@@ -1,52 +1,36 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { generateNavItems } from "../../utils/helper";
+import { Status } from "../../utils/types";
+import type { ProfileMaster } from "../../utils/types";
+import { useColors } from "../../utils/theme";
 
-import { GridBackground } from "../molecules/GridBackground/GridBackground";
-import { ScrollProgress } from "../molecules/ScrollProgress/ScrollProgress";
-import { MouseGlow } from "../molecules/MouseGlow/MouseGlow";
-import { Navbar } from "../molecules/Navbar/Navbar";
-import { HeroSection } from "../templates/HeroSection";
-import { AboutSection } from "../templates/AboutSection";
-import { SkillsSection } from "../templates/SkillSection";
-import { ExperienceSection } from "../templates/ExperienceSection";
-import { ProjectsSection } from "../templates/ProjectSection";
-import { EducationSection } from "../templates/EducationSection";
-import { TestimonialsSection } from "../templates/TestimonialSection";
-import {
-  AchievementsSection,
-  CertificationsSection,
-} from "../templates/AchievementSection";
-import { ContactSection } from "../templates/ContactSection";
-import { Footer } from "../molecules/Footer/Footer";
+import Navbar from "../molecules/Navbar/Navbar";
+import HeroSection from "../templates/HeroSection";
+import AboutSection from "../templates/AboutSection";
+import SkillsSection from "../templates/SkillSection";
+import ExperienceSection from "../templates/ExperienceSection";
+import ProjectsSection from "../templates/ProjectSection";
+import AchievementsSection from "../templates/AchievementSection";
+import CertificationsSection from "../templates/CertificationSection";
+import EducationSection from "../templates/EducationSection";
+import TestimonialsSection from "../templates/TestimonialSection";
+import ContactSection from "../templates/ContactSection";
+import Footer from "../molecules/Footer/Footer";
+import SectionDivider from "../molecules/SectionDivider/SectionDivider";
+import ScrollToTop from "../molecules/ScrollToTop/ScrollToTop";
+import MouseGlow from "../molecules/MouseGlow/MouseGlow";
 
-import { useProfileMasterService } from "../../services/useProfileMasterService";
+import GridBackground from "../molecules/GridBackground/GridBackground";
+import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
+import useProfileMasterService from "../../services/useProfileMasterService";
 import { HTTP_STATUS } from "../../utils/constants";
-import type { ProfileMaster, NavItem } from "../../utils/types";
-
-const generateNavItems = (data: ProfileMaster | null): NavItem[] => {
-  if (!data) return [];
-
-  const items: NavItem[] = [{ label: "Home", section: "hero" }];
-
-  if (data.profile?.aboutMe) items.push({ label: "About", section: "about-me" });
-  if (data.skills?.length) items.push({ label: "Skills", section: "skills" });
-  if (data.experiences?.length) items.push({ label: "Experience", section: "experience" });
-  if (data.projects?.length) items.push({ label: "Projects", section: "projects" });
-  if (data.achievements?.length) items.push({ label: "Achievements", section: "achievements" });
-  if (data.certifications?.length) items.push({ label: "Certifications", section: "certifications" });
-  if (data.educations?.length) items.push({ label: "Education", section: "education" });
-  if (data.testimonials?.length) items.push({ label: "Testimonials", section: "testimonials" });
-
-  items.push({ label: "Contact", section: "contact" });
-
-  return items;
-};
 
 const Index = () => {
+  const colors = useColors();
   const profileService = useProfileMasterService();
 
   const [data, setData] = useState<ProfileMaster | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchProfile = async () => {
     try {
@@ -55,11 +39,7 @@ const Index = () => {
 
       if (res?.status === HTTP_STATUS.OK) {
         setData(res.data.data);
-      } else {
-        setError("Failed to load profile");
       }
-    } catch {
-      setError("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -71,67 +51,148 @@ const Index = () => {
 
   const navItems = useMemo(() => generateNavItems(data), [data]);
 
-  // ================= LOADING =================
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-neutral-400">
-        Loading portfolio...
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: colors.neutral900 }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="w-10 h-10 rounded-full animate-spin"
+            style={{
+              border: `2px solid ${colors.primary500}`,
+              borderTopColor: "transparent",
+            }}
+          />
+          <p className="font-mono text-sm" style={{ color: colors.neutral500 }}>
+            Loading...
+          </p>
+        </div>
       </div>
     );
   }
 
-  // ================= ERROR =================
-  if (error || !data || !data.profile) {
+  if (!data?.profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-red-500 text-sm">
-        {error || "No data found"}
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: colors.neutral900 }}
+      >
+        <div className="text-center">
+          <h1
+            className="text-6xl font-display font-bold mb-3"
+            style={{ color: colors.primary500 }}
+          >
+            404
+          </h1>
+          <p className="font-mono" style={{ color: colors.neutral500 }}>
+            Profile not found
+          </p>
+        </div>
       </div>
     );
   }
 
-  // ================= UI =================
+  const profile = data.profile;
+
+  const activeSocialLinks = data.socialLinks.filter(
+    (l) => l.status === Status.ACTIVE
+  );
+  const activeTestimonials = data.testimonials.filter(
+    (t) => t.status === Status.ACTIVE
+  );
+  const activeAchievements = data.achievements.filter(
+    (a) => a.status === Status.ACTIVE
+  );
+  const activeCertifications = data.certifications.filter(
+    (c) => c.status === Status.ACTIVE
+  );
+
+  const sections: React.ReactNode[] = [];
+
+  sections.push(
+    <HeroSection key="hero" profile={profile} socialLinks={activeSocialLinks} />
+  );
+
+  if (profile.aboutMe) {
+    sections.push(<SectionDivider key="div-about" />);
+    sections.push(<AboutSection key="about" profile={profile} />);
+  }
+
+  if (data.skills.length > 0) {
+    sections.push(<SectionDivider key="div-skills" />);
+    sections.push(<SkillsSection key="skills" skills={data.skills} />);
+  }
+
+  if (data.experiences.length > 0) {
+    sections.push(<SectionDivider key="div-exp" />);
+    sections.push(
+      <ExperienceSection key="experience" experiences={data.experiences} />
+    );
+  }
+
+  if (data.projects.length > 0) {
+    sections.push(<SectionDivider key="div-proj" />);
+    sections.push(
+      <ProjectsSection key="projects" projects={data.projects} />
+    );
+  }
+
+  if (activeAchievements.length > 0) {
+    sections.push(<SectionDivider key="div-ach" />);
+    sections.push(
+      <AchievementsSection
+        key="achievements"
+        achievements={activeAchievements}
+      />
+    );
+  }
+
+  if (activeCertifications.length > 0) {
+    sections.push(<SectionDivider key="div-cert" />);
+    sections.push(
+      <CertificationsSection
+        key="certifications"
+        certifications={activeCertifications}
+      />
+    );
+  }
+
+  if (data.educations.length > 0) {
+    sections.push(<SectionDivider key="div-edu" />);
+    sections.push(
+      <EducationSection key="education" educations={data.educations} />
+    );
+  }
+
+  if (activeTestimonials.length > 0) {
+    sections.push(<SectionDivider key="div-test" />);
+    sections.push(
+      <TestimonialsSection
+        key="testimonials"
+        testimonials={activeTestimonials}
+      />
+    );
+  }
+
+  sections.push(<SectionDivider key="div-contact" />);
+  sections.push(<ContactSection key="contact" profile={profile} />);
+
   return (
-    <div className="min-h-screen bg-background relative noise-overlay">
-      <ScrollProgress />
-      <MouseGlow />
+    <div
+      className="min-h-screen relative"
+      style={{ background: colors.neutral900, color: colors.neutral100 }}
+    >
       <GridBackground />
+      <ScrollProgress />
 
       <div className="relative z-10">
-        <Navbar items={navItems} profileName={data.profile.fullName} />
-
-        <HeroSection profile={data.profile} socialLinks={data.socialLinks} />
-
-        {data.profile.aboutMe && <AboutSection profile={data.profile} />}
-        <div className="section-divider" />
-
-        {data.skills?.length > 0 && <SkillsSection skills={data.skills} />}
-        <div className="section-divider" />
-
-        {data.experiences?.length > 0 && <ExperienceSection experiences={data.experiences} />}
-        <div className="section-divider" />
-
-        {data.projects?.length > 0 && <ProjectsSection projects={data.projects} />}
-        <div className="section-divider" />
-
-        {data.achievements?.length > 0 && (
-          <AchievementsSection achievements={data.achievements} />
-        )}
-        {data.certifications?.length > 0 && (
-          <CertificationsSection certifications={data.certifications} />
-        )}
-        <div className="section-divider" />
-
-        {data.educations?.length > 0 && <EducationSection educations={data.educations} />}
-        <div className="section-divider" />
-
-        {data.testimonials?.length > 0 && (
-          <TestimonialsSection testimonials={data.testimonials} />
-        )}
-        <div className="section-divider" />
-
-        <ContactSection profile={data.profile} />
-
-        <Footer profile={data.profile} socialLinks={data.socialLinks} />
+        <MouseGlow />
+        <Navbar items={navItems || []} profileName={profile.fullName || ""} />
+        <main>{sections}</main>
+        <Footer profile={profile} socialLinks={activeSocialLinks} />
+        <ScrollToTop />
       </div>
     </div>
   );

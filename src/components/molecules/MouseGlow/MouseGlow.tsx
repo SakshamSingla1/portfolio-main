@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useColors } from "../../../utils/theme";
+import React from "react";
 
-export const MouseGlow = () => {
+const MouseGlow = () => {
   const ref = useRef<HTMLDivElement>(null);
   const colors = useColors();
   const pos = useRef({ x: 0, y: 0 });
@@ -11,7 +12,6 @@ export const MouseGlow = () => {
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       pos.current = { x: e.clientX, y: e.clientY };
-      // Update CSS vars for glass-card-premium hover effect
       document.documentElement.style.setProperty("--mouse-x", `${e.clientX}px`);
       document.documentElement.style.setProperty("--mouse-y", `${e.clientY}px`);
     };
@@ -41,3 +41,5 @@ export const MouseGlow = () => {
     />
   );
 };
+
+export default React.memo(MouseGlow);

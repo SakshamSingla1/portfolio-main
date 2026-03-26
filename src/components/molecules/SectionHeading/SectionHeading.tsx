@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { useColors } from "../../../utils/theme";
+import React from "react";
 
 interface Props {
   title: string;
   subtitle?: string;
 }
 
-export const SectionHeading = ({ title, subtitle }: Props) => {
+const SectionHeading = ({ title, subtitle }: Props) => {
   const colors = useColors();
 
   return (
@@ -58,3 +59,5 @@ export const SectionHeading = ({ title, subtitle }: Props) => {
     </div>
   );
 };
+
+export default React.memo(SectionHeading);

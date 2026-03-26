@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import React from "react";
 
 interface Props {
   children: ReactNode;
@@ -7,7 +8,7 @@ interface Props {
   delay?: number;
 }
 
-export const FadeInView = ({ children, className = "", delay = 0 }: Props) => (
+const FadeInView = ({ children, className = "", delay = 0 }: Props) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -18,3 +19,5 @@ export const FadeInView = ({ children, className = "", delay = 0 }: Props) => (
     {children}
   </motion.div>
 );
+
+export default React.memo(FadeInView);
