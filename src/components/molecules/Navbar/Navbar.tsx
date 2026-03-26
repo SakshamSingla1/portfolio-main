@@ -71,10 +71,10 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
           onClick={() => scrollTo("hero")}
         >
           {logoUrl ? (
-            <>
+            <div className="flex items-center gap-2">
               <img src={logoUrl} alt="Logo" className="h-8 w-8 rounded-full" />
               {profileName}
-            </>
+            </div>
           ) : (
             profileName
           )}
