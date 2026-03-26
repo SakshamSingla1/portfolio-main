@@ -15,12 +15,19 @@ const TestimonialsSection = ({ testimonials }: Props) => {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => setActive((a) => (a + 1) % testimonials.length), 6000);
+    if (!testimonials.length) return;
+    const timer = setInterval(() => {
+      setActive((a) => (a + 1) % testimonials.length);
+    }, 6000);
     return () => clearInterval(timer);
   }, [testimonials.length]);
 
+  if (!testimonials.length) return null;
+
+  const current = testimonials[active];
+
   return (
-    <section id="testimonials" className="section-container">
+    <section id="testimonials" className="section-container !pt-0">
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
       <div className="max-w-3xl mx-auto">
@@ -29,7 +36,6 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
           </div>
 
-          {/* Stars */}
           <div className="flex gap-0.5 mb-6">
             {[...Array(5)].map((_, s) => (
               <Star key={s} className="w-4 h-4" style={{ fill: colors.warning400, color: colors.warning400 }} />
@@ -49,43 +55,52 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 style={{ color: `${colors.neutral300}E6` }}
               >
                 <ReadMoreText
-                  text={testimonials[active].message || ""}
+                  text={current.message || ""}
                   limit={200}
                   mobileLimit={100}
                   className="italic text-sm leading-relaxed border-l-4 pl-4"
                 />
               </div>
+
               <div className="flex items-center gap-4">
-                {testimonials[active].imageUrl && (
+                {current.imageUrl && (
                   <div className="relative">
                     <img
-                      src={testimonials[active].imageUrl}
-                      alt={testimonials[active].name}
+                      src={current.imageUrl}
+                      alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
                       style={{ border: `2px solid ${colors.primary500}26` }}
                     />
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
-                      style={{ backgroundColor: colors.primary500, border: `2px solid hsl(var(--background))` }}
+                      style={{
+                        backgroundColor: colors.primary500,
+                        border: `2px solid hsl(var(--background))`,
+                      }}
                     >
                       <span className="text-[8px] text-white font-bold">✓</span>
                     </div>
                   </div>
                 )}
+
                 <div>
-                  <p className="font-display font-semibold text-sm" style={{ color: colors.neutral100 }}>{testimonials[active].name}</p>
+                  <p className="font-display font-semibold text-sm" style={{ color: colors.neutral100 }}>
+                    {current.name}
+                  </p>
                   <p className="text-xs" style={{ color: `${colors.neutral500}CC` }}>
-                    {testimonials[active].role} at{" "}
-                    <span style={{ color: `${colors.primary400}99` }}>{testimonials[active].company}</span>
+                    {current.role} at{" "}
+                    <span style={{ color: `${colors.primary400}99` }}>{current.company}</span>
                   </p>
                 </div>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation */}
           {testimonials.length > 1 && (
-            <div className="flex items-center justify-between mt-8 pt-5" style={{ borderTop: `1px solid ${colors.neutral700}20` }}>
+            <div
+              className="flex items-center justify-between mt-8 pt-5"
+              style={{ borderTop: `1px solid ${colors.neutral700}20` }}
+            >
               <div className="flex gap-2">
                 {testimonials.map((_, idx) => (
                   <button
@@ -94,23 +109,34 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                     className="h-1 rounded-full transition-all duration-500"
                     style={{
                       width: idx === active ? "1.5rem" : "0.5rem",
-                      backgroundColor: idx === active ? colors.primary400 : `${colors.neutral600}60`,
+                      backgroundColor:
+                        idx === active ? colors.primary400 : `${colors.neutral600}60`,
                     }}
                   />
                 ))}
               </div>
+
               <div className="flex gap-1.5">
                 <button
-                  onClick={() => setActive((a) => (a - 1 + testimonials.length) % testimonials.length)}
+                  onClick={() =>
+                    setActive((a) => (a - 1 + testimonials.length) % testimonials.length)
+                  }
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
-                  style={{ border: `1px solid ${colors.neutral700}33`, color: colors.neutral400 }}
+                  style={{
+                    border: `1px solid ${colors.neutral700}33`,
+                    color: colors.neutral400,
+                  }}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
+
                 <button
                   onClick={() => setActive((a) => (a + 1) % testimonials.length)}
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
-                  style={{ border: `1px solid ${colors.neutral700}33`, color: colors.neutral400 }}
+                  style={{
+                    border: `1px solid ${colors.neutral700}33`,
+                    color: colors.neutral400,
+                  }}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -119,18 +145,20 @@ const TestimonialsSection = ({ testimonials }: Props) => {
           )}
         </div>
 
-        {/* Avatars */}
         <div className="flex items-center justify-center gap-2.5 mt-6">
           {testimonials.map((t, i) => (
             <motion.button
               key={i}
               onClick={() => setActive(i)}
               whileHover={{ scale: 1.1 }}
-              className="rounded-full transition-all duration-400 overflow-hidden"
+              className="rounded-full overflow-hidden"
               style={{
                 width: i === active ? "2.75rem" : "2.25rem",
                 height: i === active ? "2.75rem" : "2.25rem",
-                border: i === active ? `2px solid ${colors.primary400}` : `2px solid ${colors.neutral700}50`,
+                border:
+                  i === active
+                    ? `2px solid ${colors.primary400}`
+                    : `2px solid ${colors.neutral700}50`,
                 opacity: i === active ? 1 : 0.5,
               }}
             >
