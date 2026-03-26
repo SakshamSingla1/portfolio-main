@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
@@ -19,31 +19,13 @@ const ProjectCard = React.memo(({ project, idx, colors, s }: {
   s: any;
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
-  const [showRepos, setShowRepos] = useState(false);
-  const repoRef = useRef<HTMLDivElement | null>(null);
-
   const images = project.projectImages;
 
   const nextImage = () =>
     setCurrentImage((c) => (c + 1) % images.length);
+
   const prevImage = () =>
     setCurrentImage((c) => (c - 1 + images.length) % images.length);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (repoRef.current && !repoRef.current.contains(e.target as Node)) {
-        setShowRepos(false);
-      }
-    };
-
-    if (showRepos) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showRepos]);
 
   return (
     <FadeInView delay={idx * 0.15}>
@@ -128,84 +110,74 @@ const ProjectCard = React.memo(({ project, idx, colors, s }: {
                 <FiExternalLink size={14} /> Live
               </a>
             )}
+          </div>
 
-            <div className="relative" ref={repoRef}>
-              {project.githubRepositories.length === 1 ? (
-                <a
-                  href={project.githubRepositories[0]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-mono"
+          {project.githubRepositories.length > 0 && (
+            <div
+              className="mt-4 pt-4 border-t"
+              style={{ borderColor: `${colors.neutral700}30` }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <FiGithub size={14} style={{ color: colors.neutral400 }} />
+                <span
+                  className="text-xs font-mono"
                   style={{ color: colors.neutral400 }}
                 >
-                  <FiGithub size={14} /> Code
-                </a>
-              ) : project.githubRepositories.length > 1 ? (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowRepos((p) => !p);
-                    }}
-                    className="inline-flex items-center gap-1.5 text-sm font-mono"
-                    style={{ color: colors.neutral400 }}
-                  >
-                    <FiGithub size={14} /> Code
-                  </button>
+                  Repositories
+                </span>
+              </div>
 
-                  <AnimatePresence>
-                    {showRepos && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 5 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        className="absolute left-0 top-full mt-2 w-44 rounded-lg z-50"
-                        style={{
-                          background: `${colors.neutral900}EE`,
-                          border: `1px solid ${colors.neutral700}40`,
-                        }}
-                      >
-                        {project.githubRepositories.map((repo, i) => (
-                          <a
-                            key={i}
-                            href={repo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block px-3 py-2 text-xs font-mono hover:bg-white/5"
-                            style={{ color: colors.neutral200 }}
-                          >
-                            Repo {i + 1}
-                          </a>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              ) : null}
+              <div className="flex flex-wrap gap-2">
+                {project.githubRepositories.map((repo, i) => (
+                  <a
+                    key={i}
+                    href={repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono px-2 py-1 rounded-md transition-all"
+                    style={{
+                      background: `${colors.neutral700}40`,
+                      color: colors.neutral200,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = `${colors.primary500}20`;
+                      e.currentTarget.style.color = colors.primary300;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = `${colors.neutral700}40`;
+                      e.currentTarget.style.color = colors.neutral200;
+                    }}
+                  >
+                    {repo.split("/").pop()}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </motion.div>
     </FadeInView>
   );
-}
-);
+});
 
 const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const colors = useColors();
   const s = shadows(colors);
 
   return (
-    <section
-      id="projects"
-      className="section-padding relative"
-    >
+    <section id="projects" className="section-padding relative">
       <div className="max-w-6xl mx-auto">
         <SectionHeading title="Projects" subtitle="Things I've built and shipped" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, idx) => (
-            <ProjectCard key={project.id} project={project} idx={idx} colors={colors} s={s} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              idx={idx}
+              colors={colors}
+              s={s}
+            />
           ))}
         </div>
       </div>
