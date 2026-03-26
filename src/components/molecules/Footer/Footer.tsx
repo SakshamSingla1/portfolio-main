@@ -51,7 +51,7 @@ const Footer = ({ profile, socialLinks }: Props) => {
   const g = gradients(colors);
 
   return (
-    <footer className="relative py-10 px-4 md:px-8" style={{ background: colors.neutral900 }}>
+    <footer className="relative py-10 px-4 md:px-8 mb-12" style={{ background: colors.neutral900 }}>
       <div className="absolute top-0 inset-x-0 h-px" style={{ background: g.dividerGradient, opacity: 0.2 }} />
 
       <div className="max-w-6xl mx-auto">

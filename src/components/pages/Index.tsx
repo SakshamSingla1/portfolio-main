@@ -202,7 +202,7 @@ const Index = () => {
   }
 
   sections.push(
-    <div key="contact" className="mb-15">
+    <div key="contact" className="mb-40">
       <ContactSection profile={profile} />
     </div>
   );
