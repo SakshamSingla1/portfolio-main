@@ -39,7 +39,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
     const el = document.getElementById(section);
     if (!el) return;
 
-    const yOffset = -80;
+    const yOffset = -100;
     const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
 
     window.scrollTo({ top: y, behavior: "smooth" });
@@ -47,41 +47,40 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
+      initial={{ y: -120 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.7 }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={
         scrolled
           ? {
               backgroundColor: `${colors.neutral900}CC`,
-              backdropFilter: "blur(20px)",
+              backdropFilter: "blur(24px)",
               borderBottom: `1px solid ${colors.neutral700}33`,
             }
           : undefined
       }
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-
+      <div className="max-w-350 xl:max-w-400 mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-20 xl:h-24">
         <span
-          className="font-display font-bold text-lg cursor-pointer bg-clip-text text-transparent"
+          className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer bg-clip-text text-transparent flex items-center gap-3"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
           }}
           onClick={() => scrollTo("hero")}
         >
-          {logoUrl ? (
-            <div className="flex items-center gap-2">
-              <img src={logoUrl} alt="Logo" className="h-8 w-8 rounded-full" />
-              {profileName}
-            </div>
-          ) : (
-            profileName
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="Logo"
+              className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full"
+            />
           )}
+          {profileName}
         </span>
 
         <div
-          className="hidden md:flex items-center gap-1 rounded-full px-2 py-1"
+          className="hidden md:flex items-center gap-2 rounded-full px-3 py-2 lg:px-4 lg:py-2.5"
           style={{
             backgroundColor: `${colors.neutral800}60`,
             border: `1px solid ${colors.neutral700}33`,
@@ -91,7 +90,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
             <button
               key={item.section}
               onClick={() => scrollTo(item.section)}
-              className="relative text-xs px-3 py-1.5 rounded-full transition-all"
+              className="relative text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-all"
               style={{
                 color:
                   activeSection === item.section
@@ -116,47 +115,47 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
 
         <button
           onClick={() => scrollTo("contact")}
-          className="hidden md:flex items-center gap-1 text-xs px-4 py-2 rounded-xl font-semibold text-white"
+          className="hidden md:flex items-center gap-2 text-sm lg:text-base px-5 py-2.5 lg:px-6 lg:py-3 xl:px-7 xl:py-3.5 rounded-xl font-semibold text-white shadow-lg"
           style={{ background: g.ctaGradient }}
         >
-          Hire Me <ArrowUpRight className="w-3 h-3" />
+          Hire Me <ArrowUpRight className="w-4 h-4 lg:w-5 lg:h-5" />
         </button>
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 rounded-lg"
+          className="md:hidden p-2.5 rounded-lg"
           style={{ color: colors.neutral200 }}
         >
-          {mobileOpen ? <X /> : <Menu />}
+          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.25 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
             className="md:hidden absolute top-16 left-0 right-0 z-40"
             style={{
               backgroundColor: `${colors.neutral900}F2`,
-              backdropFilter: "blur(20px)",
+              backdropFilter: "blur(24px)",
               borderBottom: `1px solid ${colors.neutral700}33`,
             }}
           >
-            <div className="px-4 py-4 space-y-2">
+            <div className="px-5 py-5 space-y-3">
               {items.map((item, i) => (
                 <motion.button
                   key={item.section}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
                   onClick={() => {
                     setMobileOpen(false);
                     setTimeout(() => scrollTo(item.section), 200);
                   }}
-                  className="block w-full text-left py-2.5 px-3 text-sm rounded-xl"
+                  className="block w-full text-left py-3 px-4 text-base rounded-xl"
                   style={
                     activeSection === item.section
                       ? {
