@@ -100,14 +100,14 @@ const Index = () => {
   const sections: React.ReactNode[] = [];
 
   sections.push(
-    <div key="hero" className="mb-20">
+    <div key="hero" className="mb-10">
       <HeroSection profile={profile} socialLinks={activeSocialLinks} />
     </div>
   );
 
   if (profile.aboutMe) {
     sections.push(
-      <div key="about" className="mb-20">
+      <div key="about" className="mb-10">
         <AboutSection profile={profile} />
       </div>
     );
@@ -115,7 +115,7 @@ const Index = () => {
 
   if (data.skills.length > 0) {
     sections.push(
-      <div key="skills" className="mb-20">
+      <div key="skills" className="mb-10">
         <SkillsSection skills={data.skills} />
       </div>
     );
@@ -123,7 +123,7 @@ const Index = () => {
 
   if (data.experiences.length > 0) {
     sections.push(
-      <div key="experience" className="mb-20">
+      <div key="experience" className="mb-10">
         <ExperienceSection experiences={data.experiences} />
       </div>
     );
@@ -131,7 +131,7 @@ const Index = () => {
 
   if (data.projects.length > 0) {
     sections.push(
-      <div key="projects" className="mb-20">
+      <div key="projects" className="mb-10">
         <ProjectsSection projects={data.projects} />
       </div>
     );
@@ -139,7 +139,7 @@ const Index = () => {
 
   if (activeAchievements.length > 0) {
     sections.push(
-      <div key="achievements" className="mb-20">
+      <div key="achievements" className="mb-10">
         <AchievementsSection achievements={activeAchievements} />
       </div>
     );
@@ -147,7 +147,7 @@ const Index = () => {
 
   if (activeCertifications.length > 0) {
     sections.push(
-      <div key="certifications" className="mb-20">
+      <div key="certifications" className="mb-10">
         <CertificationsSection certifications={activeCertifications} />
       </div>
     );
@@ -155,7 +155,7 @@ const Index = () => {
 
   if (data.educations.length > 0) {
     sections.push(
-      <div key="education" className="mb-20">
+      <div key="education" className="mb-10">
         <EducationSection educations={data.educations} />
       </div>
     );
@@ -163,14 +163,14 @@ const Index = () => {
 
   if (activeTestimonials.length > 0) {
     sections.push(
-      <div key="testimonials" className="mb-20">
+      <div key="testimonials" className="mb-10">
         <TestimonialsSection testimonials={activeTestimonials} />
       </div>
     );
   }
 
   sections.push(
-    <div key="contact" className="mb-24">
+    <div key="contact" className="mb-10">
       <ContactSection profile={profile} />
     </div>
   );

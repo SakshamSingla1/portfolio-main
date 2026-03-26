@@ -90,14 +90,14 @@ const AboutSection = ({ profile }: AboutSectionProps) => {
                 <span style={{ color: colors.success400 }}>{"{"}</span>
               </div>
               <div
-                className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
+                className="text-lg md:text-xl leading-relaxed mb-8 font-light flex items-center"
                 style={{ color: `${colors.neutral300}E6` }}
               >
                 <ReadMoreText
                   text={profile.aboutMe || ""}
                   limit={200}
                   mobileLimit={100}
-                  className="italic text-sm leading-relaxed border-l-4 pl-4"
+                  className="text-sm leading-relaxed border-l-4 pl-4"
                 />
               </div>
               <div className="font-mono text-xs mt-3" style={{ color: colors.success400 }}>{"}"}</div>

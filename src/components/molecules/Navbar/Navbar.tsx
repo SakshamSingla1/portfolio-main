@@ -12,6 +12,7 @@ interface Props {
 const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
   const colors = useColors();
   const g = gradients(colors);
+
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -19,6 +20,7 @@ const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
+
       for (const item of [...items].reverse()) {
         const el = document.getElementById(item.section);
         if (el && el.getBoundingClientRect().top <= 150) {
@@ -27,41 +29,51 @@ const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
         }
       }
     };
+
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, [items]);
 
   const scrollTo = (section: string) => {
-    document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
-    setMobileOpen(false);
+    const el = document.getElementById(section);
+    if (!el) return;
+
+    const yOffset = -80;
+    const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
   };
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6 }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={scrolled ? {
-        backgroundColor: `${colors.neutral900}CC`,
-        backdropFilter: "blur(24px) saturate(180%)",
-        borderBottom: `1px solid ${colors.neutral700}33`,
-        boxShadow: `0 4px 30px ${colors.neutral900}80`,
-      } : undefined}
+      style={
+        scrolled
+          ? {
+              backgroundColor: `${colors.neutral900}CC`,
+              backdropFilter: "blur(20px)",
+              borderBottom: `1px solid ${colors.neutral700}33`,
+            }
+          : undefined
+      }
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <motion.span
-          whileHover={{ scale: 1.05 }}
+
+        <span
           className="font-display font-bold text-lg cursor-pointer bg-clip-text text-transparent"
-          style={{ backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})` }}
+          style={{
+            backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
+          }}
           onClick={() => scrollTo("hero")}
         >
-          {profileName.split(" ")[0]}
-          <span className="text-primary">.</span>
-        </motion.span>
+          {profileName.split(" ")[0]}.
+        </span>
 
         <div
-          className="hidden md:flex items-center gap-0.5 rounded-full px-1.5 py-1 backdrop-blur-sm"
+          className="hidden md:flex items-center gap-1 rounded-full px-2 py-1"
           style={{
             backgroundColor: `${colors.neutral800}60`,
             border: `1px solid ${colors.neutral700}33`,
@@ -71,66 +83,79 @@ const Navbar = ({ items, profileName = "Portfolio" }: Props) => {
             <button
               key={item.section}
               onClick={() => scrollTo(item.section)}
-              className="relative text-xs px-3 py-1.5 rounded-full transition-all duration-300"
-              style={{ color: activeSection === item.section ? colors.primary400 : colors.neutral500 }}
+              className="relative text-xs px-3 py-1.5 rounded-full transition-all"
+              style={{
+                color:
+                  activeSection === item.section
+                    ? colors.primary400
+                    : colors.neutral500,
+              }}
             >
               {activeSection === item.section && (
                 <motion.div
                   layoutId="activeNav"
                   className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: `${colors.primary500}1A`, border: `1px solid ${colors.primary500}26` }}
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                  style={{
+                    backgroundColor: `${colors.primary500}1A`,
+                    border: `1px solid ${colors.primary500}26`,
+                  }}
                 />
               )}
-              <span className="relative z-10 font-medium">{item.label}</span>
+              <span className="relative z-10">{item.label}</span>
             </button>
           ))}
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={() => scrollTo("contact")}
-          className="hidden md:flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl font-semibold text-white transition-all"
+          className="hidden md:flex items-center gap-1 text-xs px-4 py-2 rounded-xl font-semibold text-white"
           style={{ background: g.ctaGradient }}
         >
           Hire Me <ArrowUpRight className="w-3 h-3" />
-        </motion.button>
+        </button>
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 rounded-lg transition-colors"
-          style={{ color: colors.neutral200, backgroundColor: mobileOpen ? `${colors.neutral800}80` : "transparent" }}
+          className="md:hidden p-2 rounded-lg"
+          style={{ color: colors.neutral200 }}
         >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileOpen ? <X /> : <Menu />}
         </button>
       </div>
 
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="md:hidden absolute top-16 left-0 right-0 z-40"
             style={{
               backgroundColor: `${colors.neutral900}F2`,
-              backdropFilter: "blur(24px)",
+              backdropFilter: "blur(20px)",
               borderBottom: `1px solid ${colors.neutral700}33`,
             }}
           >
-            <div className="px-4 py-4 space-y-1">
+            <div className="px-4 py-4 space-y-2">
               {items.map((item, i) => (
                 <motion.button
                   key={item.section}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  onClick={() => scrollTo(item.section)}
-                  className="block w-full text-left py-2.5 px-3 text-sm rounded-xl transition-all"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setTimeout(() => scrollTo(item.section), 200);
+                  }}
+                  className="block w-full text-left py-2.5 px-3 text-sm rounded-xl"
                   style={
                     activeSection === item.section
-                      ? { backgroundColor: `${colors.primary500}1A`, color: colors.primary400, fontWeight: 500 }
+                      ? {
+                          backgroundColor: `${colors.primary500}1A`,
+                          color: colors.primary400,
+                          fontWeight: 500,
+                        }
                       : { color: colors.neutral500 }
                   }
                 >

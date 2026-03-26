@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { MapPin, ArrowDown, Download, Sparkles, Code2, Layers, Rocket } from "lucide-react";
+import { MapPin, ArrowDown, Download } from "lucide-react";
 import { TypewriterText } from "../molecules/TypewriterText/TypewriterText";
-import { AnimatedCounter } from "../molecules/AnimatedCounter/AnimatedCounter";
 import { useColors, gradients } from "../../utils/theme";
 import type { ProfileRequest, SocialLinkResponse } from "../../utils/types";
 import { useRef } from "react";
@@ -10,6 +9,7 @@ import { FaGithub, FaLinkedin, FaGlobe, FaGitlab, FaBitbucket, FaStackOverflow, 
 import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
 import React from "react";
+import { usePublicResumeService } from "../../services/usePublicResumeService";
 
 interface Props {
   profile: ProfileRequest;
@@ -50,13 +50,6 @@ const getSocialIcon = (platform: string) => {
   }
 };
 
-const stats = [
-  { value: 6, suffix: "+", label: "Years Exp.", icon: Rocket },
-  { value: 50, suffix: "K+", label: "Users Served", icon: Layers },
-  { value: 15, suffix: "+", label: "Projects", icon: Code2 },
-  { value: 99, suffix: "%", label: "Satisfaction", icon: Sparkles },
-];
-
 const stagger = {
   container: { hidden: {}, visible: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } } },
   item: { 
@@ -80,9 +73,15 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
   const opacityFade = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.97]);
   const g = gradients(colors);
+  const publicResumeService = usePublicResumeService();
 
   const scrollToAbout = () => {
     document.getElementById("about-me")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleDownloadResume = () => {
+    const url = publicResumeService.getDownloadResumeUrl(profile.userName);
+    window.open(url, "_blank");
   };
 
   return (
@@ -224,6 +223,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   color: colors.primary400,
                   backgroundColor: `${colors.primary500}08`,
                 }}
+                onClick={handleDownloadResume}
               >
                 <Download className="w-4 h-4" /> Resume
               </motion.button>
@@ -255,28 +255,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto mt-20"
-        >
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -4 }}
-              transition={{ duration: 0.3 }}
-              className="glass-card-premium p-5 text-center cursor-default group"
-            >
-              <stat.icon className="w-4 h-4 mx-auto mb-2 transition-colors duration-300" style={{ color: `${colors.primary400}60` }} />
-              <AnimatedCounter end={stat.value} suffix={stat.suffix} colors={colors} />
-              <p className="text-[11px] mt-1 font-medium tracking-wide" style={{ color: `${colors.neutral500}B3` }}>{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
         {/* Scroll indicator */}
         <motion.button
           initial={{ opacity: 0 }}
