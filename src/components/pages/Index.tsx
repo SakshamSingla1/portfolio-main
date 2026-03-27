@@ -208,6 +208,12 @@ const Index = () => {
     </div>
   );
 
+  const [canonicalUrl, setCanonicalUrl] = useState("");
+
+  useEffect(() => {
+    setCanonicalUrl(window.location.href);
+  }, []);
+
   const seoData = useMemo(() => ({
     title: data?.profile?.fullName 
       ? `${data.profile.fullName} - ${data.profile.title || "Full Stack Developer"}`
@@ -244,7 +250,7 @@ const Index = () => {
         <meta property="twitter:description" content={seoData.description} />
         <meta property="twitter:image" content={seoData.image} />
 
-        <link rel="canonical" href={window.location.href} />
+        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       </Helmet>
       <GridBackground />
       <ScrollProgress />
