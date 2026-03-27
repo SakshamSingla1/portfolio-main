@@ -33,6 +33,7 @@ const Index = () => {
 
   const [data, setData] = useState<ProfileMaster | null>(null);
   const [loading, setLoading] = useState(true);
+  const [canonicalUrl, setCanonicalUrl] = useState("");
 
   const fetchProfile = async () => {
     try {
@@ -71,7 +72,23 @@ const Index = () => {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    setCanonicalUrl(window.location.href);
+  }, []);
+
   const navItems = useMemo(() => generateNavItems(data), [data]);
+
+  const seoData = useMemo(() => ({
+    title: data?.profile?.fullName 
+      ? `${data.profile.fullName} - ${data.profile.title || "Full Stack Developer"}`
+      : "Portfolio - Full Stack Developer",
+    description: data?.profile?.aboutMe 
+      ? data.profile.aboutMe.substring(0, 160) + "..."
+      : "Full Stack Developer specializing in React, TypeScript, and modern web technologies.",
+    name: data?.profile?.fullName || "Your Name",
+    image: data?.profile?.profileImageUrl || "/og-image.jpg",
+    author: data?.profile?.fullName || "Your Name"
+  }), [data]);
 
   if (loading) {
     return (
@@ -207,24 +224,6 @@ const Index = () => {
       <ContactSection profile={profile} />
     </div>
   );
-
-  const [canonicalUrl, setCanonicalUrl] = useState("");
-
-  useEffect(() => {
-    setCanonicalUrl(window.location.href);
-  }, []);
-
-  const seoData = useMemo(() => ({
-    title: data?.profile?.fullName 
-      ? `${data.profile.fullName} - ${data.profile.title || "Full Stack Developer"}`
-      : "Portfolio - Full Stack Developer",
-    description: data?.profile?.aboutMe 
-      ? data.profile.aboutMe.substring(0, 160) + "..."
-      : "Full Stack Developer specializing in React, TypeScript, and modern web technologies.",
-    name: data?.profile?.fullName || "Your Name",
-    image: data?.profile?.profileImageUrl || "/og-image.jpg",
-    author: data?.profile?.fullName || "Your Name"
-  }), [data]);
 
   return (
     <div
