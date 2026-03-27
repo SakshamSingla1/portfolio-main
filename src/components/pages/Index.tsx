@@ -24,6 +24,7 @@ import GridBackground from "../molecules/GridBackground/GridBackground";
 import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
 import useProfileMasterService from "../../services/useProfileMasterService";
 import { HTTP_STATUS } from "../../utils/constants";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   const colors = useColors();
@@ -207,11 +208,44 @@ const Index = () => {
     </div>
   );
 
+  const seoData = useMemo(() => ({
+    title: data?.profile?.fullName 
+      ? `${data.profile.fullName} - ${data.profile.title || "Full Stack Developer"}`
+      : "Portfolio - Full Stack Developer",
+    description: data?.profile?.aboutMe 
+      ? data.profile.aboutMe.substring(0, 160) + "..."
+      : "Full Stack Developer specializing in React, TypeScript, and modern web technologies.",
+    name: data?.profile?.fullName || "Your Name",
+    image: data?.profile?.profileImageUrl || "/og-image.jpg",
+    author: data?.profile?.fullName || "Your Name"
+  }), [data]);
+
   return (
     <div
       className="min-h-screen relative overflow-x-hidden"
       style={{ background: colors.neutral900, color: colors.neutral100 }}
     >
+      <Helmet>
+        <title>{seoData.title}</title>
+        <meta name="description" content={seoData.description} />
+        <meta name="keywords" content="full stack developer, react, typescript, web development, portfolio" />
+        <meta name="author" content={seoData.author} />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={seoData.title} />
+        <meta property="og:description" content={seoData.description} />
+        <meta property="og:image" content={seoData.image} />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={seoData.title} />
+        <meta property="twitter:description" content={seoData.description} />
+        <meta property="twitter:image" content={seoData.image} />
+
+        <link rel="canonical" href={window.location.href} />
+      </Helmet>
       <GridBackground />
       <ScrollProgress />
 
