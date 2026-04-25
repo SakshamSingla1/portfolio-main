@@ -18,10 +18,10 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
   const levelColor = (level: string) => {
     switch (level) {
-      case "Expert": return colors.primary400;
-      case "Advanced": return colors.secondary400;
-      case "Intermediate": return colors.accent400;
-      default: return colors.neutral400;
+      case "Expert": return colors.primary900;
+      case "Advanced": return colors.primary700;
+      case "Intermediate": return colors.primary500;
+      default: return colors.primary300;
     }
   };
 
@@ -43,7 +43,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
       id="skills"
       className="section-padding relative"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Tech Stack" subtitle="Technologies I work with on a daily basis" />
 
         <SkillsAutoScrollBar skills={skills} />
@@ -76,7 +76,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           ))}
         </div>
 
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <motion.div layout className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-3">
           {filteredSkills.map((skill) => (
             <motion.div
               layout

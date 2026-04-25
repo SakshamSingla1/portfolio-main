@@ -20,7 +20,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
   return (
     <section id="experience" className="section-padding relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading
           title="Experience"
           subtitle="Where I've worked and what I've built"

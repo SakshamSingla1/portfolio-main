@@ -29,7 +29,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
 
   return (
     <section id="education" className="section-padding relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Education" subtitle="Academic background and qualifications" />
 
         <div className="relative">

@@ -38,7 +38,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
 
   return (
     <section id="contact" className="section-padding relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Get In Touch" subtitle="Let's build something great together" />
 
         <div className="grid md:grid-cols-5 gap-8">

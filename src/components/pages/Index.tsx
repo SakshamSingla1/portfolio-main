@@ -260,7 +260,7 @@ const Index = () => {
         <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} />
 
         {sections.filter((section: any) => section.key === "hero")}
-        <main className="px-4 md:px-8 lg:px-16 xl:px-24">
+        <main className="px-4">
           {sections.filter((section: any) => section.key !== "hero")}
         </main>
 

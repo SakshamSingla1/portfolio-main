@@ -17,7 +17,7 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
 
   return (
     <section id="achievements" className="section-padding relative">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Achievements" subtitle="Recognition and accomplishments" />
 
         <div className="grid md:grid-cols-2 gap-6">

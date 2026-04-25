@@ -31,7 +31,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
 
   return (
     <section id="about-me" className="section-padding relative">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="About Me" />
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
@@ -48,7 +48,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 <img
                   src={profile.aboutMeImageUrl}
                   alt="About me"
-                  className="w-full h-80 lg:h-96 object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-80 lg:h-120 object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(135deg, ${colors.primary900}60 0%, transparent 50%, ${colors.accent900}40 100%)`,

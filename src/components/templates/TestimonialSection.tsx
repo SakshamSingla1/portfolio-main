@@ -30,7 +30,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
     <section id="testimonials" className="section-container pt-0!">
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="glass-card-premium relative">
           <div className="absolute -top-2 -right-2 opacity-30">
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />

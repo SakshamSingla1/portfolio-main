@@ -21,7 +21,7 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
       id="certifications"
       className="section-padding relative"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Certifications" subtitle="Professional certifications and credentials" />
 
         <div className="space-y-4">
