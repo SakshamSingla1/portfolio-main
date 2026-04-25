@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
@@ -40,6 +40,16 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
     setCurrentImage((c) => (c - 1 + images.length) % images.length);
 
   const handleMouseMove = () => { };
+
+  useEffect(() => {
+    if (images.length <= 1 || isHovered || isPreviewOpen) return;
+
+    const interval = setInterval(() => {
+      nextImage();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length, isHovered, isPreviewOpen]);
 
   return (
     <FadeInView delay={idx * 0.15}>
