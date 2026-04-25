@@ -160,6 +160,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       onMouseEnter={() => setShowMoreSkills(true)}
                       onMouseLeave={() => setShowMoreSkills(false)}
                       className="px-2 py-0.5 rounded-full text-[9px] font-mono border backdrop-blur-md transition-all duration-300"
+                      aria-label="View technical stack"
                       style={{
                         background: showMoreSkills ? `${colors.primary500}40` : `${colors.primary500}20`,
                         borderColor: showMoreSkills ? colors.primary500 : `${colors.primary500}40`,
@@ -178,13 +179,27 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
             {images.length > 1 && (
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 z-20">
                 {images.map((_, i) => (
-                  <button
+                  <motion.button
                     key={i}
+                    layout
                     onClick={(e) => {
                       e.stopPropagation();
                       setCurrentImage(i);
                     }}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentImage ? "bg-primary-500 w-6" : "bg-white/40 hover:bg-white/70"}`}
+                    aria-label={`Go to image ${i + 1}`}
+                    className="h-2.5 rounded-full"
+                    animate={{
+                      width: i === currentImage ? 24 : 10,
+                      backgroundColor: i === currentImage ? colors.primary500 : "rgba(255, 255, 255, 0.4)"
+                    }}
+                    whileHover={{
+                      backgroundColor: i === currentImage ? colors.primary500 : "rgba(255, 255, 255, 0.7)"
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30
+                    }}
                   />
                 ))}
               </div>
@@ -194,6 +209,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 <button
                   onClick={prevImage}
                   className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
+                  aria-label="Previous image"
                   style={{
                     background: `${colors.neutral900}CC`,
                     color: colors.neutral100,
@@ -205,6 +221,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 <button
                   onClick={nextImage}
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100"
+                  aria-label="Next image"
                   style={{
                     background: `${colors.neutral900}CC`,
                     color: colors.neutral100,
@@ -249,6 +266,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     <span className="text-xs font-bold uppercase tracking-wider text-primary-400">Tech Stack</span>
                     <button
                       onClick={() => setShowMoreSkills(false)}
+                      aria-label="Close tech stack view"
                       className="p-1 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors"
                     >
                       <FiX size={14} />
@@ -345,12 +363,14 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                   onClick={() => window.open(images[previewIndex].url, '_blank')}
                   className="p-2.5 rounded-full bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all border border-white/5"
                   title="Open original"
+                  aria-label="Open original image in new tab"
                 >
                   <FiExternalLink size={20} />
                 </button>
                 <button
                   onClick={() => setIsPreviewOpen(false)}
                   className="p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10"
+                  aria-label="Close image preview"
                 >
                   <FiX size={24} />
                 </button>
@@ -361,6 +381,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
               <>
                 <button
                   className="absolute left-6 top-1/2 -translate-y-1/2 z-[110] p-4 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all border border-white/5 backdrop-blur-md"
+                  aria-label="Previous image"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPreviewIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
@@ -370,6 +391,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 </button>
                 <button
                   className="absolute right-6 top-1/2 -translate-y-1/2 z-[110] p-4 rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all border border-white/5 backdrop-blur-md"
+                  aria-label="Next image"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPreviewIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
@@ -408,9 +430,10 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       e.stopPropagation();
                       setPreviewIndex(i);
                     }}
+                    aria-label={`View image ${i + 1}`}
                     className={`relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${i === previewIndex ? "border-primary-500 scale-110 shadow-lg shadow-primary-500/20" : "border-transparent opacity-50 hover:opacity-100"}`}
                   >
-                    <img src={img.url} className="w-full h-full object-cover" alt={`Thumb ${i}`} />
+                    <img src={img.url} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} />
                   </button>
                 ))}
               </div>

@@ -47,7 +47,7 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
                 <div className="flex-1 min-w-0">
                   <h3 className="font-display font-bold" style={{ color: colors.neutral50 }}>{cert.title}</h3>
                   <p className="text-sm font-mono" style={{ color: colors.primary400 }}>{cert.issuer}</p>
-                  <div className="flex flex-wrap gap-3 mt-1.5 text-xs font-mono" style={{ color: colors.neutral500 }}>
+                  <div className="flex flex-wrap gap-3 mt-1.5 text-xs font-mono" style={{ color: colors.neutral400 }}>
                     <span>Issued: {formatDate(cert.issueDate)}</span>
                     {cert.expiryDate && <span>Expires: {formatDate(cert.expiryDate)}</span>}
                     {cert.credentialId && <span>ID: {cert.credentialId}</span>}

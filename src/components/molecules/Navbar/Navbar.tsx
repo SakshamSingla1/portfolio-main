@@ -62,12 +62,13 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
       }
     >
       <div className="max-w-350 xl:max-w-400 mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-20 xl:h-24">
-        <span
+        <button
           className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer bg-clip-text text-transparent flex items-center gap-3"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
           }}
           onClick={() => scrollTo("hero")}
+          aria-label="Scroll to top"
         >
           {logoUrl && (
             <img
@@ -77,7 +78,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
             />
           )}
           {profileName}
-        </span>
+        </button>
 
         <div
           className="hidden md:flex items-center gap-2 rounded-full px-3 py-2 lg:px-4 lg:py-2.5"
@@ -95,7 +96,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                 color:
                   activeSection === item.section
                     ? colors.primary400
-                    : colors.neutral500,
+                    : colors.neutral400,
               }}
             >
               {activeSection === item.section && (
@@ -125,6 +126,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden p-2.5 rounded-lg"
           style={{ color: colors.neutral200 }}
+          aria-label={mobileOpen ? "Close mobile menu" : "Open mobile menu"}
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -163,7 +165,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                           color: colors.primary400,
                           fontWeight: 500,
                         }
-                      : { color: colors.neutral500 }
+                      : { color: colors.neutral400 }
                   }
                 >
                   {item.label}

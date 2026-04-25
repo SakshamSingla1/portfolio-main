@@ -88,10 +88,10 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   <div className="w-3 h-3 rounded-full" style={{ background: `${colors.warning500}80` }} />
                   <div className="w-3 h-3 rounded-full" style={{ background: `${colors.success500}80` }} />
                 </div>
-                <span className="font-mono text-xs ml-2" style={{ color: colors.neutral500 }}>about.ts</span>
+                <span className="font-mono text-xs ml-2" style={{ color: colors.neutral400 }}>about.ts</span>
               </div>
 
-              <div className="font-mono text-xs mb-3" style={{ color: colors.neutral500 }}>
+              <div className="font-mono text-xs mb-3" style={{ color: colors.neutral400 }}>
                 <span style={{ color: colors.accent400 }}>const</span>{" "}
                 <span style={{ color: colors.primary400 }}>aboutMe</span>{" "}
                 <span style={{ color: colors.neutral600 }}>=</span>{" "}
@@ -131,7 +131,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   >
                     {stat.value}
                   </div>
-                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral500 }}>
+                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral400 }}>
                     {stat.label}
                   </div>
                 </motion.div>

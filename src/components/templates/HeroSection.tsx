@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { MapPin, ArrowDown, Download } from "lucide-react";
 import { TypewriterText } from "../molecules/TypewriterText/TypewriterText";
 import { useColors, gradients } from "../../utils/theme";
@@ -82,6 +82,7 @@ const stagger = {
 const HeroSection = ({ profile, socialLinks }: Props) => {
   const colors = useColors();
   const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { amount: 0.1 });
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -124,7 +125,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             {profile.profileImageUrl && (
               <div className="relative group">
                 <motion.div
-                  animate={{ rotate: 360 }}
+                  animate={isInView ? { rotate: 360 } : {}}
                   transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                   className="absolute -inset-10 rounded-full opacity-30 blur-2xl"
                   style={{
@@ -132,7 +133,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   }}
                 />
                 <motion.div
-                  animate={{ rotate: -360 }}
+                  animate={isInView ? { rotate: -360 } : {}}
                   transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
                   className="absolute -inset-8 rounded-full opacity-20 blur-xl"
                   style={{
@@ -141,7 +142,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                 />
 
                 <motion.div
-                  animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+                  animate={isInView ? { scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] } : {}}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   className="absolute -inset-4 rounded-3xl blur-3xl"
                   style={{ background: `linear-gradient(135deg, ${colors.primary500}40, ${colors.accent500}40)` }}
@@ -229,7 +230,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             <motion.div
               variants={stagger.item}
               className="flex items-center gap-2 mb-8 justify-center lg:justify-start"
-              style={{ color: colors.neutral500 }}
+              style={{ color: colors.neutral400 }}
             >
               <MapPin className="w-4 h-4" />
               <span className="text-sm lg:text-base xl:text-lg">
@@ -278,12 +279,13 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Visit my ${link.platform} profile`}
                   whileHover={{ scale: 1.15, y: -3 }}
                   className="p-3 lg:p-4 rounded-xl"
                   style={{
                     border: `1px solid ${colors.neutral700}50`,
                     backgroundColor: `${colors.neutral800}50`,
-                    color: colors.neutral500,
+                    color: colors.neutral400,
                   }}
                 >
                   {getSocialIcon(link.platform)}
@@ -296,6 +298,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
         <motion.button
           onClick={scrollToAbout}
           className="mt-20 mx-auto block"
+          aria-label="Scroll to about section"
         >
           <div className="flex flex-col items-center gap-2">
             <span className="text-xs lg:text-sm tracking-widest">SCROLL</span>
