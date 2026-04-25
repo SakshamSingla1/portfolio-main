@@ -50,6 +50,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
                   alt="About me"
                   className="w-full h-80 lg:h-120 object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(135deg, ${colors.primary900}60 0%, transparent 50%, ${colors.accent900}40 100%)`,

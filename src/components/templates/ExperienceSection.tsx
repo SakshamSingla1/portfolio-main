@@ -181,6 +181,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                             src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
                             alt={skill.logoName}
                             className="w-3.5 h-3.5"
+                            loading="lazy"
                           />
                           {skill.logoName}
                         </span>

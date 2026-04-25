@@ -118,9 +118,9 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
       >
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 xl:gap-32">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="shrink-0 relative"
           >
             {profile.profileImageUrl && (
@@ -167,6 +167,9 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                     src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fetchPriority="high"
+                    loading="eager"
+                    decoding="async"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />

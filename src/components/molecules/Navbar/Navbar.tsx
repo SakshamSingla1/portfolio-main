@@ -22,18 +22,35 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
-
-      for (const item of [...items].reverse()) {
-        const el = document.getElementById(item.section);
-        if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(item.section);
-          break;
-        }
-      }
     };
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    items.forEach((item) => {
+      const el = document.getElementById(item.section);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
   }, [items]);
 
   const scrollTo = (section: string) => {
@@ -55,10 +72,10 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
       style={
         scrolled
           ? {
-              backgroundColor: `${colors.neutral900}CC`,
-              backdropFilter: "blur(24px)",
-              borderBottom: `1px solid ${colors.neutral700}33`,
-            }
+            backgroundColor: `${colors.neutral900}CC`,
+            backdropFilter: "blur(24px)",
+            borderBottom: `1px solid ${colors.neutral700}33`,
+          }
           : undefined
       }
     >
@@ -162,10 +179,10 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                   style={
                     activeSection === item.section
                       ? {
-                          backgroundColor: `${colors.primary500}1A`,
-                          color: colors.primary400,
-                          fontWeight: 500,
-                        }
+                        backgroundColor: `${colors.primary500}1A`,
+                        color: colors.primary400,
+                        fontWeight: 500,
+                      }
                       : { color: colors.neutral400 }
                   }
                 >

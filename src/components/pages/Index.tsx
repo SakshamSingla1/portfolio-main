@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { generateNavItems } from "../../utils/helper";
+import { generateNavItems, getOptimizedImageUrl } from "../../utils/helper";
 import { Status } from "../../utils/types";
 import type { ProfileMaster } from "../../utils/types";
 import { useColors } from "../../utils/theme";
@@ -83,7 +83,7 @@ const Index = () => {
     const fullName = data?.profile?.fullName || "Portfolio";
     const title = data?.profile?.title || "Full Stack Developer";
     const skills = data?.skills?.map(s => s.logoName).slice(0, 10).join(", ");
-    
+
     return {
       title: `${fullName} | ${title}`,
       description: data?.profile?.aboutMe
@@ -183,7 +183,16 @@ const Index = () => {
         <meta property="twitter:image" content={seoData.image} />
 
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-        
+
+        {data?.profile?.profileImageUrl && (
+          <link
+            rel="preload"
+            as="image"
+            href={getOptimizedImageUrl(data.profile.profileImageUrl, { width: 800 })}
+            fetchPriority="high"
+          />
+        )}
+
         {jsonLd && (
           <script type="application/ld+json">
             {JSON.stringify(jsonLd)}

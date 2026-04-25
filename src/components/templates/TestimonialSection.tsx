@@ -71,6 +71,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                       alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
                       style={{ border: `2px solid ${colors.primary500}26` }}
+                      loading="lazy"
                     />
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
@@ -163,7 +164,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 opacity: i === active ? 1 : 0.5,
               }}
             >
-              <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" />
+              <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />
             </motion.button>
           ))}
         </div>

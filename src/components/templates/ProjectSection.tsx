@@ -42,6 +42,8 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
   const handleMouseMove = () => { };
 
   useEffect(() => {
+    // Disable auto-play by default to save network bandwidth and CPU
+    return;
     if (images.length <= 1 || isHovered || isPreviewOpen) return;
 
     const interval = setInterval(() => {
@@ -84,17 +86,18 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                   setIsPreviewOpen(true);
                 }}
               >
-                <motion.img
-                  src={getOptimizedImageUrl(images[currentImage].url, { width: 1000 })}
-                  alt={project.projectName}
-                  initial={{ opacity: 0, scale: 1.2 }}
-                  animate={{
-                    opacity: 1
-                  }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="w-full h-full object-cover origin-center"
-                />
+                  <motion.img
+                    src={getOptimizedImageUrl(images[currentImage].url, { width: 1000 })}
+                    alt={project.projectName}
+                    initial={{ opacity: 0, scale: 1.2 }}
+                    animate={{
+                      opacity: 1
+                    }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="w-full h-full object-cover origin-center"
+                    loading="lazy"
+                  />
 
                 <div
                   className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300"
