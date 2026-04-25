@@ -7,7 +7,7 @@ import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, Fi
 import { useColors, shadows } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { formatDate, toTitleCase } from "../../utils/helper";
+import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
 
 interface ProjectsSectionProps {
   projects: ProjectResponse[];
@@ -85,7 +85,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 }}
               >
                 <motion.img
-                  src={images[currentImage].url}
+                  src={getOptimizedImageUrl(images[currentImage].url, { width: 1000 })}
                   alt={project.projectName}
                   initial={{ opacity: 0, scale: 1.2 }}
                   animate={{
@@ -409,7 +409,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
               <AnimatePresence mode="wait">
                 <motion.img
                   key={previewIndex}
-                  src={images[previewIndex].url}
+                  src={getOptimizedImageUrl(images[previewIndex].url, { width: 1600 })}
                   alt="Project Preview"
                   initial={{ opacity: 0, scale: 0.9, x: 20 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -433,7 +433,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     aria-label={`View image ${i + 1}`}
                     className={`relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${i === previewIndex ? "border-primary-500 scale-110 shadow-lg shadow-primary-500/20" : "border-transparent opacity-50 hover:opacity-100"}`}
                   >
-                    <img src={img.url} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} />
+                    <img src={getOptimizedImageUrl(img.url, { width: 200, height: 150 })} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} />
                   </button>
                 ))}
               </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
 import type { NavItem } from "../../../utils/types";
+import { getOptimizedImageUrl } from "../../../utils/helper";
 
 interface Props {
   items: NavItem[];
@@ -72,7 +73,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
         >
           {logoUrl && (
             <img
-              src={logoUrl}
+              src={getOptimizedImageUrl(logoUrl, { width: 120, height: 120 })}
               alt="Logo"
               className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full"
             />

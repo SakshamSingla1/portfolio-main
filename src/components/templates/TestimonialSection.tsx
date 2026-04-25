@@ -5,6 +5,7 @@ import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface Props {
   testimonials: Testimonial[];
@@ -66,7 +67,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 {current.imageUrl && (
                   <div className="relative">
                     <img
-                      src={current.imageUrl}
+                      src={getOptimizedImageUrl(current.imageUrl, { width: 100, height: 100 })}
                       alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
                       style={{ border: `2px solid ${colors.primary500}26` }}
@@ -162,7 +163,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 opacity: i === active ? 1 : 0.5,
               }}
             >
-              <img src={t.imageUrl} alt={t.name} className="w-full h-full object-cover" />
+              <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" />
             </motion.button>
           ))}
         </div>

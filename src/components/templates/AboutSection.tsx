@@ -6,6 +6,7 @@ import { useColors, gradients } from "../../utils/theme";
 import { FiCode, FiCoffee, FiZap } from "react-icons/fi";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface AboutSectionProps {
   profile: ProfileRequest;
@@ -46,7 +47,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 style={{ border: `1px solid ${colors.neutral700}30` }}
               >
                 <img
-                  src={profile.aboutMeImageUrl}
+                  src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
                   alt="About me"
                   className="w-full h-80 lg:h-120 object-cover group-hover:scale-105 transition-transform duration-700"
                 />

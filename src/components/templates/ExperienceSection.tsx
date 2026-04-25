@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import type { ExperienceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { formatDate, toTitleCase } from "../../utils/helper";
+import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import { FiBriefcase, FiMapPin } from "react-icons/fi";
 import React from "react";
@@ -178,7 +178,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                           }}
                         >
                           <img
-                            src={skill.logoUrl}
+                            src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
                             alt={skill.logoName}
                             className="w-3.5 h-3.5"
                           />

@@ -79,3 +79,21 @@ export const formatDate = (dateStr: string | null | undefined): string => {
     return dateStr;
   }
 };
+export const getOptimizedImageUrl = (
+  url: string | null | undefined,
+  options: { width?: number; height?: number; quality?: string } = {}
+): string => {
+  if (!url) return "";
+  if (!url.includes("cloudinary.com")) return url;
+
+  const uploadIndex = url.indexOf("/upload/");
+  if (uploadIndex === -1) return url;
+
+  const transformations: string[] = ["f_auto", "q_auto"];
+  if (options.width) transformations.push(`w_${options.width}`);
+  if (options.height) transformations.push(`h_${options.height}`);
+  if (options.quality) transformations.push(`q_${options.quality}`);
+
+  const insertIndex = uploadIndex + 8;
+  return `${url.slice(0, insertIndex)}${transformations.join(",")}/${url.slice(insertIndex)}`;
+};

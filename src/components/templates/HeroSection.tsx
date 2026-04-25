@@ -21,6 +21,7 @@ import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
 import React from "react";
 import { usePublicResumeService } from "../../services/usePublicResumeService";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface Props {
   profile: ProfileRequest;
@@ -163,7 +164,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   }}
                 >
                   <img
-                    src={profile.profileImageUrl}
+                    src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
