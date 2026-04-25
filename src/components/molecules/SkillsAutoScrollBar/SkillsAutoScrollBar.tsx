@@ -43,52 +43,24 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
         {repeatedSkills.map((skill, index) => (
           <motion.div
             key={`${skill.id}-${index}`}
-            whileHover={{
-              y: -6,
-              scale: 1.05,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-            }}
             className="group flex min-w-[200px] items-center gap-4 rounded-2xl border px-6 py-5 backdrop-blur-xl transition-all duration-300"
             style={{
-              background: `linear-gradient(135deg, ${colors.neutral800}AA, ${colors.neutral900}EE)`,
-              borderColor: `${colors.primary400}20`,
-              boxShadow: `0 20px 50px -20px ${colors.primary500}30`,
+              background: `linear-gradient(135deg, ${colors.neutral100}12, ${colors.neutral100}05)`,
+              borderColor: `${colors.neutral100}15`,
+              boxShadow: `0 15px 35px -15px rgba(0, 0, 0, 0.3)`,
             }}
           >
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 group-hover:rotate-6 group-hover:shadow-lg"
-              style={{
-                backgroundColor: `${colors.primary500}10`,
-                borderColor: `${colors.primary400}20`,
-                boxShadow: `0 0 20px ${colors.primary500}10`,
-              }}
+            <img
+              src={skill.logoUrl}
+              alt={skill.logoName}
+              className="h-8 w-8 object-contain transition-transform duration-300"
+            />
+            <p
+              className="truncate text-sm font-semibold tracking-tight"
+              style={{ color: colors.neutral100 }}
             >
-              <img
-                src={skill.logoUrl}
-                alt={skill.logoName}
-                className="h-8 w-8 object-contain transition-transform duration-300 group-hover:scale-110"
-              />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p
-                className="truncate text-sm font-semibold tracking-tight"
-                style={{ color: colors.neutral100 }}
-              >
-                {skill.logoName}
-              </p>
-
-              <p
-                className="mt-1 text-[10px] font-bold uppercase tracking-widest opacity-80"
-                style={{ color: colors.primary400 }}
-              >
-                {skill.level}
-              </p>
-            </div>
+              {skill.logoName}
+            </p>
           </motion.div>
         ))}
       </motion.div>
