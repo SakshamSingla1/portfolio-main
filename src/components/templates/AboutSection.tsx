@@ -25,8 +25,8 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
 
   const stats = [
     { icon: FiCode, value: totalExp.value, label: totalExp.label, color: colors.primary500 },
-    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.accent500 },
-    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.secondary500 },
+    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.primary500 },
+    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.primary500 },
   ];
 
   return (

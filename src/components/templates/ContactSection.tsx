@@ -52,8 +52,8 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
             >
               {[
                 { icon: FiMail, label: "email", value: profile.email, href: `mailto:${profile.email}`, color: colors.primary500 },
-                ...(profile.phone ? [{ icon: FiPhone, label: "phone", value: profile.phone, href: `tel:${profile.phone}`, color: colors.accent500 }] : []),
-                { icon: FiMapPin, label: "location", value: profile.location, href: undefined, color: colors.secondary500 },
+                ...(profile.phone ? [{ icon: FiPhone, label: "phone", value: profile.phone, href: `tel:${profile.phone}`, color: colors.primary500 }] : []),
+                { icon: FiMapPin, label: "location", value: profile.location, href: undefined, color: colors.primary500 },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3">
                   <div

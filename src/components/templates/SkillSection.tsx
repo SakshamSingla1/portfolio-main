@@ -5,6 +5,7 @@ import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { toTitleCase } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import React from "react";
+import SkillsAutoScrollBar from "../molecules/SkillsAutoScrollBar/SkillsAutoScrollBar";
 
 interface SkillsSectionProps {
   skills: SkillResponse[];
@@ -17,18 +18,18 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
   const levelColor = (level: string) => {
     switch (level) {
-      case "EXPERT": return colors.primary400;
-      case "ADVANCED": return colors.secondary400;
-      case "INTERMEDIATE": return colors.accent400;
+      case "Expert": return colors.primary400;
+      case "Advanced": return colors.secondary400;
+      case "Intermediate": return colors.accent400;
       default: return colors.neutral400;
     }
   };
 
   const levelBar = (level: string) => {
     switch (level) {
-      case "EXPERT": return "100%";
-      case "ADVANCED": return "75%";
-      case "INTERMEDIATE": return "50%";
+      case "Expert": return "100%";
+      case "Advanced": return "75%";
+      case "Intermediate": return "50%";
       default: return "25%";
     }
   };
@@ -44,6 +45,8 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
     >
       <div className="max-w-6xl mx-auto">
         <SectionHeading title="Tech Stack" subtitle="Technologies I work with on a daily basis" />
+
+        <SkillsAutoScrollBar skills={skills} />
 
         <div className="flex flex-wrap gap-2 mb-10">
           <button

@@ -111,12 +111,12 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className="text-xs"
+                      <div
+                        className="text-xs flex items-center gap-1"
                         style={{ color: colors.neutral400 }}
                       >
                         <FiMapPin size={12} /> {exp.location}
-                      </span>
+                      </div>
 
                       <span
                         className="text-xs font-mono rounded-full px-2.5 py-0.5"

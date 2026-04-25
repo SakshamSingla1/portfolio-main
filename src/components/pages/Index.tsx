@@ -79,10 +79,10 @@ const Index = () => {
   const navItems = useMemo(() => generateNavItems(data), [data]);
 
   const seoData = useMemo(() => ({
-    title: data?.profile?.fullName 
+    title: data?.profile?.fullName
       ? `${data.profile.fullName} - ${data.profile.title || "Full Stack Developer"}`
       : "Portfolio - Full Stack Developer",
-    description: data?.profile?.aboutMe 
+    description: data?.profile?.aboutMe
       ? data.profile.aboutMe.substring(0, 160) + "..."
       : "Full Stack Developer specializing in React, TypeScript, and modern web technologies.",
     name: data?.profile?.fullName || "Your Name",
@@ -259,8 +259,9 @@ const Index = () => {
 
         <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} />
 
+        {sections.filter((section: any) => section.key === "hero")}
         <main className="px-4 md:px-8 lg:px-16 xl:px-24">
-          {sections}
+          {sections.filter((section: any) => section.key !== "hero")}
         </main>
 
         <Footer profile={profile} socialLinks={activeSocialLinks} />
