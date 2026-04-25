@@ -32,19 +32,28 @@ const Index = () => {
   const profileService = useProfileMasterService();
   const { setDefaultTheme } = useDefaultColorTheme();
 
-  const [data, setData] = useState<ProfileMaster | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ProfileMaster | null>(() => {
+    const cached = localStorage.getItem("portfolio_data");
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [loading, setLoading] = useState(!data);
   const [canonicalUrl, setCanonicalUrl] = useState("");
 
   const fetchProfile = async () => {
     try {
-      setLoading(true);
+      // If we don't have data, we show the loading state
+      if (!data) setLoading(true);
+      
       const res = await profileService.get();
 
       if (res?.status === HTTP_STATUS.OK) {
-        setData(res.data.data);
-        setDefaultTheme(res.data.data?.colorTheme || "default");
+        const newData = res.data.data;
+        setData(newData);
+        localStorage.setItem("portfolio_data", JSON.stringify(newData));
+        setDefaultTheme(newData?.colorTheme || "default");
       }
+    } catch (error) {
+      console.error("Failed to fetch profile:", error);
     } finally {
       setLoading(false);
     }

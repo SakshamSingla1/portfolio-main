@@ -9,14 +9,14 @@ export const replaceUrlParams = (url: string, params: Record<string, any>) => {
   return result;
 };
 
-export const getColor = (theme: ColorTheme | null,colorName: string) => {
-    if(!theme?.palette?.colorGroups) return "";
-    for( const group of theme.palette.colorGroups){
-        for(const shade of group.colorShades){
-            if(shade.colorName === colorName) return shade.colorCode;
-        }
+export const getColor = (theme: ColorTheme | null, colorName: string) => {
+  if (!theme?.palette?.colorGroups) return "";
+  for (const group of theme.palette.colorGroups) {
+    for (const shade of group.colorShades) {
+      if (shade.colorName === colorName) return shade.colorCode;
     }
-    return "";
+  }
+  return "";
 }
 
 export const sanitizeHtml = (html: string) => {
@@ -34,7 +34,7 @@ export const toTitleCase = (value?: string | null) => {
 };
 
 export const getEducationLabel = (degree: string) => {
-    return DEGREE_OPTIONS.find(option => option.value === degree)?.label || degree;
+  return DEGREE_OPTIONS.find(option => option.value === degree)?.label || degree;
 }
 
 export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null => {
