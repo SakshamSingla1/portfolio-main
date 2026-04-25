@@ -192,6 +192,13 @@ const Index = () => {
         <meta property="twitter:image" content={seoData.image} />
 
         {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+        
+        {profile.logoUrl && (
+          <>
+            <link rel="icon" href={profile.logoUrl} />
+            <link rel="apple-touch-icon" href={profile.logoUrl} />
+          </>
+        )}
 
         {data?.profile?.profileImageUrl && (
           <link
