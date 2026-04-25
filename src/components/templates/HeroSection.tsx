@@ -156,7 +156,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                     xl:w-120 xl:h-120 
                     2xl:w-130 2xl:h-130 
                     rounded-3xl overflow-hidden z-10"
-                  style={{ 
+                  style={{
                     border: `1px solid ${colors.neutral700}60`,
                     boxShadow: `0 0 50px ${colors.primary500}20`
                   }}
@@ -166,7 +166,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                     alt={profile.fullName}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
 
@@ -220,8 +220,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             >
               <TypewriterText
                 words={[
-                  "Full-Stack Developer",
-                  "UI/UX Enthusiast",
                   profile.title,
                 ]}
                 colors={colors}
