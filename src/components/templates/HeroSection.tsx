@@ -115,7 +115,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
         className="section-container relative z-10 w-full py-24 lg:py-32 xl:py-40"
       >
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 xl:gap-32">
-          {/* Profile Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -124,7 +123,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
           >
             {profile.profileImageUrl && (
               <div className="relative group">
-                {/* Enhanced Gradient Rotators */}
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
@@ -142,7 +140,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   }}
                 />
 
-                {/* Soft Pulse Glow */}
                 <motion.div
                   animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -170,18 +167,15 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   
-                  {/* Subtle Image Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
 
-                {/* Decorative Corners */}
                 <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 rounded-tl-2xl opacity-50" style={{ borderColor: colors.primary500 }} />
                 <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 rounded-br-2xl opacity-50" style={{ borderColor: colors.accent500 }} />
               </div>
             )}
           </motion.div>
 
-          {/* Content */}
           <motion.div
             variants={stagger.container}
             initial="hidden"
@@ -245,7 +239,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               </span>
             </motion.div>
 
-            {/* Buttons */}
             <motion.div
               variants={stagger.item}
               className="flex gap-4 flex-wrap justify-center lg:justify-start mb-8"
@@ -277,7 +270,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               </motion.button>
             </motion.div>
 
-            {/* Social */}
             <motion.div
               variants={stagger.item}
               className="flex gap-3 justify-center lg:justify-start"
@@ -303,7 +295,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
           </motion.div>
         </div>
 
-        {/* Scroll */}
         <motion.button
           onClick={scrollToAbout}
           className="mt-20 mx-auto block"
