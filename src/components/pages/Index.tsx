@@ -23,6 +23,7 @@ import MouseGlow from "../molecules/MouseGlow/MouseGlow";
 import GridBackground from "../molecules/GridBackground/GridBackground";
 import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
 import useProfileMasterService from "../../services/useProfileMasterService";
+import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { Helmet } from "react-helmet-async";
 
@@ -75,6 +76,13 @@ const Index = () => {
   useEffect(() => {
     setCanonicalUrl(window.location.href);
   }, []);
+
+  // Fire view tracking once per session after profile data is available
+  useEffect(() => {
+    if (data?.profile?.id) {
+      trackPortfolioView(data.profile.id);
+    }
+  }, [data?.profile?.id]);
 
   const navItems = useMemo(() => generateNavItems(data), [data]);
 
