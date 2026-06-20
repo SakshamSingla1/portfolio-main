@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import type { ExperienceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { formatDate, toTitleCase } from "../../utils/helper";
-import { useColors, shadows } from "../../utils/theme";
+import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
+import { useColors } from "../../utils/theme";
 import { FiBriefcase, FiMapPin } from "react-icons/fi";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
@@ -15,12 +15,11 @@ interface ExperienceSectionProps {
 
 const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   const colors = useColors();
-  const s = shadows(colors);
   const isMobile = useIsMobile();
 
   return (
     <section id="experience" className="section-padding relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading
           title="Experience"
           subtitle="Where I've worked and what I've built"
@@ -29,15 +28,34 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
         <div className="relative">
 
           {!isMobile && (
-            <div
-              className="absolute left-5 md:left-7 top-0 bottom-0 w-[2px] rounded-full"
-              style={{
-                background: `linear-gradient(to bottom, ${colors.primary500}, ${colors.accent500}40, transparent)`
-              }}
-            />
+            <>
+              <div
+                className="absolute left-5 md:left-7 top-0 bottom-0 w-[2px]"
+                style={{
+                  background: `linear-gradient(to bottom, ${colors.primary500}80, ${colors.neutral700}30, transparent)`,
+                  boxShadow: `0 0 15px ${colors.primary500}20`
+                }}
+              />
+              <motion.div
+                animate={{
+                  top: ["0%", "100%"],
+                  opacity: [0, 1, 0]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: 2 // Staggered from education
+                }}
+                className="absolute left-5 md:left-7 w-[2px] h-24 blur-[1px]"
+                style={{
+                  background: `linear-gradient(to bottom, transparent, ${colors.primary400}, transparent)`,
+                }}
+              />
+            </>
           )}
 
-          <div className="space-y-6">
+          <div className="space-y-12">
             {experiences.map((exp, idx) => (
               <FadeInView
                 key={exp.id}
@@ -46,15 +64,20 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
               >
 
                 {!isMobile && (
-                  <div
-                    className="absolute left-3 md:left-5 top-6 w-5 h-5 rounded-lg flex items-center justify-center"
-                    style={{
-                      background: `${colors.primary500}20`,
-                      border: `2px solid ${colors.primary500}`,
-                      boxShadow: `0 0 16px ${colors.primary500}40`,
-                    }}
-                  >
-                    <FiBriefcase size={10} style={{ color: colors.primary400 }} />
+                  <div className="absolute left-0 md:left-2 top-6 bottom-0 flex items-start">
+                    <div
+                      className="relative z-10 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500"
+                      style={{
+                        background: colors.neutral900,
+                        border: `1px solid ${colors.primary500}50`,
+                        boxShadow: `0 0 15px ${colors.primary500}10`
+                      }}
+                    >
+                      <FiBriefcase
+                        style={{ color: colors.primary400 }}
+                        className="text-lg relative z-10"
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -79,12 +102,11 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   </div>
                 )}
 
-                <motion.div
-                  whileHover={{ boxShadow: s.card }}
-                  className="rounded-2xl p-5 md:p-6 backdrop-blur-md transition-all duration-500 relative overflow-hidden"
+                <div
+                  className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
                   style={{
-                    background: `${colors.neutral800}50`,
-                    border: `1px solid ${colors.neutral700}35`,
+                    background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
+                    border: `1px solid ${colors.neutral700}30`,
                   }}
                 >
                   <div
@@ -111,12 +133,12 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className="text-xs"
+                      <div
+                        className="text-xs flex items-center gap-1"
                         style={{ color: colors.neutral400 }}
                       >
                         <FiMapPin size={12} /> {exp.location}
-                      </span>
+                      </div>
 
                       <span
                         className="text-xs font-mono rounded-full px-2.5 py-0.5"
@@ -137,8 +159,8 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                   >
                     <ReadMoreText
                       text={exp.description || ""}
-                      limit={200}
-                      mobileLimit={100}
+                      limit={150}
+                      mobileLimit={80}
                       className="border-l-4 pl-4"
                     />
                   </div>
@@ -156,16 +178,17 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                           }}
                         >
                           <img
-                            src={skill.logoUrl}
+                            src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
                             alt={skill.logoName}
                             className="w-3.5 h-3.5"
+                            loading="lazy"
                           />
                           {skill.logoName}
                         </span>
                       ))}
                     </div>
                   )}
-                </motion.div>
+                </div>
               </FadeInView>
             ))}
           </div>

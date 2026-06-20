@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
 import type { NavItem } from "../../../utils/types";
+import { getOptimizedImageUrl } from "../../../utils/helper";
 
 interface Props {
   items: NavItem[];
@@ -21,18 +22,35 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 50);
-
-      for (const item of [...items].reverse()) {
-        const el = document.getElementById(item.section);
-        if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(item.section);
-          break;
-        }
-      }
     };
 
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    items.forEach((item) => {
+      const el = document.getElementById(item.section);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
   }, [items]);
 
   const scrollTo = (section: string) => {
@@ -54,30 +72,31 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
       style={
         scrolled
           ? {
-              backgroundColor: `${colors.neutral900}CC`,
-              backdropFilter: "blur(24px)",
-              borderBottom: `1px solid ${colors.neutral700}33`,
-            }
+            backgroundColor: `${colors.neutral900}CC`,
+            backdropFilter: "blur(24px)",
+            borderBottom: `1px solid ${colors.neutral700}33`,
+          }
           : undefined
       }
     >
       <div className="max-w-350 xl:max-w-400 mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-20 xl:h-24">
-        <span
+        <button
           className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer bg-clip-text text-transparent flex items-center gap-3"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
           }}
           onClick={() => scrollTo("hero")}
+          aria-label="Scroll to top"
         >
           {logoUrl && (
             <img
-              src={logoUrl}
+              src={getOptimizedImageUrl(logoUrl, { width: 120, height: 120 })}
               alt="Logo"
               className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full"
             />
           )}
           {profileName}
-        </span>
+        </button>
 
         <div
           className="hidden md:flex items-center gap-2 rounded-full px-3 py-2 lg:px-4 lg:py-2.5"
@@ -95,7 +114,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                 color:
                   activeSection === item.section
                     ? colors.primary400
-                    : colors.neutral500,
+                    : colors.neutral400,
               }}
             >
               {activeSection === item.section && (
@@ -125,6 +144,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden p-2.5 rounded-lg"
           style={{ color: colors.neutral200 }}
+          aria-label={mobileOpen ? "Close mobile menu" : "Open mobile menu"}
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -159,11 +179,11 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                   style={
                     activeSection === item.section
                       ? {
-                          backgroundColor: `${colors.primary500}1A`,
-                          color: colors.primary400,
-                          fontWeight: 500,
-                        }
-                      : { color: colors.neutral500 }
+                        backgroundColor: `${colors.primary500}1A`,
+                        color: colors.primary400,
+                        fontWeight: 500,
+                      }
+                      : { color: colors.neutral400 }
                   }
                 >
                   {item.label}

@@ -6,6 +6,7 @@ import { useColors, gradients } from "../../utils/theme";
 import { FiCode, FiCoffee, FiZap } from "react-icons/fi";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface AboutSectionProps {
   profile: ProfileRequest;
@@ -25,13 +26,13 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
 
   const stats = [
     { icon: FiCode, value: totalExp.value, label: totalExp.label, color: colors.primary500 },
-    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.accent500 },
-    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.secondary500 },
+    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.primary500 },
+    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.primary500 },
   ];
 
   return (
     <section id="about-me" className="section-padding relative">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="About Me" />
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
@@ -46,9 +47,10 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 style={{ border: `1px solid ${colors.neutral700}30` }}
               >
                 <img
-                  src={profile.aboutMeImageUrl}
+                  src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
                   alt="About me"
-                  className="w-full h-80 lg:h-96 object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-80 lg:h-120 object-cover group-hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(135deg, ${colors.primary900}60 0%, transparent 50%, ${colors.accent900}40 100%)`,
@@ -88,10 +90,10 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   <div className="w-3 h-3 rounded-full" style={{ background: `${colors.warning500}80` }} />
                   <div className="w-3 h-3 rounded-full" style={{ background: `${colors.success500}80` }} />
                 </div>
-                <span className="font-mono text-xs ml-2" style={{ color: colors.neutral500 }}>about.ts</span>
+                <span className="font-mono text-xs ml-2" style={{ color: colors.neutral400 }}>about.ts</span>
               </div>
 
-              <div className="font-mono text-xs mb-3" style={{ color: colors.neutral500 }}>
+              <div className="font-mono text-xs mb-3" style={{ color: colors.neutral400 }}>
                 <span style={{ color: colors.accent400 }}>const</span>{" "}
                 <span style={{ color: colors.primary400 }}>aboutMe</span>{" "}
                 <span style={{ color: colors.neutral600 }}>=</span>{" "}
@@ -131,7 +133,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   >
                     {stat.value}
                   </div>
-                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral500 }}>
+                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral400 }}>
                     {stat.label}
                   </div>
                 </motion.div>

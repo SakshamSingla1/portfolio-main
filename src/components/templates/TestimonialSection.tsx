@@ -5,6 +5,7 @@ import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface Props {
   testimonials: Testimonial[];
@@ -30,7 +31,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
     <section id="testimonials" className="section-container pt-0!">
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="glass-card-premium relative">
           <div className="absolute -top-2 -right-2 opacity-30">
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
@@ -66,10 +67,11 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 {current.imageUrl && (
                   <div className="relative">
                     <img
-                      src={current.imageUrl}
+                      src={getOptimizedImageUrl(current.imageUrl, { width: 100, height: 100 })}
                       alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
                       style={{ border: `2px solid ${colors.primary500}26` }}
+                      loading="lazy"
                     />
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
@@ -162,7 +164,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 opacity: i === active ? 1 : 0.5,
               }}
             >
-              <img src={t.imageUrl} alt={t.name} className="w-full h-full object-cover" />
+              <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />
             </motion.button>
           ))}
         </div>

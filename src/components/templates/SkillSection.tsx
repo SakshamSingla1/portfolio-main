@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import type { SkillResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
-import { toTitleCase } from "../../utils/helper";
+import { toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import React from "react";
+import SkillsAutoScrollBar from "../molecules/SkillsAutoScrollBar/SkillsAutoScrollBar";
 
 interface SkillsSectionProps {
   skills: SkillResponse[];
@@ -17,18 +18,18 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
   const levelColor = (level: string) => {
     switch (level) {
-      case "EXPERT": return colors.primary400;
-      case "ADVANCED": return colors.secondary400;
-      case "INTERMEDIATE": return colors.accent400;
-      default: return colors.neutral400;
+      case "Expert": return colors.primary900;
+      case "Advanced": return colors.primary700;
+      case "Intermediate": return colors.primary500;
+      default: return colors.primary300;
     }
   };
 
   const levelBar = (level: string) => {
     switch (level) {
-      case "EXPERT": return "100%";
-      case "ADVANCED": return "75%";
-      case "INTERMEDIATE": return "50%";
+      case "Expert": return "100%";
+      case "Advanced": return "75%";
+      case "Intermediate": return "50%";
       default: return "25%";
     }
   };
@@ -42,8 +43,10 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
       id="skills"
       className="section-padding relative"
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Tech Stack" subtitle="Technologies I work with on a daily basis" />
+
+        <SkillsAutoScrollBar skills={skills} />
 
         <div className="flex flex-wrap gap-2 mb-10">
           <button
@@ -73,7 +76,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           ))}
         </div>
 
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <motion.div layout className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-3">
           {filteredSkills.map((skill) => (
             <motion.div
               layout
@@ -96,7 +99,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               />
 
               <div className="w-11 h-11 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <img src={skill.logoUrl} alt={skill.logoName} className="w-9 h-9 object-contain" />
+                <img src={getOptimizedImageUrl(skill.logoUrl, { width: 100 })} alt={skill.logoName} className="w-9 h-9 object-contain" />
               </div>
               <div className="text-center w-full">
                 <p className="text-sm font-medium" style={{ color: colors.neutral100 }}>

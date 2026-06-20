@@ -5,7 +5,7 @@ import FadeInView from "../molecules/FadeInView/FadeInView";
 import { FiMapPin } from "react-icons/fi";
 import { getEducationLabel, normalizePercentage } from "../../utils/helper";
 import { HiOutlineAcademicCap } from "react-icons/hi";
-import { useColors, shadows } from "../../utils/theme";
+import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { useIsMobile } from "../../hooks/useIsMobile";
@@ -16,7 +16,6 @@ interface EducationSectionProps {
 
 const EducationSection = ({ educations }: EducationSectionProps) => {
   const colors = useColors();
-  const s = shadows(colors);
   const isMobile = useIsMobile();
 
   const sortedEducations = React.useMemo(() => {
@@ -29,21 +28,38 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
 
   return (
     <section id="education" className="section-padding relative">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <SectionHeading title="Education" subtitle="Academic background and qualifications" />
 
         <div className="relative">
-
           {!isMobile && (
-            <div
-              className="absolute left-4 md:left-6 top-0 bottom-0 w-px"
-              style={{
-                background: `linear-gradient(to bottom, ${colors.accent500}50, ${colors.neutral700}30, transparent)`
-              }}
-            />
+            <>
+              <div
+                className="absolute left-4 md:left-6 top-0 bottom-0 w-[2px]"
+                style={{
+                  background: `linear-gradient(to bottom, ${colors.accent500}80, ${colors.neutral700}30, transparent)`,
+                  boxShadow: `0 0 15px ${colors.accent500}20`
+                }}
+              />
+              <motion.div
+                animate={{
+                  top: ["0%", "100%"],
+                  opacity: [0, 1, 0]
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute left-4 md:left-6 w-[2px] h-24 blur-[1px]"
+                style={{
+                  background: `linear-gradient(to bottom, transparent, ${colors.accent400}, transparent)`,
+                }}
+              />
+            </>
           )}
 
-          <div className="space-y-6">
+          <div className="space-y-12">
             {sortedEducations.map((edu, idx) => (
               <FadeInView
                 key={edu.id}
@@ -52,17 +68,20 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
               >
 
                 {!isMobile && (
-                  <div
-                    className="absolute left-2 md:left-3.5 top-2 w-5 h-5 rounded-full flex items-center justify-center"
-                    style={{
-                      background: `${colors.accent500}20`,
-                      border: `1px solid ${colors.accent500}40`,
-                    }}
-                  >
-                    <HiOutlineAcademicCap
-                      style={{ color: colors.accent400 }}
-                      className="text-xs"
-                    />
+                  <div className="absolute left-0 md:left-1 top-1 bottom-0 flex items-start">
+                    <div
+                      className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500"
+                      style={{
+                        background: colors.neutral900,
+                        border: `1px solid ${colors.accent500}50`,
+                        boxShadow: `0 0 15px ${colors.accent500}10`
+                      }}
+                    >
+                      <HiOutlineAcademicCap
+                        style={{ color: colors.accent400 }}
+                        className="text-lg relative z-10"
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -75,12 +94,11 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                   </div>
                 )}
 
-                <motion.div
-                  whileHover={{ boxShadow: s.card }}
-                  className="rounded-xl p-5 backdrop-blur-md transition-all duration-300"
+                <div
+                  className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
                   style={{
-                    background: `${colors.neutral800}60`,
-                    border: `1px solid ${colors.neutral700}40`,
+                    background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
+                    border: `1px solid ${colors.neutral700}30`,
                   }}
                 >
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
@@ -146,13 +164,13 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                     >
                       <ReadMoreText
                         text={edu.description || ""}
-                        limit={200}
-                        mobileLimit={100}
+                        limit={150}
+                        mobileLimit={80}
                         className="border-l-4 pl-4"
                       />
                     </div>
                   )}
-                </motion.div>
+                </div>
               </FadeInView>
             ))}
           </div>

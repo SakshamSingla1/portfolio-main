@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { MapPin, ArrowDown, Download } from "lucide-react";
 import { TypewriterText } from "../molecules/TypewriterText/TypewriterText";
 import { useColors, gradients } from "../../utils/theme";
@@ -21,6 +21,7 @@ import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
 import React from "react";
 import { usePublicResumeService } from "../../services/usePublicResumeService";
+import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface Props {
   profile: ProfileRequest;
@@ -82,6 +83,7 @@ const stagger = {
 const HeroSection = ({ profile, socialLinks }: Props) => {
   const colors = useColors();
   const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { amount: 0.1 });
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -108,46 +110,43 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-screen flex items-center overflow-hidden max-w-400 mx-auto"
+      className="relative flex items-center overflow-hidden mx-auto"
     >
-      {/* Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 left-1/5 w-150 h-150 rounded-full blur-[220px]"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.06, 0.12, 0.06] }}
-          transition={{ duration: 12, repeat: Infinity }}
-          style={{ backgroundColor: colors.primary500 }}
-        />
-        <motion.div
-          className="absolute bottom-1/3 right-1/5 w-125 h-125 rounded-full blur-[220px]"
-          animate={{ scale: [1.1, 1, 1.1], opacity: [0.05, 0.1, 0.05] }}
-          transition={{ duration: 14, repeat: Infinity }}
-          style={{ backgroundColor: colors.accent500 }}
-        />
-        <div className="absolute inset-0 grid-bg opacity-20" />
-      </div>
-
       <motion.div
         style={{ y: yText, opacity: opacityFade, scale }}
         className="section-container relative z-10 w-full py-24 lg:py-32 xl:py-40"
       >
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 xl:gap-32">
-          {/* Profile Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="shrink-0 relative"
           >
             {profile.profileImageUrl && (
-              <div className="relative">
+              <div className="relative group">
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                  className="absolute -inset-6 rounded-3xl opacity-40"
+                  animate={isInView ? { rotate: 360 } : {}}
+                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  className="absolute -inset-10 rounded-full opacity-30 blur-2xl"
                   style={{
-                    background: `conic-gradient(from 0deg, ${colors.primary500}33, transparent 30%, ${colors.accent500}33, transparent 60%)`,
+                    background: `conic-gradient(from 0deg, ${colors.primary500}, transparent 25%, ${colors.accent500}, transparent 50%, ${colors.primary500}, transparent 75%, ${colors.accent500}, transparent 100%)`,
                   }}
+                />
+                <motion.div
+                  animate={isInView ? { rotate: -360 } : {}}
+                  transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+                  className="absolute -inset-8 rounded-full opacity-20 blur-xl"
+                  style={{
+                    background: `conic-gradient(from 180deg, ${colors.accent500}, transparent 20%, ${colors.primary500}, transparent 40%, ${colors.accent500}, transparent 60%, ${colors.primary500}, transparent 80%, ${colors.accent500}, transparent 100%)`,
+                  }}
+                />
+
+                <motion.div
+                  animate={isInView ? { scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] } : {}}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -inset-4 rounded-3xl blur-3xl"
+                  style={{ background: `linear-gradient(135deg, ${colors.primary500}40, ${colors.accent500}40)` }}
                 />
 
                 <div
@@ -158,20 +157,30 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                     lg:w-105 lg:h-105 
                     xl:w-120 xl:h-120 
                     2xl:w-130 2xl:h-130 
-                    rounded-3xl overflow-hidden"
-                  style={{ border: `2px solid ${colors.neutral700}50` }}
+                    rounded-3xl overflow-hidden z-10"
+                  style={{
+                    border: `1px solid ${colors.neutral700}60`,
+                    boxShadow: `0 0 50px ${colors.primary500}20`
+                  }}
                 >
                   <img
-                    src={profile.profileImageUrl}
+                    src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fetchPriority="high"
+                    loading="eager"
+                    decoding="async"
                   />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
+
+                <div className="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 rounded-tl-2xl opacity-50" style={{ borderColor: colors.primary500 }} />
+                <div className="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 rounded-br-2xl opacity-50" style={{ borderColor: colors.accent500 }} />
               </div>
             )}
           </motion.div>
 
-          {/* Content */}
           <motion.div
             variants={stagger.container}
             initial="hidden"
@@ -216,8 +225,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             >
               <TypewriterText
                 words={[
-                  "Full-Stack Developer",
-                  "UI/UX Enthusiast",
                   profile.title,
                 ]}
                 colors={colors}
@@ -227,7 +234,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
             <motion.div
               variants={stagger.item}
               className="flex items-center gap-2 mb-8 justify-center lg:justify-start"
-              style={{ color: colors.neutral500 }}
+              style={{ color: colors.neutral400 }}
             >
               <MapPin className="w-4 h-4" />
               <span className="text-sm lg:text-base xl:text-lg">
@@ -235,7 +242,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               </span>
             </motion.div>
 
-            {/* Buttons */}
             <motion.div
               variants={stagger.item}
               className="flex gap-4 flex-wrap justify-center lg:justify-start mb-8"
@@ -267,7 +273,6 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               </motion.button>
             </motion.div>
 
-            {/* Social */}
             <motion.div
               variants={stagger.item}
               className="flex gap-3 justify-center lg:justify-start"
@@ -278,12 +283,13 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Visit my ${link.platform} profile`}
                   whileHover={{ scale: 1.15, y: -3 }}
                   className="p-3 lg:p-4 rounded-xl"
                   style={{
                     border: `1px solid ${colors.neutral700}50`,
                     backgroundColor: `${colors.neutral800}50`,
-                    color: colors.neutral500,
+                    color: colors.neutral400,
                   }}
                 >
                   {getSocialIcon(link.platform)}
@@ -293,10 +299,10 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
           </motion.div>
         </div>
 
-        {/* Scroll */}
         <motion.button
           onClick={scrollToAbout}
           className="mt-20 mx-auto block"
+          aria-label="Scroll to about section"
         >
           <div className="flex flex-col items-center gap-2">
             <span className="text-xs lg:text-sm tracking-widest">SCROLL</span>
