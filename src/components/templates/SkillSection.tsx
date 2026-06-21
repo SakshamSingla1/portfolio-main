@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { SkillResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
@@ -51,51 +51,111 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         <div className="flex flex-wrap gap-2 mb-10">
           <button
             onClick={() => setActiveCategory(null)}
-            className="px-4 py-1.5 rounded-full font-mono text-xs transition-all duration-300"
+            className="rounded-full font-mono text-xs transition-all duration-300 flex items-center gap-1.5"
             style={{
+              padding: !activeCategory ? "0.5rem 1.25rem" : "0.375rem 1rem",
               color: !activeCategory ? colors.primary300 : colors.neutral400,
               background: !activeCategory ? `${colors.primary500}15` : `${colors.neutral700}30`,
               border: `1px solid ${!activeCategory ? colors.primary500 + "30" : colors.neutral700 + "20"}`,
+              fontWeight: !activeCategory ? 600 : undefined,
+              boxShadow: !activeCategory ? `0 4px 12px ${colors.primary500}20` : undefined,
+            }}
+            onMouseEnter={(e) => {
+              if (activeCategory !== null) {
+                e.currentTarget.style.background = `${colors.primary500}08`;
+                e.currentTarget.style.color = colors.neutral300;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeCategory !== null) {
+                e.currentTarget.style.background = `${colors.neutral700}30`;
+                e.currentTarget.style.color = colors.neutral400;
+              }
             }}
           >
             All
+            <span
+              className="inline-flex items-center justify-center rounded-full text-[9px] px-1 min-w-[16px]"
+              style={{
+                background: !activeCategory ? `${colors.primary500}30` : `${colors.neutral700}50`,
+                color: !activeCategory ? colors.primary300 : colors.neutral600,
+              }}
+            >
+              {skills.length}
+            </span>
           </button>
-          {categories.map((cat) => (
+          {categories.map((cat) => {
+            const count = skills.filter((sk) => sk.category === cat).length;
+            return (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className="px-4 py-1.5 rounded-full font-mono text-xs transition-all duration-300"
+              className="rounded-full font-mono text-xs transition-all duration-300 flex items-center gap-1.5"
               style={{
+                padding: activeCategory === cat ? "0.5rem 1.25rem" : "0.375rem 1rem",
                 color: activeCategory === cat ? colors.primary300 : colors.neutral400,
                 background: activeCategory === cat ? `${colors.primary500}15` : `${colors.neutral700}30`,
                 border: `1px solid ${activeCategory === cat ? colors.primary500 + "30" : colors.neutral700 + "20"}`,
+                fontWeight: activeCategory === cat ? 600 : undefined,
+                boxShadow: activeCategory === cat ? `0 4px 12px ${colors.primary500}20` : undefined,
+              }}
+              onMouseEnter={(e) => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.background = `${colors.primary500}08`;
+                  e.currentTarget.style.color = colors.neutral300;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeCategory !== cat) {
+                  e.currentTarget.style.background = `${colors.neutral700}30`;
+                  e.currentTarget.style.color = colors.neutral400;
+                }
               }}
             >
               {cat}
+              <span
+                className="inline-flex items-center justify-center rounded-full text-[9px] px-1 min-w-[16px]"
+                style={{
+                  background: activeCategory === cat ? `${colors.primary500}30` : `${colors.neutral700}50`,
+                  color: activeCategory === cat ? colors.primary300 : colors.neutral600,
+                }}
+              >
+                {count}
+              </span>
             </button>
-          ))}
+            );
+          })}
         </div>
 
+        <AnimatePresence mode="popLayout">
         <motion.div layout className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-3">
-          {filteredSkills.map((skill) => (
+          {filteredSkills.map((skill) => {
+            const cardHoverShadow = `0 12px 30px ${levelColor(skill.level)}25`;
+            return (
             <motion.div
               layout
               key={skill.id}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              whileHover={{ y: -6, boxShadow: `0 12px 30px ${colors.primary500}15` }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              whileHover={{ y: -6, boxShadow: cardHoverShadow }}
               className="rounded-xl p-4 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 backdrop-blur-md relative overflow-hidden"
               style={{
-                background: `${colors.neutral900}70`,
+                background: `${colors.neutral800}55`,
                 border: `1px solid ${colors.neutral700}30`,
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${levelColor(skill.level)}40`; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = `${colors.neutral700}30`; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = `${levelColor(skill.level)}40`;
+                e.currentTarget.style.background = `${colors.neutral800}80`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = `${colors.neutral700}30`;
+                e.currentTarget.style.background = `${colors.neutral800}55`;
+              }}
             >
               <div
                 className="absolute top-0 left-0 right-0 h-px"
-                style={{ background: `linear-gradient(90deg, transparent, ${levelColor(skill.level)}40, transparent)` }}
+                style={{ background: `linear-gradient(90deg, transparent, ${levelColor(skill.level)}50, transparent)` }}
               />
 
               <div className="w-11 h-11 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -115,13 +175,15 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
                     transition={{ duration: 0.8, delay: 0.2 }}
                   />
                 </div>
-                <p className="text-[10px] font-mono mt-1.5" style={{ color: levelColor(skill.level) }}>
+                <p className="text-[9px] font-bold uppercase tracking-wider font-mono mt-1.5" style={{ color: levelColor(skill.level) }}>
                   {toTitleCase(skill.level)}
                 </p>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

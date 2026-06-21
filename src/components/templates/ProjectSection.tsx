@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, FiMaximize2, FiX, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { useColors, shadows } from "../../utils/theme";
+import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
@@ -17,7 +17,6 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
   project: ProjectResponse;
   idx: number;
   colors: any;
-  s: any;
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [showMoreSkills, setShowMoreSkills] = useState(false);
@@ -39,25 +38,10 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
   const prevImage = () =>
     setCurrentImage((c) => (c - 1 + images.length) % images.length);
 
-  const handleMouseMove = () => { };
-
-  useEffect(() => {
-    // Disable auto-play by default to save network bandwidth and CPU
-    return;
-    if (images.length <= 1 || isHovered || isPreviewOpen) return;
-
-    const interval = setInterval(() => {
-      nextImage();
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [images.length, isHovered, isPreviewOpen]);
-
   return (
     <FadeInView delay={idx * 0.15}>
       <motion.div
         ref={cardRef}
-        onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false);
@@ -68,15 +52,14 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
           scale: 1
         }}
         transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
-        className="rounded-2xl overflow-hidden group backdrop-blur-xl transition-all duration-500 flex flex-col relative preserve-3d"
+        className={`rounded-2xl overflow-hidden group backdrop-blur-xl transition-all duration-500 relative flex flex-col ${idx % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
         style={{
           background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}90)`,
           border: `1px solid ${isHovered ? `${colors.primary500}40` : `${colors.neutral700}30`}`,
-          perspective: "1000px"
         }}
       >
         {images.length > 0 && (
-          <div className="relative h-[300px] overflow-hidden shrink-0 perspective-1000">
+          <div className="relative h-[260px] lg:h-auto lg:min-h-[320px] lg:w-[44%] overflow-hidden shrink-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentImage}
@@ -237,7 +220,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
           </div>
         )}
 
-        <div className="p-6 md:p-8 flex flex-col justify-between relative z-10 h-full overflow-hidden">
+        <div className="p-6 md:p-8 lg:flex-1 flex flex-col justify-between relative z-10 overflow-hidden">
           <div className="relative h-full">
             <h3
               className="text-2xl font-bold mb-3 group-hover:text-primary-400 transition-colors"
@@ -450,7 +433,6 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
 
 const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const colors = useColors();
-  const s = shadows(colors);
 
   return (
     <section id="projects" className="section-padding relative">
@@ -464,7 +446,6 @@ const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
               project={project}
               idx={idx}
               colors={colors}
-              s={s}
             />
           ))}
         </div>

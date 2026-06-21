@@ -1,50 +1,14 @@
+import React from "react";
 import { useColors, gradients } from "../../../utils/theme";
 import type { ProfileRequest, SocialLinkResponse } from "../../../utils/types";
-import { SocialLinkPlatform } from "../../../utils/constants";
-import { FaGithub, FaLinkedin, FaGlobe, FaGitlab, FaBitbucket, FaStackOverflow, FaHackerrank, FaInstagram, FaFacebook, FaLink } from "react-icons/fa";
-import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
-import { FaXTwitter } from "react-icons/fa6";
-import React from "react";
 import { FiHeart } from "react-icons/fi";
+import { getSocialIcon } from "../../../utils/socialIcons";
 
 interface Props {
   profile: ProfileRequest;
   socialLinks: SocialLinkResponse[];
 }
 
-const getSocialIcon = (platform: string) => {
-  switch (platform) {
-    case SocialLinkPlatform.GITHUB:
-      return <FaGithub />;
-    case SocialLinkPlatform.LINKEDIN:
-      return <FaLinkedin />;
-    case SocialLinkPlatform.PORTFOLIO:
-      return <FaGlobe />;
-    case SocialLinkPlatform.GITLAB:
-      return <FaGitlab />;
-    case SocialLinkPlatform.BITBUCKET:
-      return <FaBitbucket />;
-    case SocialLinkPlatform.STACKOVERFLOW:
-      return <FaStackOverflow />;
-    case SocialLinkPlatform.LEETCODE:
-      return <SiLeetcode />;
-    case SocialLinkPlatform.HACKERRANK:
-      return <FaHackerrank />;
-    case SocialLinkPlatform.CODECHEF:
-      return <SiCodechef />;
-    case SocialLinkPlatform.CODEFORCES:
-      return <SiCodeforces />;
-    case SocialLinkPlatform.TWITTER:
-    case SocialLinkPlatform.X:
-      return <FaXTwitter />;
-    case SocialLinkPlatform.INSTAGRAM:
-      return <FaInstagram />;
-    case SocialLinkPlatform.FACEBOOK:
-      return <FaFacebook />;
-    default:
-      return <FaLink />;
-  }
-};
 
 const Footer = ({ profile, socialLinks }: Props) => {
   const colors = useColors();
@@ -96,6 +60,7 @@ const Footer = ({ profile, socialLinks }: Props) => {
           <p className="font-mono text-xs" style={{ color: colors.neutral600 }}>
             © {new Date().getFullYear()} {profile.fullName}. All rights reserved.
           </p>
+
           <p className="font-mono text-xs flex items-center gap-1.5" style={{ color: colors.neutral600 }}>
             Built with <FiHeart size={12} style={{ color: colors.primary500 }} /> and lots of code
           </p>

@@ -229,7 +229,7 @@ const Index = () => {
       <div className="relative z-10">
         <MouseGlow />
 
-        <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} />
+        <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
 
         <div key="hero" className="mb-15">
           <HeroSection profile={profile} socialLinks={activeSocialLinks} />

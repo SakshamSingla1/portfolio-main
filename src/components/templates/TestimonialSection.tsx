@@ -32,14 +32,39 @@ const TestimonialsSection = ({ testimonials }: Props) => {
       <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
       <div className="max-w-7xl mx-auto">
-        <div className="glass-card-premium relative">
-          <div className="absolute -top-2 -right-2 opacity-30">
+        <div
+          className="glass-card-premium relative"
+          style={{
+            background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
+            border: `1px solid ${colors.neutral700}40`,
+            borderRadius: 20,
+            padding: '2rem 2rem',
+          }}
+        >
+          <div className="absolute -top-2 -right-2 opacity-15">
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
           </div>
+          <div className="absolute -bottom-2 -left-2 opacity-10 rotate-180">
+            <Quote className="w-10 h-10" style={{ color: colors.primary400 }} />
+          </div>
 
-          <div className="flex gap-0.5 mb-6">
+          <div className="flex gap-1 mb-6">
             {[...Array(5)].map((_, s) => (
-              <Star key={s} className="w-4 h-4" style={{ fill: colors.warning400, color: colors.warning400 }} />
+              <motion.div
+                key={s}
+                initial={{ opacity: 0, scale: 0, rotate: -20 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ delay: s * 0.07, type: "spring", stiffness: 400, damping: 18 }}
+              >
+                <Star
+                  className="w-4 h-4"
+                  style={{
+                    fill: colors.warning400,
+                    color: colors.warning400,
+                    filter: `drop-shadow(0 0 6px ${colors.warning400}60)`,
+                  }}
+                />
+              </motion.div>
             ))}
           </div>
 
@@ -70,7 +95,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                       src={getOptimizedImageUrl(current.imageUrl, { width: 100, height: 100 })}
                       alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
-                      style={{ border: `2px solid ${colors.primary500}26` }}
+                      style={{ border: `2px solid ${colors.primary500}50`, boxShadow: `0 0 16px ${colors.primary500}20` }}
                       loading="lazy"
                     />
                     <div
@@ -113,6 +138,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                       width: idx === active ? "1.5rem" : "0.5rem",
                       backgroundColor:
                         idx === active ? colors.primary400 : `${colors.neutral600}60`,
+                      boxShadow: idx === active ? `0 0 8px ${colors.primary400}60` : undefined,
                     }}
                   />
                 ))}
@@ -147,21 +173,23 @@ const TestimonialsSection = ({ testimonials }: Props) => {
           )}
         </div>
 
-        <div className="flex items-center justify-center gap-2.5 mt-6">
+        <div className="flex items-center justify-center gap-3 mt-6">
           {testimonials.map((t, i) => (
             <motion.button
               key={i}
               onClick={() => setActive(i)}
-              whileHover={{ scale: 1.1 }}
-              className="rounded-full overflow-hidden"
+              whileHover={{ scale: 1.12 }}
+              className="rounded-full overflow-hidden relative"
               style={{
-                width: i === active ? "2.75rem" : "2.25rem",
-                height: i === active ? "2.75rem" : "2.25rem",
+                width: i === active ? "3rem" : "2.25rem",
+                height: i === active ? "3rem" : "2.25rem",
                 border:
                   i === active
                     ? `2px solid ${colors.primary400}`
                     : `2px solid ${colors.neutral700}50`,
-                opacity: i === active ? 1 : 0.5,
+                opacity: i === active ? 1 : 0.45,
+                boxShadow: i === active ? `0 0 16px ${colors.primary500}40` : undefined,
+                transition: "all 0.35s ease",
               }}
             >
               <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />

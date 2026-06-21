@@ -1,46 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { Menu, X, ArrowUpRight, Download } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
 import type { NavItem } from "../../../utils/types";
 import { getOptimizedImageUrl } from "../../../utils/helper";
+import { usePublicResumeService } from "../../../services/usePublicResumeService";
 
 interface Props {
   items: NavItem[];
   profileName?: string;
   logoUrl?: string;
+  userName?: string;
 }
 
-const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
+const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) => {
   const colors = useColors();
   const g = gradients(colors);
+  const publicResumeService = usePublicResumeService();
 
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -70% 0px",
-      threshold: 0,
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { root: null, rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+    );
 
     items.forEach((item) => {
       const el = document.getElementById(item.section);
@@ -56,65 +53,116 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
   const scrollTo = (section: string) => {
     const el = document.getElementById(section);
     if (!el) return;
-
-    const yOffset = -100;
-    const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
-
+    const y = el.getBoundingClientRect().top + window.scrollY - 100;
     window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  const handleResume = () => {
+    if (userName) {
+      const url = publicResumeService.getDownloadResumeUrl(userName);
+      window.open(url, "_blank");
+    }
   };
 
   return (
     <motion.nav
       initial={{ y: -120 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.7 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={
         scrolled
           ? {
-            backgroundColor: `${colors.neutral900}CC`,
-            backdropFilter: "blur(24px)",
-            borderBottom: `1px solid ${colors.neutral700}33`,
-          }
+              backgroundColor: `${colors.neutral900}E8`,
+              backdropFilter: "blur(32px) saturate(200%)",
+              WebkitBackdropFilter: "blur(32px) saturate(200%)",
+              borderBottom: `1px solid ${colors.neutral700}35`,
+              boxShadow: `0 4px 40px rgba(0,0,0,0.4), inset 0 1px 0 ${colors.neutral700}15`,
+            }
           : undefined
       }
     >
+      {/* Scroll progress bar */}
+      <motion.div
+        style={{
+          scaleX,
+          transformOrigin: "0% 50%",
+          height: 2,
+          background: `linear-gradient(90deg, ${colors.primary500}, ${colors.accent500})`,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          boxShadow: `0 0 8px ${colors.primary500}60`,
+        }}
+      />
+
       <div className="max-w-350 xl:max-w-400 mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-20 xl:h-24">
+
+        {/* Logo */}
         <button
-          className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer bg-clip-text text-transparent flex items-center gap-3"
-          style={{
-            backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})`,
-          }}
+          className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer flex items-center gap-3 group"
           onClick={() => scrollTo("hero")}
           aria-label="Scroll to top"
         >
           {logoUrl && (
-            <img
-              src={getOptimizedImageUrl(logoUrl, { width: 120, height: 120 })}
-              alt="Logo"
-              className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full"
-            />
+            <div className="relative">
+              <img
+                src={getOptimizedImageUrl(logoUrl, { width: 120, height: 120 })}
+                alt="Logo"
+                className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full transition-transform duration-300 group-hover:scale-105"
+                style={{ boxShadow: `0 0 16px ${colors.primary500}25` }}
+              />
+              <div
+                className="absolute -inset-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: `${colors.primary500}20`, filter: "blur(4px)" }}
+              />
+            </div>
           )}
-          {profileName}
+          <span
+            className="bg-clip-text text-transparent"
+            style={{ backgroundImage: `linear-gradient(135deg, ${colors.primary400}, ${colors.accent400})` }}
+          >
+            {profileName}
+          </span>
         </button>
 
+        {/* Desktop nav pill */}
         <div
-          className="hidden md:flex items-center gap-2 rounded-full px-3 py-2 lg:px-4 lg:py-2.5"
+          className="hidden md:flex items-center gap-1 rounded-full px-3 py-2 lg:px-4 lg:py-2.5 relative"
           style={{
-            backgroundColor: `${colors.neutral800}60`,
-            border: `1px solid ${colors.neutral700}33`,
+            backgroundColor: `${colors.neutral800}70`,
+            border: `1px solid ${colors.neutral700}28`,
+            backdropFilter: "blur(12px)",
           }}
         >
+          {/* Hover ghost track */}
+          <AnimatePresence>
+            {hoveredItem && hoveredItem !== activeSection && (
+              <motion.div
+                key={hoveredItem}
+                layoutId="navHover"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-y-1.5 rounded-full pointer-events-none"
+                style={{
+                  backgroundColor: `${colors.neutral700}40`,
+                }}
+              />
+            )}
+          </AnimatePresence>
+
           {items.map((item) => (
             <button
               key={item.section}
               onClick={() => scrollTo(item.section)}
-              className="relative text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-all"
+              onMouseEnter={() => setHoveredItem(item.section)}
+              onMouseLeave={() => setHoveredItem(null)}
+              className="relative text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-colors duration-200"
               style={{
-                color:
-                  activeSection === item.section
-                    ? colors.primary400
-                    : colors.neutral400,
+                color: activeSection === item.section ? colors.primary400 : colors.neutral400,
+                fontWeight: activeSection === item.section ? 500 : undefined,
               }}
             >
               {activeSection === item.section && (
@@ -122,73 +170,195 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl }: Props) => {
                   layoutId="activeNav"
                   className="absolute inset-0 rounded-full"
                   style={{
-                    backgroundColor: `${colors.primary500}1A`,
-                    border: `1px solid ${colors.primary500}26`,
+                    backgroundColor: `${colors.primary500}18`,
+                    border: `1px solid ${colors.primary500}28`,
+                    boxShadow: `inset 0 0 12px ${colors.primary500}08`,
                   }}
                 />
               )}
               <span className="relative z-10">{item.label}</span>
+              {activeSection === item.section && (
+                <motion.div
+                  layoutId="activeUnderline"
+                  className="absolute bottom-1 left-4 right-4"
+                  style={{
+                    height: 1.5,
+                    borderRadius: 99,
+                    background: `linear-gradient(90deg, ${colors.primary500}, ${colors.accent500})`,
+                    opacity: 0.7,
+                  }}
+                />
+              )}
             </button>
           ))}
         </div>
 
-        <button
-          onClick={() => scrollTo("contact")}
-          className="hidden md:flex items-center gap-2 text-sm lg:text-base px-5 py-2.5 lg:px-6 lg:py-3 xl:px-7 xl:py-3.5 rounded-xl font-semibold text-white shadow-lg"
-          style={{ background: g.ctaGradient }}
-        >
-          Hire Me <ArrowUpRight className="w-4 h-4 lg:w-5 lg:h-5" />
-        </button>
+        {/* Desktop right actions */}
+        <div className="hidden md:flex items-center gap-2.5">
+          {/* Available for work dot */}
+          <div
+            className="hidden lg:flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full"
+            style={{
+              color: colors.success400,
+              background: `${colors.success500}08`,
+              border: `1px solid ${colors.success500}20`,
+            }}
+          >
+            <motion.span
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2.2, repeat: Infinity }}
+              style={{
+                display: "inline-block",
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: colors.success500,
+                flexShrink: 0,
+              }}
+            />
+            Open to work
+          </div>
 
+          {userName && (
+            <motion.button
+              onClick={handleResume}
+              className="flex items-center gap-1.5 text-sm lg:text-base px-4 py-2.5 lg:px-5 lg:py-3 rounded-xl font-medium"
+              style={{
+                color: colors.neutral300,
+                border: `1px solid ${colors.neutral700}40`,
+                backgroundColor: `${colors.neutral800}50`,
+              }}
+              whileHover={{
+                scale: 1.04,
+                borderColor: `${colors.primary500}35`,
+                backgroundColor: `${colors.neutral800}90`,
+              }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            >
+              <Download className="w-4 h-4" /> Resume
+            </motion.button>
+          )}
+
+          <motion.button
+            onClick={() => scrollTo("contact")}
+            className="flex items-center gap-2 text-sm lg:text-base px-5 py-2.5 lg:px-6 lg:py-3 xl:px-7 xl:py-3.5 rounded-xl font-semibold text-white"
+            style={{
+              background: g.ctaGradient,
+              boxShadow: `0 0 24px ${colors.primary500}35`,
+            }}
+            whileHover={{ scale: 1.05, boxShadow: `0 0 36px ${colors.primary500}55` }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          >
+            Hire Me <ArrowUpRight className="w-4 h-4 lg:w-5 lg:h-5" />
+          </motion.button>
+        </div>
+
+        {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2.5 rounded-lg"
-          style={{ color: colors.neutral200 }}
-          aria-label={mobileOpen ? "Close mobile menu" : "Open mobile menu"}
+          className="md:hidden p-2.5 rounded-xl transition-colors duration-200"
+          style={{
+            color: colors.neutral200,
+            background: mobileOpen ? `${colors.neutral700}50` : undefined,
+            border: `1px solid ${mobileOpen ? colors.neutral600 + "50" : "transparent"}`,
+          }}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          <AnimatePresence mode="wait">
+            {mobileOpen ? (
+              <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                <X size={22} />
+              </motion.div>
+            ) : (
+              <motion.div key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                <Menu size={22} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </button>
       </div>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden absolute top-16 left-0 right-0 z-40"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="md:hidden overflow-hidden"
             style={{
-              backgroundColor: `${colors.neutral900}F2`,
-              backdropFilter: "blur(24px)",
-              borderBottom: `1px solid ${colors.neutral700}33`,
+              backgroundColor: `${colors.neutral900}F5`,
+              backdropFilter: "blur(28px)",
+              borderBottom: `1px solid ${colors.neutral700}30`,
             }}
           >
-            <div className="px-5 py-5 space-y-3">
+            <div className="px-5 py-4 space-y-1.5">
               {items.map((item, i) => (
                 <motion.button
                   key={item.section}
-                  initial={{ opacity: 0, x: -15 }}
+                  initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.04, duration: 0.25 }}
                   onClick={() => {
                     setMobileOpen(false);
                     setTimeout(() => scrollTo(item.section), 200);
                   }}
-                  className="block w-full text-left py-3 px-4 text-base rounded-xl"
+                  className="flex items-center justify-between w-full py-3 px-4 text-sm rounded-xl transition-all duration-200"
                   style={
                     activeSection === item.section
                       ? {
-                        backgroundColor: `${colors.primary500}1A`,
-                        color: colors.primary400,
-                        fontWeight: 500,
-                      }
+                          backgroundColor: `${colors.primary500}12`,
+                          color: colors.primary400,
+                          fontWeight: 500,
+                          borderLeft: `2px solid ${colors.primary500}`,
+                          paddingLeft: 14,
+                        }
                       : { color: colors.neutral400 }
                   }
                 >
                   {item.label}
+                  {activeSection === item.section && (
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: colors.primary500 }} />
+                  )}
                 </motion.button>
               ))}
+
+              <div className="pt-2 space-y-2">
+                {userName && (
+                  <motion.button
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: items.length * 0.04 }}
+                    onClick={() => { setMobileOpen(false); handleResume(); }}
+                    className="flex items-center gap-2 w-full justify-center py-3 px-4 text-sm rounded-xl font-medium"
+                    style={{
+                      color: colors.neutral300,
+                      border: `1px solid ${colors.neutral700}40`,
+                      background: `${colors.neutral800}50`,
+                    }}
+                  >
+                    <Download className="w-4 h-4" /> Download Resume
+                  </motion.button>
+                )}
+
+                <motion.button
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (items.length + 1) * 0.04 }}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setTimeout(() => scrollTo("contact"), 200);
+                  }}
+                  className="flex items-center gap-2 w-full justify-center py-3 px-4 text-sm rounded-xl font-semibold text-white"
+                  style={{
+                    background: g.ctaGradient,
+                    boxShadow: `0 0 20px ${colors.primary500}35`,
+                  }}
+                >
+                  Hire Me <ArrowUpRight className="w-4 h-4" />
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         )}

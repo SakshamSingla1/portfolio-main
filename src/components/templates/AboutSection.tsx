@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import type { ProfileRequest } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -23,11 +24,12 @@ interface AboutSectionProps {
 const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) => {
   const colors = useColors();
   const g = gradients(colors);
+  const [codeCardHovered, setCodeCardHovered] = useState(false);
 
   const stats = [
     { icon: FiCode, value: totalExp.value, label: totalExp.label, color: colors.primary500 },
-    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.primary500 },
-    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.primary500 },
+    { icon: FiZap, value: totalProjects.value, label: totalProjects.label, color: colors.success500 },
+    { icon: FiCoffee, value: "∞", label: "Cups of Coffee", color: colors.warning500 },
   ];
 
   return (
@@ -66,13 +68,17 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                     color: colors.primary400,
                   }}
                 >
-                  <span style={{ color: colors.success500 }}>●</span> Currently building cool stuff
+                  <motion.span
+                    animate={{ opacity: [1, 0.4, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    style={{ color: colors.success500 }}
+                  >●</motion.span> Currently building cool stuff
                 </div>
               </div>
               <div className="absolute -bottom-2 -right-2 w-12 h-12 border-b-2 border-r-2 rounded-br-xl"
-                style={{ borderColor: `${colors.primary500}25` }} />
+                style={{ borderColor: `${colors.primary500}45` }} />
               <div className="absolute -top-2 -left-2 w-12 h-12 border-t-2 border-l-2 rounded-tl-xl"
-                style={{ borderColor: `${colors.accent500}25` }} />
+                style={{ borderColor: `${colors.accent500}45` }} />
             </FadeInView>
           )}
 
@@ -81,8 +87,12 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
               className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden"
               style={{
                 background: `${colors.neutral800}50`,
-                border: `1px solid ${colors.neutral700}40`,
+                border: `1px solid ${codeCardHovered ? `${colors.primary500}30` : `${colors.neutral700}40`}`,
+                boxShadow: codeCardHovered ? `0 8px 40px ${colors.primary500}08` : undefined,
+                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
               }}
+              onMouseEnter={() => setCodeCardHovered(true)}
+              onMouseLeave={() => setCodeCardHovered(false)}
             >
               <div className="flex items-center gap-2 mb-5 pb-4" style={{ borderBottom: `1px solid ${colors.neutral700}30` }}>
                 <div className="flex gap-1.5">
@@ -117,23 +127,34 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
               {stats.map((stat) => (
                 <motion.div
                   key={stat.label}
-                  whileHover={{ y: -4, boxShadow: `0 8px 24px ${stat.color}18` }}
-                  className="rounded-xl p-4 text-center backdrop-blur-md transition-all duration-300"
+                  whileHover={{ y: -5, boxShadow: `0 16px 40px ${stat.color}20` }}
+                  className="rounded-xl p-4 text-center backdrop-blur-md transition-all duration-300 relative overflow-hidden"
                   style={{
                     background: `${colors.neutral800}50`,
                     border: `1px solid ${colors.neutral700}35`,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = `${stat.color}35`; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = `${colors.neutral700}35`; }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = `${stat.color}40`;
+                    e.currentTarget.style.background = `${colors.neutral800}80`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = `${colors.neutral700}35`;
+                    e.currentTarget.style.background = `${colors.neutral800}50`;
+                  }}
                 >
-                  <stat.icon size={18} style={{ color: stat.color }} className="mx-auto mb-2" />
+                  <div
+                    className="w-8 h-8 rounded-lg mx-auto mb-2.5 flex items-center justify-center"
+                    style={{ background: `${stat.color}15`, border: `1px solid ${stat.color}25` }}
+                  >
+                    <stat.icon size={16} style={{ color: stat.color }} />
+                  </div>
                   <div
                     className="text-2xl font-bold font-display bg-clip-text text-transparent"
                     style={{ backgroundImage: `linear-gradient(135deg, ${stat.color}, ${colors.accent400})` }}
                   >
                     {stat.value}
                   </div>
-                  <div className="text-[10px] font-mono mt-1 leading-tight" style={{ color: colors.neutral400 }}>
+                  <div className="text-[10px] font-mono mt-1.5 leading-tight" style={{ color: colors.neutral500 }}>
                     {stat.label}
                   </div>
                 </motion.div>

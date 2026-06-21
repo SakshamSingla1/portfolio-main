@@ -17,6 +17,18 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   const colors = useColors();
   const isMobile = useIsMobile();
 
+  const [hoveredId, setHoveredId] = React.useState<string | null>(null);
+
+  const getEmploymentChipColor = (status: string): string => {
+    const normalized = status.toUpperCase();
+    if (normalized === "FULL_TIME") return colors.success400;
+    if (normalized === "PART_TIME") return colors.warning400;
+    if (normalized === "CONTRACT") return colors.primary400;
+    if (normalized === "FREELANCE") return colors.accent400;
+    if (normalized === "INTERNSHIP") return "#06b6d4";
+    return colors.accent400;
+  };
+
   return (
     <section id="experience" className="section-padding relative">
       <div className="max-w-7xl mx-auto">
@@ -56,141 +68,194 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           )}
 
           <div className="space-y-12">
-            {experiences.map((exp, idx) => (
-              <FadeInView
-                key={exp.id}
-                delay={idx * 0.12}
-                className={`relative ${isMobile ? "pl-0" : "pl-18"}`}
-              >
+            {experiences.map((exp, idx) => {
+              const isHovered = hoveredId === exp.id;
+              const chipColor = getEmploymentChipColor(exp.employmentStatus);
 
-                {!isMobile && (
-                  <div className="absolute left-0 md:left-2 top-6 bottom-0 flex items-start">
-                    <div
-                      className="relative z-10 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500"
-                      style={{
-                        background: colors.neutral900,
-                        border: `1px solid ${colors.primary500}50`,
-                        boxShadow: `0 0 15px ${colors.primary500}10`
-                      }}
-                    >
-                      <FiBriefcase
-                        style={{ color: colors.primary400 }}
-                        className="text-lg relative z-10"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {isMobile && (
-                  <div className="mb-2 text-xs font-mono" style={{ color: colors.primary400 }}>
-                    {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
-                  </div>
-                )}
-
-                {!isMobile && (
-                  <div className="mb-2">
-                    <span
-                      className="inline-flex items-center font-mono text-xs px-3 py-1 rounded-full"
-                      style={{
-                        color: colors.primary400,
-                        background: `${colors.primary500}10`,
-                        border: `1px solid ${colors.primary500}20`,
-                      }}
-                    >
-                      {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
-                    </span>
-                  </div>
-                )}
-
-                <div
-                  className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
-                  style={{
-                    background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
-                    border: `1px solid ${colors.neutral700}30`,
-                  }}
+              return (
+                <FadeInView
+                  key={exp.id}
+                  delay={idx * 0.12}
+                  className={`relative ${isMobile ? "pl-0" : "pl-18"}`}
                 >
-                  <div
-                    className="absolute top-0 left-0 right-0 h-px"
-                    style={{
-                      background: `linear-gradient(90deg, ${colors.primary500}40, transparent 80%)`
-                    }}
-                  />
 
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
-                    <div>
-                      <h3
-                        className="text-lg font-display font-bold"
-                        style={{ color: colors.neutral50 }}
-                      >
-                        {exp.jobTitle}
-                      </h3>
-                      <p
-                        className="font-medium text-sm"
-                        style={{ color: colors.primary400 }}
-                      >
-                        {exp.companyName}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2 flex-wrap">
+                  {!isMobile && (
+                    <div className="absolute left-0 md:left-2 top-6 bottom-0 flex items-start">
                       <div
-                        className="text-xs flex items-center gap-1"
-                        style={{ color: colors.neutral400 }}
-                      >
-                        <FiMapPin size={12} /> {exp.location}
-                      </div>
-
-                      <span
-                        className="text-xs font-mono rounded-full px-2.5 py-0.5"
+                        className="relative z-10 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500"
                         style={{
-                          color: colors.accent400,
-                          background: `${colors.accent500}10`,
-                          border: `1px solid ${colors.accent500}15`,
+                          background: colors.neutral900,
+                          border: `1px solid ${colors.primary500}50`,
+                          boxShadow: `0 0 15px ${colors.primary500}10`
                         }}
                       >
-                        {toTitleCase(exp.employmentStatus)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div
-                    className="text-sm leading-relaxed mb-6"
-                    style={{ color: `${colors.neutral300}E6` }}
-                  >
-                    <ReadMoreText
-                      text={exp.description || ""}
-                      limit={150}
-                      mobileLimit={80}
-                      className="border-l-4 pl-4"
-                    />
-                  </div>
-
-                  {exp.skills.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {exp.skills.map((skill) => (
-                        <span
-                          key={skill.id}
-                          className="inline-flex items-center gap-1.5 text-xs font-mono rounded-full px-2.5 py-1"
-                          style={{
-                            color: colors.neutral200,
-                            background: `${colors.neutral700}40`,
-                            border: `1px solid ${colors.neutral600}20`,
-                          }}
-                        >
-                          <img
-                            src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
-                            alt={skill.logoName}
-                            className="w-3.5 h-3.5"
-                            loading="lazy"
-                          />
-                          {skill.logoName}
-                        </span>
-                      ))}
+                        <FiBriefcase
+                          style={{ color: colors.primary400 }}
+                          className="text-lg relative z-10"
+                        />
+                      </div>
                     </div>
                   )}
-                </div>
-              </FadeInView>
-            ))}
+
+                  {isMobile && (
+                    <div className="mb-2 text-xs font-mono" style={{ color: colors.primary400 }}>
+                      {formatDate(exp.startDate)}{exp.endDate ? ` — ${formatDate(exp.endDate)}` : ""}
+                    </div>
+                  )}
+
+                  {!isMobile && (
+                    <div className="mb-2">
+                      <span
+                        className="inline-flex items-center font-mono text-xs px-3 py-1 rounded-full"
+                        style={{
+                          color: colors.primary400,
+                          background: `${colors.primary500}10`,
+                          border: `1px solid ${colors.primary500}20`,
+                        }}
+                      >
+                        {formatDate(exp.startDate)}{exp.endDate ? ` — ${formatDate(exp.endDate)}` : ""}
+                      </span>
+                    </div>
+                  )}
+
+                  <div
+                    className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
+                    style={{
+                      background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
+                      border: `1px solid ${isHovered ? `${colors.primary500}45` : `${colors.neutral700}30`}`,
+                      boxShadow: isHovered ? `0 8px 40px ${colors.primary500}12` : undefined,
+                      transition: 'all 0.4s ease',
+                    }}
+                    onMouseEnter={() => setHoveredId(exp.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                  >
+                    {isHovered && (
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: `radial-gradient(ellipse at 20% 50%, ${colors.primary500}05 0%, transparent 60%)`,
+                        }}
+                      />
+                    )}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-px"
+                      style={{
+                        background: `linear-gradient(90deg, ${colors.primary500}${isHovered ? "70" : "50"}, transparent 80%)`
+                      }}
+                    />
+                    {!exp.endDate && (
+                      <div className="absolute top-4 right-4">
+                        <span
+                          className="inline-flex items-center gap-1.5 text-[10px] font-mono rounded-full px-2.5 py-1"
+                          style={{
+                            background: `${colors.success500}12`,
+                            border: `1px solid ${colors.success500}35`,
+                            color: colors.success400,
+                          }}
+                        >
+                          <motion.span
+                            animate={{ opacity: [1, 0.3, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            style={{
+                              display: 'inline-block',
+                              width: 5,
+                              height: 5,
+                              borderRadius: '50%',
+                              background: colors.success500,
+                              flexShrink: 0,
+                            }}
+                          />
+                          Current
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
+                      <div>
+                        <h3
+                          className="text-lg font-display font-bold"
+                          style={{ color: colors.neutral50 }}
+                        >
+                          {exp.jobTitle}
+                        </h3>
+                        <p
+                          className="font-semibold text-sm"
+                          style={{ color: colors.primary400 }}
+                        >
+                          {exp.companyName}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div
+                          className="text-xs flex items-center gap-1"
+                          style={{ color: colors.neutral400 }}
+                        >
+                          <FiMapPin size={12} /> {exp.location}
+                        </div>
+
+                        <span
+                          className="text-xs font-mono rounded-full px-2.5 py-0.5"
+                          style={{
+                            color: chipColor,
+                            background: `${chipColor}15`,
+                            border: `1px solid ${chipColor}30`,
+                          }}
+                        >
+                          {toTitleCase(exp.employmentStatus)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      className="text-sm leading-relaxed mb-6"
+                      style={{ color: `${colors.neutral300}E6` }}
+                    >
+                      <ReadMoreText
+                        text={exp.description || ""}
+                        limit={150}
+                        mobileLimit={80}
+                        className="border-l-4 pl-4"
+                      />
+                    </div>
+
+                    {exp.skills.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {exp.skills.map((skill) => (
+                          <span
+                            key={skill.id}
+                            className="inline-flex items-center gap-1.5 text-xs font-mono rounded-full px-2.5 py-1 transition-all duration-200"
+                            style={{
+                              color: colors.neutral300,
+                              background: `${colors.neutral700}35`,
+                              border: `1px solid ${colors.neutral600}25`,
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = `${colors.primary500}12`;
+                              e.currentTarget.style.borderColor = `${colors.primary500}30`;
+                              e.currentTarget.style.color = colors.neutral100;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = `${colors.neutral700}35`;
+                              e.currentTarget.style.borderColor = `${colors.neutral600}25`;
+                              e.currentTarget.style.color = colors.neutral300;
+                            }}
+                          >
+                            <img
+                              src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
+                              alt={skill.logoName}
+                              className="w-3.5 h-3.5"
+                              loading="lazy"
+                            />
+                            {skill.logoName}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </FadeInView>
+              );
+            })}
           </div>
         </div>
       </div>
