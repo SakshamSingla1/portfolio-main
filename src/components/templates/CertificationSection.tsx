@@ -31,6 +31,15 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
     return { label: "Valid", color: colors.success400 };
   };
 
+  const getProgressBarColor = (progress: number, expiryDate: string): string => {
+    const expiry = new Date(expiryDate);
+    const now = new Date();
+    if (now > expiry) return colors.error400;
+    if (progress > 0.9) return colors.error400;
+    if (progress > 0.7) return colors.warning400;
+    return colors.success400;
+  };
+
   return (
     <section
       id="certifications"
@@ -44,7 +53,7 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
             <FadeInView key={cert.id} delay={idx * 0.1}>
               <motion.div
                 whileHover={{ x: 4, boxShadow: s.card }}
-                className="rounded-xl p-5 flex flex-col md:flex-row md:items-center gap-4 backdrop-blur-md transition-all duration-300 relative overflow-hidden"
+                className="group rounded-xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 backdrop-blur-md transition-all duration-300 relative overflow-hidden"
                 style={{
                   background: `${colors.neutral900}80`,
                   border: `1px solid ${colors.neutral700}40`,
@@ -68,15 +77,59 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </div>
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                  style={{
-                    background: `linear-gradient(135deg, ${colors.primary600}25, ${colors.accent600}20)`,
-                    border: `1px solid ${colors.primary500}30`,
-                    boxShadow: `0 4px 16px ${colors.primary500}15`,
-                  }}
-                >
-                  <HiOutlineBadgeCheck style={{ color: colors.primary300 }} size={24} />
+
+                {/* Issuer initial avatar with badge icon overlay */}
+                <div className="relative shrink-0">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center relative"
+                    style={{
+                      background: `linear-gradient(135deg, ${colors.primary600}25, ${colors.accent600}20)`,
+                      border: `1px solid ${colors.primary500}30`,
+                      boxShadow: `0 4px 16px ${colors.primary500}15`,
+                    }}
+                  >
+                    <span
+                      className="font-display font-bold text-xl leading-none select-none"
+                      style={{
+                        background: `linear-gradient(135deg, ${colors.primary300}, ${colors.accent400})`,
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }}
+                    >
+                      {cert.issuer.charAt(0).toUpperCase()}
+                    </span>
+                    <div
+                      className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center"
+                      style={{
+                        background: `linear-gradient(135deg, ${colors.primary500}, ${colors.accent500})`,
+                        boxShadow: `0 2px 6px ${colors.primary500}40`,
+                      }}
+                    >
+                      <HiOutlineBadgeCheck style={{ color: "#fff" }} size={10} />
+                    </div>
+                  </div>
+
+                  {/* Issuer tooltip on hover */}
+                  <div
+                    className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md text-xs font-mono whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                    style={{
+                      background: `${colors.neutral800}F0`,
+                      border: `1px solid ${colors.neutral700}60`,
+                      color: colors.neutral300,
+                      boxShadow: `0 4px 12px ${colors.neutral900}80`,
+                    }}
+                  >
+                    {cert.issuer}
+                    <div
+                      className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0"
+                      style={{
+                        borderLeft: "4px solid transparent",
+                        borderRight: "4px solid transparent",
+                        borderTop: `4px solid ${colors.neutral700}60`,
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div className="flex-1 min-w-0">
@@ -122,6 +175,39 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
                       </span>
                     )}
                   </div>
+
+                  {/* Validity progress bar */}
+                  {cert.issueDate && cert.expiryDate && (() => {
+                    const now = new Date().getTime();
+                    const issued = new Date(cert.issueDate).getTime();
+                    const expiry = new Date(cert.expiryDate).getTime();
+                    const raw = (now - issued) / (expiry - issued);
+                    const progress = Math.min(1, Math.max(0, raw));
+                    const barColor = getProgressBarColor(progress, cert.expiryDate);
+                    return (
+                      <div
+                        className="mt-2.5"
+                        style={{
+                          height: 3,
+                          borderRadius: 99,
+                          background: `${colors.neutral700}40`,
+                          overflow: "hidden",
+                        }}
+                      >
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress * 100}%` }}
+                          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: idx * 0.1 + 0.3 }}
+                          style={{
+                            height: "100%",
+                            borderRadius: 99,
+                            background: barColor,
+                            boxShadow: `0 0 6px ${barColor}60`,
+                          }}
+                        />
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {cert.credentialUrl && (

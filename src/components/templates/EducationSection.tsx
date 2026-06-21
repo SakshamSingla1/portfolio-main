@@ -74,18 +74,31 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
 
                   {!isMobile && (
                     <div className="absolute left-0 md:left-1 top-1 bottom-0 flex items-start">
-                      <div
-                        className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500"
-                        style={{
-                          background: colors.neutral900,
-                          border: `1px solid ${colors.accent500}50`,
-                          boxShadow: `0 0 15px ${colors.accent500}10`
-                        }}
-                      >
-                        <HiOutlineAcademicCap
-                          style={{ color: colors.accent400 }}
-                          className="text-lg relative z-10"
-                        />
+                      {/* Pulse ring on hover */}
+                      <div className="relative w-10 h-10">
+                        {isHovered && (
+                          <motion.div
+                            className="absolute inset-0 rounded-full pointer-events-none"
+                            animate={{ scale: [1, 1.4, 1], opacity: [0.4, 0, 0.4] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            style={{
+                              border: `2px solid ${colors.accent500}`,
+                            }}
+                          />
+                        )}
+                        <div
+                          className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500"
+                          style={{
+                            background: colors.neutral900,
+                            border: `1px solid ${colors.accent500}50`,
+                            boxShadow: `0 0 15px ${colors.accent500}10`
+                          }}
+                        >
+                          <HiOutlineAcademicCap
+                            style={{ color: colors.accent400 }}
+                            className="text-lg relative z-10"
+                          />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -104,7 +117,9 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                     style={{
                       background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                       border: `1px solid ${isHovered ? `${colors.accent500}40` : `${colors.neutral700}30`}`,
-                      boxShadow: isHovered ? `0 8px 40px ${colors.accent500}10` : undefined,
+                      boxShadow: isHovered
+                        ? `0 8px 40px ${colors.accent500}10, inset 0 0 0 1px ${colors.accent500}60`
+                        : undefined,
                       transition: 'all 0.4s ease',
                     }}
                     onMouseEnter={() => setHoveredId(edu.id ?? null)}
@@ -124,11 +139,23 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                         background: `linear-gradient(90deg, ${colors.accent500}${isHovered ? "60" : "40"}, transparent 80%)`
                       }}
                     />
-                    <div
-                      className="absolute top-4 right-4 font-mono text-2xl font-bold leading-none select-none pointer-events-none"
-                      style={{ color: `${colors.accent500}10` }}
-                    >
-                      {edu.endYear || edu.startYear}
+
+                    {/* Year watermark + Grade score in top-right */}
+                    <div className="absolute top-4 right-4 flex flex-col items-end gap-1 select-none pointer-events-none">
+                      <div
+                        className="font-mono text-2xl font-bold leading-none"
+                        style={{ color: `${colors.accent500}10` }}
+                      >
+                        {edu.endYear || edu.startYear}
+                      </div>
+                      {edu.grade && (
+                        <div
+                          className="font-mono font-bold text-base leading-none"
+                          style={{ color: colors.success400 }}
+                        >
+                          {normalizePercentage(edu.grade)}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">

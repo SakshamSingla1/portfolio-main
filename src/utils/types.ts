@@ -166,6 +166,14 @@ export interface ImageValue {
     publicId?: string;
 }
 
+export interface GitHubStats {
+    username: string;
+    publicRepos: number;
+    followers: number;
+    totalStars: number;
+    externalPRs: number | null;
+}
+
 export interface ProfileMaster {
     profile : ProfileRequest | null;
     colorTheme : ColorTheme | null;
@@ -177,6 +185,7 @@ export interface ProfileMaster {
     testimonials: Testimonial[];
     certifications: Certification[];
     socialLinks: SocialLinkResponse[];
+    githubStats: GitHubStats | null;
 }
 
 export type Option = {

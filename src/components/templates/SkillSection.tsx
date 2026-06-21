@@ -11,10 +11,13 @@ interface SkillsSectionProps {
   skills: SkillResponse[];
 }
 
+const LEVELS = ["Expert", "Advanced", "Intermediate", "Beginner"] as const;
+
 const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const colors = useColors();
   const categories = [...new Set(skills.map((sk) => sk.category))];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   const levelColor = (level: string) => {
     switch (level) {
@@ -34,9 +37,20 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
     }
   };
 
-  const filteredSkills = activeCategory
-    ? skills.filter((sk) => sk.category === activeCategory)
-    : skills;
+  const filteredSkills = skills
+    .filter((sk) => !activeCategory || sk.category === activeCategory)
+    .filter((sk) => sk.logoName.toLowerCase().includes(search.toLowerCase()));
+
+  // Proficiency counts from full skills array
+  const levelCounts = LEVELS.reduce<Record<string, number>>((acc, lvl) => {
+    acc[lvl] = skills.filter((sk) => sk.level === lvl).length;
+    return acc;
+  }, {});
+
+  // Featured skills: Expert level, or top 4 if none
+  const expertSkills = skills.filter((sk) => sk.level === "Expert");
+  const featuredSkills = expertSkills.length > 0 ? expertSkills : skills.slice(0, 4);
+  const showFeatured = expertSkills.length > 0;
 
   return (
     <section
@@ -48,6 +62,119 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         <SkillsAutoScrollBar skills={skills} />
 
+        {/* Featured Skills Row */}
+        {showFeatured && (
+          <div className="mb-8">
+            <p
+              className="text-xs font-mono font-semibold uppercase tracking-widest mb-3"
+              style={{ color: colors.primary400 }}
+            >
+              Featured
+            </p>
+            <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+              {featuredSkills.map((skill) => (
+                <motion.div
+                  key={skill.id}
+                  whileHover={{ y: -4, scale: 1.03 }}
+                  className="rounded-2xl p-4 flex flex-col items-center gap-2 shrink-0 w-24 cursor-default"
+                  style={{
+                    background: `${colors.primary500}08`,
+                    border: `1px solid ${colors.primary500}25`,
+                  }}
+                >
+                  <div className="w-20 h-20 flex items-center justify-center">
+                    <img
+                      src={getOptimizedImageUrl(skill.logoUrl, { width: 120 })}
+                      alt={skill.logoName}
+                      className="w-14 h-14 object-contain"
+                    />
+                  </div>
+                  <p
+                    className="text-xs font-medium text-center leading-tight"
+                    style={{ color: colors.neutral100 }}
+                  >
+                    {skill.logoName}
+                  </p>
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-wider font-mono px-2 py-0.5 rounded-full"
+                    style={{
+                      color: levelColor(skill.level),
+                      background: `${levelColor(skill.level)}18`,
+                      border: `1px solid ${levelColor(skill.level)}30`,
+                    }}
+                  >
+                    {skill.level}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Proficiency Overview Mini-Chart */}
+        <div
+          className="grid grid-cols-4 gap-4 rounded-xl p-4 mb-8"
+          style={{
+            background: `${colors.neutral800}40`,
+            border: `1px solid ${colors.neutral700}30`,
+          }}
+        >
+          {LEVELS.map((lvl) => (
+            <motion.div
+              key={lvl}
+              whileHover={{ scale: 1.05 }}
+              className="flex flex-col items-center gap-1"
+            >
+              <span
+                className="text-2xl font-mono font-bold"
+                style={{ color: levelColor(lvl) }}
+              >
+                {levelCounts[lvl]}
+              </span>
+              <span
+                className="text-[10px] font-mono uppercase tracking-wider"
+                style={{ color: colors.neutral400 }}
+              >
+                {lvl}
+              </span>
+              <div
+                className="w-2 h-2 rounded-full mt-0.5"
+                style={{ background: levelColor(lvl) }}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Search Input */}
+        <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+          <div className="relative w-full md:w-64">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search skills..."
+              className="rounded-xl px-4 py-2 font-mono text-sm w-full"
+              style={{
+                background: `${colors.neutral800}60`,
+                border: `1px solid ${colors.neutral700}40`,
+                color: colors.neutral100,
+                outline: "none",
+              }}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono leading-none"
+                style={{ color: colors.neutral400 }}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Category Filter Buttons */}
         <div className="flex flex-wrap gap-2 mb-10">
           <button
             onClick={() => setActiveCategory(null)}

@@ -195,50 +195,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
 
         {/* Desktop right actions */}
         <div className="hidden md:flex items-center gap-2.5">
-          {/* Available for work dot */}
-          <div
-            className="hidden lg:flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full"
-            style={{
-              color: colors.success400,
-              background: `${colors.success500}08`,
-              border: `1px solid ${colors.success500}20`,
-            }}
-          >
-            <motion.span
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2.2, repeat: Infinity }}
-              style={{
-                display: "inline-block",
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: colors.success500,
-                flexShrink: 0,
-              }}
-            />
-            Open to work
-          </div>
-
-          {userName && (
-            <motion.button
-              onClick={handleResume}
-              className="flex items-center gap-1.5 text-sm lg:text-base px-4 py-2.5 lg:px-5 lg:py-3 rounded-xl font-medium"
-              style={{
-                color: colors.neutral300,
-                border: `1px solid ${colors.neutral700}40`,
-                backgroundColor: `${colors.neutral800}50`,
-              }}
-              whileHover={{
-                scale: 1.04,
-                borderColor: `${colors.primary500}35`,
-                backgroundColor: `${colors.neutral800}90`,
-              }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            >
-              <Download className="w-4 h-4" /> Resume
-            </motion.button>
-          )}
-
           <motion.button
             onClick={() => scrollTo("contact")}
             className="flex items-center gap-2 text-sm lg:text-base px-5 py-2.5 lg:px-6 lg:py-3 xl:px-7 xl:py-3.5 rounded-xl font-semibold text-white"

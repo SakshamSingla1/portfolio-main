@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { FaBriefcase } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
@@ -33,7 +35,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
 
       <div className="max-w-7xl mx-auto">
         <div
-          className="glass-card-premium relative"
+          className="glass-card-premium relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
             border: `1px solid ${colors.neutral700}40`,
@@ -41,14 +43,37 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             padding: '2rem 2rem',
           }}
         >
-          <div className="absolute -top-2 -right-2 opacity-15">
+          {/* Ambient glow that shifts with active index */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: "-40%",
+              left: `${(active / Math.max(testimonials.length - 1, 1)) * 80}%`,
+              transform: "translateX(-50%)",
+              width: "60%",
+              height: "200%",
+              background: `radial-gradient(ellipse at center, ${colors.primary500}08 0%, transparent 65%)`,
+              transition: "left 0.8s cubic-bezier(0.22, 1, 0.36, 1)",
+              zIndex: 0,
+            }}
+          />
+
+          {/* Counter top-right */}
+          <div
+            className="absolute top-4 right-5 font-mono text-xs select-none"
+            style={{ color: colors.neutral600, zIndex: 1 }}
+          >
+            {active + 1} / {testimonials.length}
+          </div>
+
+          <div className="absolute -top-2 -right-2 opacity-15" style={{ zIndex: 1 }}>
             <Quote className="w-12 h-12" style={{ color: colors.primary400 }} />
           </div>
-          <div className="absolute -bottom-2 -left-2 opacity-10 rotate-180">
+          <div className="absolute -bottom-2 -left-2 opacity-10 rotate-180" style={{ zIndex: 1 }}>
             <Quote className="w-10 h-10" style={{ color: colors.primary400 }} />
           </div>
 
-          <div className="flex gap-1 mb-6">
+          <div className="flex gap-1 mb-6 relative" style={{ zIndex: 1 }}>
             {[...Array(5)].map((_, s) => (
               <motion.div
                 key={s}
@@ -75,6 +100,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: "relative", zIndex: 1 }}
             >
               <div
                 className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
@@ -111,13 +137,50 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 )}
 
                 <div>
-                  <p className="font-display font-semibold text-sm" style={{ color: colors.neutral100 }}>
-                    {current.name}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-display font-semibold text-sm" style={{ color: colors.neutral100 }}>
+                      {current.name}
+                    </p>
+                    {current.linkedInUrl && (
+                      <a
+                        href={current.linkedInUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center rounded-lg transition-all duration-200"
+                        style={{
+                          width: 28,
+                          height: 28,
+                          background: `${colors.primary500}15`,
+                          color: "#0077B5",
+                          border: `1px solid ${colors.primary500}20`,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = `${colors.primary500}25`;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = `${colors.primary500}15`;
+                        }}
+                      >
+                        <FaLinkedin size={14} />
+                      </a>
+                    )}
+                  </div>
                   <p className="text-xs" style={{ color: `${colors.neutral500}CC` }}>
                     {current.role} at{" "}
                     <span style={{ color: `${colors.primary400}99` }}>{current.company}</span>
                   </p>
+                  {current.company && (
+                    <div className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full font-mono text-xs"
+                      style={{
+                        background: `${colors.neutral700}30`,
+                        border: `1px solid ${colors.neutral700}50`,
+                        color: colors.neutral400,
+                      }}
+                    >
+                      <FaBriefcase size={10} />
+                      {current.company}
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -126,7 +189,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
           {testimonials.length > 1 && (
             <div
               className="flex items-center justify-between mt-8 pt-5"
-              style={{ borderTop: `1px solid ${colors.neutral700}20` }}
+              style={{ borderTop: `1px solid ${colors.neutral700}20`, position: "relative", zIndex: 1 }}
             >
               <div className="flex gap-2">
                 {testimonials.map((_, idx) => (

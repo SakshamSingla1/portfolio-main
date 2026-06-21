@@ -143,33 +143,6 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                         background: `linear-gradient(90deg, ${colors.primary500}${isHovered ? "70" : "50"}, transparent 80%)`
                       }}
                     />
-                    {!exp.endDate && (
-                      <div className="absolute top-4 right-4">
-                        <span
-                          className="inline-flex items-center gap-1.5 text-[10px] font-mono rounded-full px-2.5 py-1"
-                          style={{
-                            background: `${colors.success500}12`,
-                            border: `1px solid ${colors.success500}35`,
-                            color: colors.success400,
-                          }}
-                        >
-                          <motion.span
-                            animate={{ opacity: [1, 0.3, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            style={{
-                              display: 'inline-block',
-                              width: 5,
-                              height: 5,
-                              borderRadius: '50%',
-                              background: colors.success500,
-                              flexShrink: 0,
-                            }}
-                          />
-                          Current
-                        </span>
-                      </div>
-                    )}
-
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
                       <div>
                         <h3

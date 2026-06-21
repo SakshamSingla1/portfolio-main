@@ -296,9 +296,9 @@ const Index = () => {
               </div>
             )}
 
-            {activeSocialLinks.some(l => l.platform === "GITHUB") && (
+            {data.githubStats && (
               <div key="open-source" className="mb-15">
-                <GitHubSection socialLinks={activeSocialLinks} />
+                <GitHubSection githubStats={data.githubStats} />
               </div>
             )}
 

@@ -21,6 +21,13 @@ interface AboutSectionProps {
   };
 }
 
+const techBadges = [
+  { label: "TypeScript", position: { top: "-10px", left: "-12px" }, delay: 0 },
+  { label: "React", position: { top: "-10px", right: "-12px" }, delay: 0.6 },
+  { label: "Spring Boot", position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
+  { label: "MongoDB", position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
+];
+
 const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) => {
   const colors = useColors();
   const g = gradients(colors);
@@ -60,21 +67,55 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(to top, ${colors.neutral900}90, transparent 50%)`,
                 }} />
+
+                {/* Available badge */}
                 <div
-                  className="absolute bottom-4 left-4 px-4 py-2 rounded-lg backdrop-blur-md font-mono text-xs"
+                  className="absolute bottom-4 left-4 px-4 py-2 rounded-lg backdrop-blur-md font-mono text-xs flex items-center gap-2"
                   style={{
                     background: `${colors.neutral900}90`,
                     border: `1px solid ${colors.neutral700}40`,
                     color: colors.primary400,
                   }}
                 >
-                  <motion.span
-                    animate={{ opacity: [1, 0.4, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    style={{ color: colors.success500 }}
-                  >●</motion.span> Currently building cool stuff
+                  <span className="relative flex h-2 w-2">
+                    <motion.span
+                      className="absolute inline-flex h-full w-full rounded-full"
+                      animate={{ scale: [1, 1.8, 1], opacity: [0.75, 0, 0.75] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                      style={{ background: colors.success500 }}
+                    />
+                    <span
+                      className="relative inline-flex rounded-full h-2 w-2"
+                      style={{ background: colors.success500 }}
+                    />
+                  </span>
+                  Available for opportunities
                 </div>
               </div>
+
+              {/* Floating tech-label badges */}
+              {techBadges.map((badge) => (
+                <motion.div
+                  key={badge.label}
+                  className="absolute z-10 px-2.5 py-1 rounded-full font-mono text-xs whitespace-nowrap pointer-events-none"
+                  style={{
+                    ...badge.position,
+                    background: `${colors.neutral800}CC`,
+                    border: `1px solid ${colors.primary500}30`,
+                    color: colors.neutral300,
+                  }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: badge.delay,
+                  }}
+                >
+                  {badge.label}
+                </motion.div>
+              ))}
+
               <div className="absolute -bottom-2 -right-2 w-12 h-12 border-b-2 border-r-2 rounded-br-xl"
                 style={{ borderColor: `${colors.primary500}45` }} />
               <div className="absolute -top-2 -left-2 w-12 h-12 border-t-2 border-l-2 rounded-tl-xl"
@@ -94,6 +135,19 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
               onMouseEnter={() => setCodeCardHovered(true)}
               onMouseLeave={() => setCodeCardHovered(false)}
             >
+              {/* Shimmer scanner line */}
+              <motion.div
+                className="absolute top-0 left-0 right-0"
+                style={{
+                  height: "1px",
+                  background: `linear-gradient(90deg, transparent, ${colors.primary500}80, transparent)`,
+                  transformOrigin: "left center",
+                }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+              />
+
               <div className="flex items-center gap-2 mb-5 pb-4" style={{ borderBottom: `1px solid ${colors.neutral700}30` }}>
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full" style={{ background: `${colors.error500}80` }} />
@@ -150,7 +204,11 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   </div>
                   <div
                     className="text-2xl font-bold font-display bg-clip-text text-transparent"
-                    style={{ backgroundImage: `linear-gradient(135deg, ${stat.color}, ${colors.accent400})` }}
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, ${stat.color}, ${colors.accent400})`,
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
                   >
                     {stat.value}
                   </div>
