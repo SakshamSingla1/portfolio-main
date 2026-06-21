@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useColors, gradients } from "../../../utils/theme";
+import { useColors } from "../../../utils/theme";
 import React from "react";
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 
 const SectionHeading = ({ title, subtitle }: Props) => {
   const colors = useColors();
-  const g = gradients(colors);
 
   return (
     <div className="mb-16 md:mb-20 text-center relative">

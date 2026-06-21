@@ -126,7 +126,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                       boxShadow: isHovered ? `0 8px 40px ${colors.primary500}12` : undefined,
                       transition: 'all 0.4s ease',
                     }}
-                    onMouseEnter={() => setHoveredId(exp.id)}
+                    onMouseEnter={() => setHoveredId(exp.id ?? null)}
                     onMouseLeave={() => setHoveredId(null)}
                   >
                     {isHovered && (

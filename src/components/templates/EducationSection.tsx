@@ -107,7 +107,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                       boxShadow: isHovered ? `0 8px 40px ${colors.accent500}10` : undefined,
                       transition: 'all 0.4s ease',
                     }}
-                    onMouseEnter={() => setHoveredId(edu.id)}
+                    onMouseEnter={() => setHoveredId(edu.id ?? null)}
                     onMouseLeave={() => setHoveredId(null)}
                   >
                     {isHovered && (
