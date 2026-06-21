@@ -27,6 +27,7 @@ const CertificationsSection = lazy(() => import("../templates/CertificationSecti
 const EducationSection = lazy(() => import("../templates/EducationSection"));
 const TestimonialsSection = lazy(() => import("../templates/TestimonialSection"));
 const ContactSection = lazy(() => import("../templates/ContactSection"));
+const GitHubSection = lazy(() => import("../templates/GitHubSection"));
 
 const Index = () => {
   const colors = useColors();
@@ -292,6 +293,12 @@ const Index = () => {
             {activeTestimonials.length > 0 && (
               <div key="testimonials" className="mb-15">
                 <TestimonialsSection testimonials={activeTestimonials} />
+              </div>
+            )}
+
+            {activeSocialLinks.some(l => l.platform === "GITHUB") && (
+              <div key="open-source" className="mb-15">
+                <GitHubSection socialLinks={activeSocialLinks} />
               </div>
             )}
 
