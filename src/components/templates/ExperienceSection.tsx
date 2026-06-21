@@ -41,29 +41,47 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
 
           {!isMobile && (
             <>
+              {/* Timeline track */}
               <div
                 className="absolute left-5 md:left-7 top-0 bottom-0 w-[2px]"
                 style={{
-                  background: `linear-gradient(to bottom, ${colors.primary500}80, ${colors.neutral700}30, transparent)`,
-                  boxShadow: `0 0 15px ${colors.primary500}20`
+                  background: `linear-gradient(to bottom, ${colors.primary500}90, ${colors.primary500}30, transparent)`,
                 }}
               />
-              <motion.div
-                animate={{
-                  top: ["0%", "100%"],
-                  opacity: [0, 1, 0]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: 2 // Staggered from education
-                }}
-                className="absolute left-5 md:left-7 w-[2px] h-24 blur-[1px]"
+              {/* Outer glow behind track */}
+              <div
+                className="absolute left-4 md:left-6 top-0 bottom-0 w-4 pointer-events-none"
                 style={{
-                  background: `linear-gradient(to bottom, transparent, ${colors.primary400}, transparent)`,
+                  background: `linear-gradient(to bottom, ${colors.primary500}12, transparent 60%)`,
+                  filter: "blur(6px)",
                 }}
               />
+              {/* Comet: bright head + long fading tail */}
+              <motion.div
+                className="absolute left-5 md:left-7 w-[2px] pointer-events-none"
+                animate={{ top: ["-15%", "110%"] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 1.75 }}
+              >
+                {/* tail */}
+                <div
+                  className="w-full"
+                  style={{
+                    height: 64,
+                    background: `linear-gradient(to bottom, transparent, ${colors.primary400}80)`,
+                  }}
+                />
+                {/* head */}
+                <div
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: colors.primary300,
+                    boxShadow: `0 0 8px 3px ${colors.primary400}90`,
+                    marginLeft: -2,
+                  }}
+                />
+              </motion.div>
             </>
           )}
 
@@ -80,20 +98,48 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                 >
 
                   {!isMobile && (
-                    <div className="absolute left-0 md:left-2 top-6 bottom-0 flex items-start">
-                      <div
-                        className="relative z-10 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500"
-                        style={{
-                          background: colors.neutral900,
-                          border: `1px solid ${colors.primary500}50`,
-                          boxShadow: `0 0 15px ${colors.primary500}10`
-                        }}
-                      >
-                        <FiBriefcase
-                          style={{ color: colors.primary400 }}
-                          className="text-lg relative z-10"
+                    <div className="absolute left-0 md:left-2 top-6 bottom-0 flex flex-col items-center gap-1">
+                      {/* Pulse ring + icon node */}
+                      <div className="relative w-10 h-10 shrink-0">
+                        <motion.div
+                          className="absolute inset-0 rounded-lg pointer-events-none"
+                          animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+                          transition={{ repeat: Infinity, duration: 2.5, delay: idx * 0.4 }}
+                          style={{ border: `2px solid ${colors.primary500}60` }}
                         />
+                        {isHovered && (
+                          <motion.div
+                            className="absolute inset-0 rounded-lg pointer-events-none"
+                            animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                            transition={{ repeat: Infinity, duration: 1.5 }}
+                            style={{ border: `2px solid ${colors.primary400}` }}
+                          />
+                        )}
+                        <div
+                          className="relative z-10 w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500"
+                          style={{
+                            background: isHovered
+                              ? `linear-gradient(135deg, ${colors.primary500}30, ${colors.neutral900})`
+                              : colors.neutral900,
+                            border: `1px solid ${isHovered ? colors.primary400 : `${colors.primary500}50`}`,
+                            boxShadow: isHovered
+                              ? `0 0 20px ${colors.primary500}40`
+                              : `0 0 10px ${colors.primary500}10`,
+                          }}
+                        >
+                          <FiBriefcase
+                            style={{ color: isHovered ? colors.primary300 : colors.primary400 }}
+                            className="text-lg relative z-10"
+                          />
+                        </div>
                       </div>
+                      {/* Step number below node */}
+                      <span
+                        className="font-mono text-[10px] font-bold leading-none"
+                        style={{ color: `${colors.primary500}50` }}
+                      >
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
                     </div>
                   )}
 
