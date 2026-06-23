@@ -35,8 +35,19 @@ const Index = () => {
   const { setDefaultTheme } = useDefaultColorTheme();
 
   const [data, setData] = useState<ProfileMaster | null>(() => {
-    const cached = localStorage.getItem("portfolio_data");
-    return cached ? JSON.parse(cached) : null;
+    try {
+      const cached = localStorage.getItem("portfolio_data");
+      if (!cached) return null;
+      const parsed = JSON.parse(cached);
+      // bust stale cache if shape is missing new fields
+      if (!("githubStats" in parsed)) {
+        localStorage.removeItem("portfolio_data");
+        return null;
+      }
+      return parsed;
+    } catch {
+      return null;
+    }
   });
   const [loading, setLoading] = useState(!data);
   const [canonicalUrl, setCanonicalUrl] = useState("");
