@@ -112,17 +112,30 @@ const Index = () => {
     const fullName = data?.profile?.fullName || "Portfolio";
     const title = data?.profile?.title || "Full Stack Developer";
     const skills = data?.skills?.map(s => s.logoName).slice(0, 10).join(", ");
+    const meta = data?.seoMeta;
+
+    const defaultTitle = `${fullName} | ${title}`;
+    const defaultDescription = data?.profile?.aboutMe
+      ? data.profile.aboutMe.substring(0, 155) + "..."
+      : `Professional portfolio of ${fullName}, a ${title} specializing in modern web technologies.`;
+    const defaultKeywords = `${fullName}, ${title}, ${skills}, web development, portfolio, software engineer`;
+
+    const resolvedTitle = meta?.title || defaultTitle;
+    const resolvedDescription = meta?.description || defaultDescription;
+    const resolvedImage = meta?.ogImageUrl || data?.profile?.profileImageUrl || "/og-image.jpg";
+    const resolvedCanonical = meta?.canonicalUrl || canonicalUrl;
+    const robots = `${meta?.indexable !== false ? "index" : "noindex"}, ${meta?.followLinks !== false ? "follow" : "nofollow"}`;
 
     return {
-      title: `${fullName} | ${title}`,
-      description: data?.profile?.aboutMe
-        ? data.profile.aboutMe.substring(0, 155) + "..."
-        : `Professional portfolio of ${fullName}, a ${title} specializing in modern web technologies.`,
-      keywords: `${fullName}, ${title}, ${skills}, web development, portfolio, software engineer`,
-      name: fullName,
-      image: data?.profile?.profileImageUrl || "/og-image.jpg",
+      title: resolvedTitle,
+      description: resolvedDescription,
+      keywords: meta?.keywords?.join(", ") || defaultKeywords,
+      ogTitle: meta?.ogTitle || resolvedTitle,
+      ogDescription: meta?.ogDescription || resolvedDescription,
+      image: resolvedImage,
       author: fullName,
-      siteUrl: canonicalUrl
+      siteUrl: resolvedCanonical,
+      robots,
     };
   }, [data, canonicalUrl]);
 
@@ -198,20 +211,20 @@ const Index = () => {
         <meta name="description" content={seoData.description} />
         <meta name="keywords" content={seoData.keywords} />
         <meta name="author" content={seoData.author} />
-        <meta name="robots" content="index, follow" />
+        <meta name="robots" content={seoData.robots} />
 
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={seoData.title} />
-        <meta property="og:description" content={seoData.description} />
+        <meta property="og:title" content={seoData.ogTitle} />
+        <meta property="og:description" content={seoData.ogDescription} />
         <meta property="og:image" content={seoData.image} />
         <meta property="og:url" content={seoData.siteUrl} />
 
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content={seoData.title} />
-        <meta property="twitter:description" content={seoData.description} />
+        <meta property="twitter:title" content={seoData.ogTitle} />
+        <meta property="twitter:description" content={seoData.ogDescription} />
         <meta property="twitter:image" content={seoData.image} />
 
-        {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+        {seoData.siteUrl && <link rel="canonical" href={seoData.siteUrl} />}
         
         {profile.logoUrl && (
           <>

@@ -174,6 +174,19 @@ export interface GitHubStats {
     externalPRs: number | null;
 }
 
+export interface SeoMeta {
+    pageKey?: string;
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImageUrl?: string;
+    canonicalUrl?: string;
+    indexable?: boolean;
+    followLinks?: boolean;
+}
+
 export interface ProfileMaster {
     profile : ProfileRequest | null;
     colorTheme : ColorTheme | null;
@@ -186,6 +199,7 @@ export interface ProfileMaster {
     certifications: Certification[];
     socialLinks: SocialLinkResponse[];
     githubStats: GitHubStats | null;
+    seoMeta: SeoMeta | null;
 }
 
 export type Option = {
