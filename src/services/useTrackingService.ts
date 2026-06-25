@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Derives the base BE URL by stripping "/public" from the public API URL
 const BE_URL = (import.meta.env.VITE_API_V1_URL as string ?? "").replace(/\/public\/?$/, "");
 
 const getSessionId = (): string => {
@@ -22,10 +21,29 @@ const getDevice = (): "MOBILE" | "TABLET" | "DESKTOP" => {
   return "DESKTOP";
 };
 
+const getBrowser = (): string => {
+  const ua = navigator.userAgent;
+  if (/Edg\//.test(ua)) return "Edge";
+  if (/OPR\/|Opera/.test(ua)) return "Opera";
+  if (/Chrome\//.test(ua)) return "Chrome";
+  if (/Firefox\//.test(ua)) return "Firefox";
+  if (/Safari\//.test(ua)) return "Safari";
+  return "Other";
+};
+
+const getOs = (): string => {
+  const ua = navigator.userAgent;
+  if (/Windows/.test(ua)) return "Windows";
+  if (/Android/.test(ua)) return "Android";
+  if (/iPhone|iPad|iPod/.test(ua)) return "iOS";
+  if (/Mac OS X|macOS/.test(ua)) return "macOS";
+  if (/Linux/.test(ua)) return "Linux";
+  return "Other";
+};
+
 export const trackPortfolioView = async (profileId: string): Promise<void> => {
   if (!profileId) return;
 
-  // One track per session per profile — never spam the backend
   const seenKey = `_pv_${profileId}`;
   if (sessionStorage.getItem(seenKey)) return;
 
@@ -36,6 +54,10 @@ export const trackPortfolioView = async (profileId: string): Promise<void> => {
       device: getDevice(),
       referrer: document.referrer ?? "",
       path: window.location.pathname,
+      browser: getBrowser(),
+      os: getOs(),
+      language: navigator.language ?? "",
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone ?? "",
     });
     sessionStorage.setItem(seenKey, "1");
   } catch {
