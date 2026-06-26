@@ -257,7 +257,7 @@ const Index = () => {
         <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
 
         <div key="hero" className="mb-15">
-          <HeroSection profile={profile} socialLinks={activeSocialLinks} />
+          <HeroSection profile={profile} socialLinks={activeSocialLinks} skills={data.skills} />
         </div>
 
         <main className="px-4">
@@ -266,6 +266,7 @@ const Index = () => {
               <div key="about" className="mb-15">
                 <AboutSection
                   profile={profile}
+                  skills={data.skills}
                   totalExp={{
                     value: displayExperience,
                     label: displayExperience === "Fresher" ? "" : "Years of Experience",

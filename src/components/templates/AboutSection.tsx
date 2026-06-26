@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import type { ProfileRequest } from "../../utils/types";
+import type { ProfileRequest, SkillResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { useColors, gradients } from "../../utils/theme";
@@ -19,16 +19,29 @@ interface AboutSectionProps {
     value: string;
     label: string;
   };
+  skills?: SkillResponse[];
 }
 
-const techBadges = [
-  { label: "TypeScript", position: { top: "-10px", left: "-12px" }, delay: 0 },
-  { label: "React", position: { top: "-10px", right: "-12px" }, delay: 0.6 },
-  { label: "Spring Boot", position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
-  { label: "MongoDB", position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
-];
+const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSectionProps) => {
+  const badgePositions = [
+    { position: { top: "-10px", left: "-12px" }, delay: 0 },
+    { position: { top: "-10px", right: "-12px" }, delay: 0.6 },
+    { position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
+    { position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
+  ];
 
-const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) => {
+  const badges = skills.length > 0
+    ? skills.slice(0, 4).map((skill, index) => ({
+        label: skill.logoName,
+        position: badgePositions[index % badgePositions.length].position,
+        delay: badgePositions[index % badgePositions.length].delay,
+      }))
+    : [
+        { label: "TypeScript", position: { top: "-10px", left: "-12px" }, delay: 0 },
+        { label: "React", position: { top: "-10px", right: "-12px" }, delay: 0.6 },
+        { label: "Spring Boot", position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
+        { label: "MongoDB", position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
+      ];
   const colors = useColors();
   const g = gradients(colors);
   const [codeCardHovered, setCodeCardHovered] = useState(false);
@@ -94,7 +107,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
               </div>
 
               {/* Floating tech-label badges */}
-              {techBadges.map((badge) => (
+              {badges.map((badge) => (
                 <motion.div
                   key={badge.label}
                   className="absolute z-10 px-2.5 py-1 rounded-full font-mono text-xs whitespace-nowrap pointer-events-none"

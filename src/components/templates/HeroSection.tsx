@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { MapPin, Download } from "lucide-react";
 import { TypewriterText } from "../molecules/TypewriterText/TypewriterText";
 import { useColors, gradients } from "../../utils/theme";
-import type { ProfileRequest, SocialLinkResponse } from "../../utils/types";
+import type { ProfileRequest, SkillResponse, SocialLinkResponse } from "../../utils/types";
 import { useRef, useState } from "react";
 import React from "react";
 import { getSocialIcon } from "../../utils/socialIcons";
@@ -12,6 +12,7 @@ import { getOptimizedImageUrl } from "../../utils/helper";
 interface Props {
   profile: ProfileRequest;
   socialLinks: SocialLinkResponse[];
+  skills?: SkillResponse[];
 }
 
 
@@ -33,9 +34,12 @@ const stagger = {
   },
 };
 
-const TECH_STACK = ["React", "TypeScript", "Node.js", "AWS", "Docker"];
+const DEFAULT_TECH_STACK = ["React", "TypeScript", "Node.js", "AWS", "Docker"];
 
-const HeroSection = ({ profile, socialLinks }: Props) => {
+const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
+  const techStack = skills.length > 0
+    ? skills.slice(0, 6).map(s => s.logoName)
+    : DEFAULT_TECH_STACK;
   const colors = useColors();
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { amount: 0.1 });
@@ -352,7 +356,7 @@ const HeroSection = ({ profile, socialLinks }: Props) => {
               variants={stagger.item}
               className="flex gap-2 flex-wrap justify-center lg:justify-start mt-4"
             >
-              {TECH_STACK.map((tech, i) => (
+              {techStack.map((tech, i) => (
                 <motion.span
                   key={tech}
                   whileHover={{ y: -2, scale: 1.05 }}

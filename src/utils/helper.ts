@@ -45,19 +45,19 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
     items.push({ label: "Experience", section: "experience" });
   if (data?.projects?.length)
     items.push({ label: "Projects", section: "projects" });
-  if (data?.achievements?.length)
+  if (data?.achievements?.some(a => a.status === "ACTIVE"))
     items.push({ label: "Achievements", section: "achievements" });
-  if (data?.certifications?.length)
+  if (data?.certifications?.some(c => c.status === "ACTIVE"))
     items.push({ label: "Certifications", section: "certifications" });
   if (data?.educations?.length)
     items.push({ label: "Education", section: "education" });
-  if (data?.testimonials?.length)
+  if (data?.testimonials?.some(t => t.status === "ACTIVE"))
     items.push({ label: "Testimonials", section: "testimonials" });
   if (data?.socialLinks?.some(l => l.platform === "GITHUB" && l.status === "ACTIVE"))
     items.push({ label: "GitHub", section: "open-source" });
   items.push({ label: "Contact", section: "contact" });
   return items;
-}
+};
 
 export const normalizePercentage = (grade?: string): string => {
   if (!grade) return "";
@@ -81,9 +81,31 @@ export const formatDate = (dateStr: string | null | undefined): string => {
     return dateStr;
   }
 };
+
 export const getOptimizedImageUrl = (
   url: string | null | undefined,
-  _options: { width?: number; height?: number; quality?: string } = {}
+  options: { width?: number; height?: number; quality?: string } = {}
 ): string => {
-  return url || "";
+  if (!url) return "";
+  if (!url.includes("res.cloudinary.com") || !url.includes("/image/upload/")) {
+    return url;
+  }
+
+  const parts = url.split("/image/upload/");
+  if (parts.length !== 2) return url;
+
+  const transformations: string[] = ["f_auto"];
+  if (options.width) transformations.push(`w_${options.width}`);
+  if (options.height) transformations.push(`h_${options.height}`);
+  if (options.width || options.height) {
+    transformations.push(options.width && options.height ? "c_fill" : "c_limit");
+  }
+  if (options.quality) {
+    transformations.push(`q_${options.quality}`);
+  } else {
+    transformations.push("q_auto");
+  }
+
+  const transformStr = transformations.join(",");
+  return `${parts[0]}/image/upload/${transformStr}/${parts[1]}`;
 };
