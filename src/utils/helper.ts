@@ -53,7 +53,7 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
     items.push({ label: "Education", section: "education" });
   if (data?.testimonials?.some(t => t.status === "ACTIVE"))
     items.push({ label: "Testimonials", section: "testimonials" });
-  if (data?.socialLinks?.some(l => l.platform === "GITHUB" && l.status === "ACTIVE"))
+  if (data?.githubStats)
     items.push({ label: "GitHub", section: "open-source" });
   items.push({ label: "Contact", section: "contact" });
   return items;

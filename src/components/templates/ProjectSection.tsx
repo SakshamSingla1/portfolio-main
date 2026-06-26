@@ -154,9 +154,6 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       }}>
                       +{moreSkills.length}
                     </button>
-
-                    <AnimatePresence>
-                    </AnimatePresence>
                   </div>
                 )}
               </div>

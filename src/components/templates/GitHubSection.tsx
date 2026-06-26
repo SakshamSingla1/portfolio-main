@@ -25,7 +25,7 @@ const GitHubSection = ({ githubStats }: Props) => {
   return (
     <section id="open-source" className="py-8">
       <SectionHeading
-        title="Github"
+        title="GitHub"
         subtitle={`Contributions & activity from @${username}`}
       />
 

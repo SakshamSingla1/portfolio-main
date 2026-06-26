@@ -17,6 +17,7 @@ import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { Helmet } from "react-helmet-async";
 import { Suspense, lazy } from "react";
+import { ErrorBoundary } from "../atoms/ErrorBoundary/ErrorBoundary";
 
 const AboutSection = lazy(() => import("../templates/AboutSection"));
 const SkillsSection = lazy(() => import("../templates/SkillSection"));
@@ -254,86 +255,112 @@ const Index = () => {
       <div className="relative z-10">
         <MouseGlow />
 
-        <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
+        <ErrorBoundary key="navbar">
+          <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
+        </ErrorBoundary>
 
-        <div key="hero" className="mb-15">
-          <HeroSection profile={profile} socialLinks={activeSocialLinks} skills={data.skills} />
-        </div>
+        <ErrorBoundary key="hero">
+          <div className="mb-15">
+            <HeroSection profile={profile} socialLinks={activeSocialLinks} skills={data.skills} />
+          </div>
+        </ErrorBoundary>
 
         <main className="px-4">
           <Suspense fallback={null}>
             {profile.aboutMe && (
-              <div key="about" className="mb-15">
-                <AboutSection
-                  profile={profile}
-                  skills={data.skills}
-                  totalExp={{
-                    value: displayExperience,
-                    label: displayExperience === "Fresher" ? "" : "Years of Experience",
-                  }}
-                  totalProjects={{
-                    value: `${totalProjects}+`,
-                    label: "Projects Shipped",
-                  }}
-                />
-              </div>
+              <ErrorBoundary key="about">
+                <div className="mb-15">
+                  <AboutSection
+                    profile={profile}
+                    skills={data.skills}
+                    totalExp={{
+                      value: displayExperience,
+                      label: displayExperience === "Fresher" ? "" : "Years of Experience",
+                    }}
+                    totalProjects={{
+                      value: `${totalProjects}+`,
+                      label: "Projects Shipped",
+                    }}
+                  />
+                </div>
+              </ErrorBoundary>
             )}
 
             {data.skills.length > 0 && (
-              <div key="skills" className="mb-15">
-                <SkillsSection skills={data.skills} />
-              </div>
+              <ErrorBoundary key="skills">
+                <div className="mb-15">
+                  <SkillsSection skills={data.skills} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {data.experiences.length > 0 && (
-              <div key="experience" className="mb-15">
-                <ExperienceSection experiences={data.experiences} />
-              </div>
+              <ErrorBoundary key="experience">
+                <div className="mb-15">
+                  <ExperienceSection experiences={data.experiences} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {data.projects.length > 0 && (
-              <div key="projects" className="mb-15">
-                <ProjectsSection projects={data.projects} />
-              </div>
+              <ErrorBoundary key="projects">
+                <div className="mb-15">
+                  <ProjectsSection projects={data.projects} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {activeAchievements.length > 0 && (
-              <div key="achievements" className="mb-15">
-                <AchievementsSection achievements={activeAchievements} />
-              </div>
+              <ErrorBoundary key="achievements">
+                <div className="mb-15">
+                  <AchievementsSection achievements={activeAchievements} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {activeCertifications.length > 0 && (
-              <div key="certifications" className="mb-15">
-                <CertificationsSection certifications={activeCertifications} />
-              </div>
+              <ErrorBoundary key="certifications">
+                <div className="mb-15">
+                  <CertificationsSection certifications={activeCertifications} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {data.educations.length > 0 && (
-              <div key="education" className="mb-15">
-                <EducationSection educations={data.educations} />
-              </div>
+              <ErrorBoundary key="education">
+                <div className="mb-15">
+                  <EducationSection educations={data.educations} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {activeTestimonials.length > 0 && (
-              <div key="testimonials" className="mb-15">
-                <TestimonialsSection testimonials={activeTestimonials} />
-              </div>
+              <ErrorBoundary key="testimonials">
+                <div className="mb-15">
+                  <TestimonialsSection testimonials={activeTestimonials} />
+                </div>
+              </ErrorBoundary>
             )}
 
             {data.githubStats && (
-              <div key="open-source" className="mb-15">
-                <GitHubSection githubStats={data.githubStats} />
-              </div>
+              <ErrorBoundary key="open-source">
+                <div className="mb-15">
+                  <GitHubSection githubStats={data.githubStats} />
+                </div>
+              </ErrorBoundary>
             )}
 
-            <div key="contact" className="mb-40">
-              <ContactSection profile={profile} />
-            </div>
+            <ErrorBoundary key="contact">
+              <div className="mb-40">
+                <ContactSection profile={profile} />
+              </div>
+            </ErrorBoundary>
           </Suspense>
         </main>
 
-        <Footer profile={profile} socialLinks={activeSocialLinks} />
+        <ErrorBoundary key="footer">
+          <Footer profile={profile} socialLinks={activeSocialLinks} />
+        </ErrorBoundary>
 
         <ScrollToTop />
       </div>

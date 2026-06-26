@@ -21,10 +21,10 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
   const levelColor = (level: string) => {
     switch (level) {
-      case "Expert": return colors.primary900;
-      case "Advanced": return colors.primary700;
+      case "Expert": return colors.primary300;
+      case "Advanced": return colors.primary400;
       case "Intermediate": return colors.primary500;
-      default: return colors.primary300;
+      default: return colors.primary600;
     }
   };
 
