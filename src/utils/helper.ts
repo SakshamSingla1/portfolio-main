@@ -1,10 +1,10 @@
 import { DEGREE_OPTIONS } from "./constants";
 import type { ColorTheme, NavItem, ProfileMaster } from "./types";
 
-export const replaceUrlParams = (url: string, params: Record<string, any>) => {
+export const replaceUrlParams = (url: string, params: Record<string, string | number>) => {
   let result = url;
   for (const [key, value] of Object.entries(params)) {
-    result = result.replace(`:${key}`, value);
+    result = result.replace(`:${key}`, String(value));
   }
   return result;
 };

@@ -1,4 +1,4 @@
-import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosError, type AxiosProgressEvent, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import { type AuthenticatedUserType } from '../utils/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_V1_URL;
@@ -17,12 +17,12 @@ export const request = async (
   method: AxiosRequestConfig['method'],
   url: string,
   userContext: AuthenticatedUserType | null,
-  data?: any,
-  options?: { params: { [key: string]: any } } | null,
-  onUploadProgress?:any,
+  data?: unknown,
+  options?: { params: { [key: string]: unknown } } | null,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
   baseUrl = API_BASE_URL,
   headers?: { [key: string]: string }
-): Promise<any> => {
+): Promise<AxiosResponse | null> => {
 
 
   setAuthHeader(userContext);

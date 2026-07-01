@@ -1,23 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { type ColorTheme } from "../utils/types";
+import { DefaultColorThemeContext } from "./defaultColorThemeContextValue";
 
 interface DefaultColorThemeProviderType {
     children: React.ReactNode;
 }
-
-export interface DefaultColorThemeContextType {
-    profileId: string | null;
-    setProfileId: (profileId: string | null) => void;
-    defaultTheme: ColorTheme | null;
-    setDefaultTheme: (theme: ColorTheme | null) => void;
-}
-
-export const DefaultColorThemeContext = React.createContext<DefaultColorThemeContextType>({
-    profileId: null,
-    setProfileId: () => {},
-    defaultTheme: null,
-    setDefaultTheme: () => {},
-});
 
 export const DefaultColorThemeProvider: React.FC<DefaultColorThemeProviderType> = ({ children }) => {
     const [profileId, setProfileId] = useState<string | null>(() => {

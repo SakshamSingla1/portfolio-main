@@ -8,6 +8,7 @@ import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
+import type { Colors } from "../../utils/theme";
 
 interface ProjectsSectionProps {
   projects: ProjectResponse[];
@@ -16,7 +17,7 @@ interface ProjectsSectionProps {
 const ProjectCard = React.memo(({ project, idx, colors }: {
   project: ProjectResponse;
   idx: number;
-  colors: any;
+  colors: Colors;
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [showMoreSkills, setShowMoreSkills] = useState(false);

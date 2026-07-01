@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import type { Colors } from "../../../utils/theme";
 
 interface Props {
   end: number;
   suffix?: string;
   duration?: number;
-  colors: any;
+  colors: Colors;
 }
 
 export const AnimatedCounter = ({ end, suffix = "", duration = 2, colors }: Props) => {

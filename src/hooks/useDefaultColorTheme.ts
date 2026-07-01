@@ -1,5 +1,5 @@
 import React from "react";
-import { DefaultColorThemeContext } from "../contexts/DefaultColorThemeContext";
+import { DefaultColorThemeContext } from "../contexts/defaultColorThemeContextValue";
 
 export const useDefaultColorTheme = () => {
   const context = React.useContext(DefaultColorThemeContext);

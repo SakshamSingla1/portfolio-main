@@ -14,7 +14,7 @@ const GridBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
     const DOTS = 70;
 
@@ -44,7 +44,16 @@ const GridBackground = () => {
 
     const color = hexToRgb(colors.primary400);
 
-    const dots: any[] = [];
+    interface Dot {
+      x: number;
+      y: number;
+      angle: number;
+      speed: number;
+      radius: number;
+      glow: number;
+    }
+
+    const dots: Dot[] = [];
 
     // ✨ Create smooth moving dots
     for (let i = 0; i < DOTS; i++) {

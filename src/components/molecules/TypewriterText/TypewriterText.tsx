@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
+import type { Colors } from "../../../utils/theme";
 
 interface Props {
   words: string[];
   typingSpeed?: number;
   deletingSpeed?: number;
   pauseDuration?: number;
-  colors: any;
+  colors: Colors;
 }
 
 export const TypewriterText = ({ words, typingSpeed = 80, deletingSpeed = 40, pauseDuration = 2000, colors }: Props) => {
