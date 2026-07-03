@@ -113,7 +113,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         {/* Proficiency Overview Mini-Chart */}
         <div
-          className="grid grid-cols-4 gap-4 rounded-xl p-4 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 rounded-xl p-4 mb-8"
           style={{
             background: `${colors.neutral800}40`,
             border: `1px solid ${colors.neutral700}30`,

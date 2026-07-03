@@ -60,7 +60,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
         }}
       >
         {images.length > 0 && (
-          <div className="relative h-[260px] lg:h-auto lg:min-h-[320px] lg:w-[44%] overflow-hidden shrink-0">
+          <div className="relative h-48 sm:h-[260px] lg:h-auto lg:min-h-[320px] lg:w-[44%] overflow-hidden shrink-0">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentImage}

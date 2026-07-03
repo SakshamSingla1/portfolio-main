@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { FaBriefcase } from "react-icons/fa";
@@ -15,6 +16,7 @@ interface Props {
 
 const TestimonialsSection = ({ testimonials }: Props) => {
   const colors = useColors();
+  const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -40,7 +42,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
             border: `1px solid ${colors.neutral700}40`,
             borderRadius: 20,
-            padding: '2rem 2rem',
+            padding: isMobile ? '1.25rem 1rem' : '2rem 2rem',
           }}
         >
           {/* Ambient glow that shifts with active index */}
@@ -236,7 +238,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
           )}
         </div>
 
-        <div className="flex items-center justify-center gap-3 mt-6">
+        <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-3 mt-6">
           {testimonials.map((t, i) => (
             <motion.button
               key={i}
