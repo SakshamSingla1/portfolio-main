@@ -64,7 +64,7 @@ const Index = () => {
         const newData = res.data.data;
         setData(newData);
         localStorage.setItem("portfolio_data", JSON.stringify(newData));
-        setDefaultTheme(newData?.colorTheme || "default");
+        setDefaultTheme(newData?.colorTheme ?? null);
       }
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -255,11 +255,11 @@ const Index = () => {
       <div className="relative z-10">
         <MouseGlow />
 
-        <ErrorBoundary key="navbar">
+        <ErrorBoundary fallback={null} key="navbar">
           <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
         </ErrorBoundary>
 
-        <ErrorBoundary key="hero">
+        <ErrorBoundary fallback={null} key="hero">
           <div className="mb-15">
             <HeroSection profile={profile} socialLinks={activeSocialLinks} skills={data.skills} />
           </div>
@@ -268,7 +268,7 @@ const Index = () => {
         <main className="px-4">
           <Suspense fallback={null}>
             {profile.aboutMe && (
-              <ErrorBoundary key="about">
+              <ErrorBoundary fallback={null} key="about">
                 <div className="mb-15">
                   <AboutSection
                     profile={profile}
@@ -287,7 +287,7 @@ const Index = () => {
             )}
 
             {data.skills.length > 0 && (
-              <ErrorBoundary key="skills">
+              <ErrorBoundary fallback={null} key="skills">
                 <div className="mb-15">
                   <SkillsSection skills={data.skills} />
                 </div>
@@ -295,7 +295,7 @@ const Index = () => {
             )}
 
             {data.experiences.length > 0 && (
-              <ErrorBoundary key="experience">
+              <ErrorBoundary fallback={null} key="experience">
                 <div className="mb-15">
                   <ExperienceSection experiences={data.experiences} />
                 </div>
@@ -303,7 +303,7 @@ const Index = () => {
             )}
 
             {data.projects.length > 0 && (
-              <ErrorBoundary key="projects">
+              <ErrorBoundary fallback={null} key="projects">
                 <div className="mb-15">
                   <ProjectsSection projects={data.projects} />
                 </div>
@@ -311,7 +311,7 @@ const Index = () => {
             )}
 
             {activeAchievements.length > 0 && (
-              <ErrorBoundary key="achievements">
+              <ErrorBoundary fallback={null} key="achievements">
                 <div className="mb-15">
                   <AchievementsSection achievements={activeAchievements} />
                 </div>
@@ -319,7 +319,7 @@ const Index = () => {
             )}
 
             {activeCertifications.length > 0 && (
-              <ErrorBoundary key="certifications">
+              <ErrorBoundary fallback={null} key="certifications">
                 <div className="mb-15">
                   <CertificationsSection certifications={activeCertifications} />
                 </div>
@@ -327,7 +327,7 @@ const Index = () => {
             )}
 
             {data.educations.length > 0 && (
-              <ErrorBoundary key="education">
+              <ErrorBoundary fallback={null} key="education">
                 <div className="mb-15">
                   <EducationSection educations={data.educations} />
                 </div>
@@ -335,7 +335,7 @@ const Index = () => {
             )}
 
             {activeTestimonials.length > 0 && (
-              <ErrorBoundary key="testimonials">
+              <ErrorBoundary fallback={null} key="testimonials">
                 <div className="mb-15">
                   <TestimonialsSection testimonials={activeTestimonials} />
                 </div>
@@ -343,14 +343,14 @@ const Index = () => {
             )}
 
             {data.githubStats && (
-              <ErrorBoundary key="open-source">
+              <ErrorBoundary fallback={null} key="open-source">
                 <div className="mb-15">
                   <GitHubSection githubStats={data.githubStats} />
                 </div>
               </ErrorBoundary>
             )}
 
-            <ErrorBoundary key="contact">
+            <ErrorBoundary fallback={null} key="contact">
               <div className="mb-40">
                 <ContactSection profile={profile} />
               </div>
@@ -358,7 +358,7 @@ const Index = () => {
           </Suspense>
         </main>
 
-        <ErrorBoundary key="footer">
+        <ErrorBoundary fallback={null} key="footer">
           <Footer profile={profile} socialLinks={activeSocialLinks} />
         </ErrorBoundary>
 

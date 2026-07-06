@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BE_URL = (import.meta.env.VITE_API_V1_URL as string ?? "").replace(/\/public\/?$/, "");
+const TRACK_URL = `${import.meta.env.VITE_API_V1_URL as string}/track-view`;
 
 const getSessionId = (): string => {
   const key = "_pv_sid";
@@ -48,7 +48,7 @@ export const trackPortfolioView = async (profileId: string): Promise<void> => {
   if (sessionStorage.getItem(seenKey)) return;
 
   try {
-    await axios.post(`${BE_URL}/public/track-view`, {
+    await axios.post(TRACK_URL, {
       profileId,
       sessionId: getSessionId(),
       device: getDevice(),

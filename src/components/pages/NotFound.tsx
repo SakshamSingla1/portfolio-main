@@ -1,19 +1,35 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useColors } from "../../utils/theme";
 
 const NotFound = () => {
   const location = useLocation();
+  const colors = useColors();
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
+    <div
+      className="flex min-h-screen items-center justify-center"
+      style={{ background: colors.neutral900 }}
+    >
+      <div className="text-center space-y-3">
+        <h1
+          className="text-7xl font-bold"
+          style={{ color: colors.primary500 }}
+        >
+          404
+        </h1>
+        <p className="text-xl" style={{ color: colors.neutral400 }}>
+          Oops! Page not found
+        </p>
+        <a
+          href="/"
+          className="inline-block text-sm underline"
+          style={{ color: colors.primary400 }}
+        >
           Return to Home
         </a>
       </div>

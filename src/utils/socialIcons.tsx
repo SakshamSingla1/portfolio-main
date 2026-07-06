@@ -2,6 +2,7 @@ import React from "react";
 import { FaGithub, FaLinkedin, FaGlobe, FaGitlab, FaBitbucket, FaStackOverflow, FaHackerrank, FaInstagram, FaFacebook, FaLink } from "react-icons/fa";
 import { SiLeetcode, SiCodechef, SiCodeforces } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
+import { FiFileText } from "react-icons/fi";
 import { SocialLinkPlatform } from "./constants";
 
 export const getSocialIcon = (platform: string): React.ReactElement => {
@@ -20,6 +21,7 @@ export const getSocialIcon = (platform: string): React.ReactElement => {
     case SocialLinkPlatform.X:           return <FaXTwitter />;
     case SocialLinkPlatform.INSTAGRAM:   return <FaInstagram />;
     case SocialLinkPlatform.FACEBOOK:    return <FaFacebook />;
+    case SocialLinkPlatform.RESUME:      return <FiFileText />;
     default:                             return <FaLink />;
   }
 };
