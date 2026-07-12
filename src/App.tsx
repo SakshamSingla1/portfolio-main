@@ -5,6 +5,8 @@ import { TooltipProvider } from "./components/molecules/Tooltip/Tooltip";
 import { DefaultColorThemeProvider } from "./contexts/DefaultColorThemeContext";
 import Index from "./components/pages/Index";
 import NotFound from "./components/pages/NotFound";
+import BlogsPage from "./components/pages/BlogsPage";
+import BlogPostPage from "./components/pages/BlogPostPage";
 import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient();
@@ -18,6 +20,8 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/blogs" element={<BlogsPage />} />
+              <Route path="/blogs/:slug" element={<BlogPostPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
