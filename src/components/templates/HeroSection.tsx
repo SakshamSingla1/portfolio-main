@@ -183,39 +183,41 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                   style={{ borderColor: colors.accent500 }}
                 />
 
-                {/* "Available for Work" floating badge */}
-                <div
-                  className="absolute -bottom-3 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-xs font-semibold"
-                  style={{
-                    background: `${colors.success500}15`,
-                    border: `1px solid ${colors.success500}40`,
-                    color: colors.success400,
-                  }}
-                >
-                  <span
+                {/* "Available for Work" floating badge — data-driven */}
+                {profile.availableForWork && (
+                  <div
+                    className="absolute -bottom-3 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-xs font-semibold"
                     style={{
-                      display: "inline-flex",
-                      width: 6,
-                      height: 6,
-                      borderRadius: "50%",
-                      background: colors.success500,
-                      position: "relative",
-                      flexShrink: 0,
+                      background: `${colors.success500}15`,
+                      border: `1px solid ${colors.success500}40`,
+                      color: colors.success400,
                     }}
                   >
-                    <motion.span
-                      animate={{ scale: [1, 2.2, 1], opacity: [0.8, 0, 0.8] }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                    <span
                       style={{
-                        position: "absolute",
-                        inset: 0,
+                        display: "inline-flex",
+                        width: 6,
+                        height: 6,
                         borderRadius: "50%",
                         background: colors.success500,
+                        position: "relative",
+                        flexShrink: 0,
                       }}
-                    />
-                  </span>
-                  Available for Work
-                </div>
+                    >
+                      <motion.span
+                        animate={{ scale: [1, 2.2, 1], opacity: [0.8, 0, 0.8] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          borderRadius: "50%",
+                          background: colors.success500,
+                        }}
+                      />
+                    </span>
+                    {profile.availabilityNote || "Available for Work"}
+                  </div>
+                )}
               </div>
             )}
           </motion.div>

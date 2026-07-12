@@ -146,6 +146,9 @@ export interface ProfileRequest {
     logoUrl?: string;
     logoPublicId?: string;
     themeName: string;
+    availableForWork?: boolean;
+    availabilityNote?: string;
+    availableFrom?: string;
 }
 
 export interface ProjectResponse {
