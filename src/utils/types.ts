@@ -177,6 +177,13 @@ export interface GitHubStats {
     externalPRs: number | null;
 }
 
+export interface LanguageResponse {
+    id: string;
+    languageName: string;
+    proficiency: "NATIVE" | "FLUENT" | "INTERMEDIATE" | "BASIC";
+    sortOrder: number;
+}
+
 export interface SeoMeta {
     pageKey?: string;
     title?: string;
@@ -203,6 +210,7 @@ export interface ProfileMaster {
     socialLinks: SocialLinkResponse[];
     githubStats: GitHubStats | null;
     seoMeta: SeoMeta | null;
+    languages: LanguageResponse[];
 }
 
 export type Option = {
