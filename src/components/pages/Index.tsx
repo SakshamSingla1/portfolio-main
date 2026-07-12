@@ -30,6 +30,7 @@ const TestimonialsSection = lazy(() => import("../templates/TestimonialSection")
 const ContactSection = lazy(() => import("../templates/ContactSection"));
 const GitHubSection = lazy(() => import("../templates/GitHubSection"));
 const LanguagesSection = lazy(() => import("../templates/LanguagesSection"));
+const ServicesSection = lazy(() => import("../templates/ServicesSection"));
 
 const Index = () => {
   const colors = useColors();
@@ -42,7 +43,7 @@ const Index = () => {
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       // bust stale cache if shape is missing new fields
-      if (!("githubStats" in parsed) || !("languages" in parsed)) {
+      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed)) {
         localStorage.removeItem("portfolio_data");
         return null;
       }
@@ -283,6 +284,14 @@ const Index = () => {
                       label: "Projects Shipped",
                     }}
                   />
+                </div>
+              </ErrorBoundary>
+            )}
+
+            {data.services && data.services.length > 0 && (
+              <ErrorBoundary fallback={null} key="services">
+                <div className="mb-15">
+                  <ServicesSection services={data.services} />
                 </div>
               </ErrorBoundary>
             )}

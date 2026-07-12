@@ -177,6 +177,19 @@ export interface GitHubStats {
     externalPRs: number | null;
 }
 
+export interface ServiceResponse {
+    id: string;
+    title: string;
+    description?: string;
+    icon?: string;
+    priceRange?: string;
+    deliveryTime?: string;
+    sortOrder: number;
+    isActive: boolean;
+    bannerUrl?: string;
+    bannerPublicId?: string;
+}
+
 export interface LanguageResponse {
     id: string;
     languageName: string;
@@ -211,6 +224,7 @@ export interface ProfileMaster {
     githubStats: GitHubStats | null;
     seoMeta: SeoMeta | null;
     languages: LanguageResponse[];
+    services: ServiceResponse[];
 }
 
 export type Option = {
