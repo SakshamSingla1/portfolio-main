@@ -38,6 +38,7 @@ export interface BlogListParams {
   size?: number;
   sortBy?: string;
   sortDir?: string;
+  [key: string]: unknown;
 }
 
 export const usePublicBlogService = () => {

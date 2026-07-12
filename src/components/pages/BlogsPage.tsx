@@ -9,7 +9,7 @@ import {
 import { useColors, gradients } from "../../utils/theme";
 import { usePublicBlogService, type BlogPostSummary } from "../../services/usePublicBlogService";
 import useProfileMasterService from "../../services/useProfileMasterService";
-import { formatDate, getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl } from "../../utils/helper";
 import { HTTP_STATUS } from "../../utils/constants";
 import GridBackground from "../molecules/GridBackground/GridBackground";
 import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
@@ -43,12 +43,10 @@ const formatPublishedDate = (iso: string | null) => {
 
 const BlogCard = ({
   post,
-  username,
   idx,
   colors,
 }: {
   post: BlogPostSummary;
-  username: string;
   idx: number;
   colors: ReturnType<typeof useColors>;
 }) => {
@@ -393,7 +391,6 @@ const BlogsPage = () => {
                   <BlogCard
                     key={post.id}
                     post={post}
-                    username={username ?? ""}
                     idx={idx}
                     colors={colors}
                   />
