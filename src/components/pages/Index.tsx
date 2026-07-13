@@ -43,7 +43,7 @@ const Index = () => {
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       // bust stale cache if shape is missing new fields
-      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed)) {
+      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed)) {
         localStorage.removeItem("portfolio_data");
         return null;
       }
@@ -363,7 +363,7 @@ const Index = () => {
             {data.githubStats && (
               <ErrorBoundary fallback={null} key="open-source">
                 <div className="mb-15">
-                  <GitHubSection githubStats={data.githubStats} />
+                  <GitHubSection githubStats={data.githubStats} githubRepos={data.githubRepos ?? []} />
                 </div>
               </ErrorBoundary>
             )}

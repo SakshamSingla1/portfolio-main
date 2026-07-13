@@ -1,19 +1,28 @@
 import { motion } from "framer-motion";
 import GitHubCalendar from "react-github-calendar";
-import { FiStar, FiUsers, FiGitPullRequest, FiBook } from "react-icons/fi";
+import { FiStar, FiUsers, FiGitPullRequest, FiBook, FiGitBranch, FiExternalLink } from "react-icons/fi";
 import { FaGithub } from "react-icons/fa";
 import { useColors } from "../../utils/theme";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import type { GitHubStats } from "../../utils/types";
+import type { GitHubStats, GithubRepoResponse } from "../../utils/types";
+
+const LANG_COLORS: Record<string, string> = {
+  TypeScript: "#3178c6", JavaScript: "#f7df1e", Java: "#b07219",
+  Python: "#3572A5", Go: "#00ADD8", Rust: "#dea584",
+  "C++": "#f34b7d", "C#": "#178600", Ruby: "#701516",
+  Swift: "#F05138", Kotlin: "#A97BFF", Dart: "#00B4AB",
+};
 
 interface Props {
   githubStats: GitHubStats;
+  githubRepos?: GithubRepoResponse[];
 }
 
-const GitHubSection = ({ githubStats }: Props) => {
+const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
   const colors = useColors();
   const { username, publicRepos, followers, totalStars, externalPRs } = githubStats;
+  const visibleRepos = githubRepos.filter(r => r.isVisible).slice(0, 6);
 
   const stats = [
     { icon: <FiBook />, label: "Public Repos", value: publicRepos },
@@ -96,6 +105,68 @@ const GitHubSection = ({ githubStats }: Props) => {
           </div>
         </div>
       </FadeInView>
+      {/* Pinned / visible repos */}
+      {visibleRepos.length > 0 && (
+        <FadeInView delay={0.2}>
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {visibleRepos.map((repo, i) => {
+              const langColor = repo.language ? (LANG_COLORS[repo.language] ?? colors.primary400) : colors.neutral500;
+              return (
+                <motion.a
+                  key={repo.id}
+                  href={repo.url ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -3 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-xl p-4 flex flex-col gap-2 cursor-pointer"
+                  style={{
+                    background: `${colors.neutral800}60`,
+                    border: `1px solid ${colors.neutral700}40`,
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = `${colors.primary500}40`;
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = `${colors.neutral700}40`;
+                  }}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-semibold text-sm truncate" style={{ color: colors.neutral100 }}>
+                      {repo.name}
+                    </span>
+                    <FiExternalLink size={11} style={{ color: colors.neutral500, flexShrink: 0 }} />
+                  </div>
+
+                  {repo.description && (
+                    <p className="text-xs leading-relaxed line-clamp-2" style={{ color: `${colors.neutral400}CC` }}>
+                      {repo.description}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-3 mt-auto pt-1 flex-wrap">
+                    {repo.language && (
+                      <span className="flex items-center gap-1 text-[11px]" style={{ color: langColor }}>
+                        <span className="w-2 h-2 rounded-full inline-block" style={{ background: langColor }} />
+                        {repo.language}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1 text-[11px]" style={{ color: `${colors.neutral400}CC` }}>
+                      <FiStar size={10} /> {repo.stars}
+                    </span>
+                    <span className="flex items-center gap-1 text-[11px]" style={{ color: `${colors.neutral400}CC` }}>
+                      <FiGitBranch size={10} /> {repo.forks}
+                    </span>
+                  </div>
+                </motion.a>
+              );
+            })}
+          </div>
+        </FadeInView>
+      )}
     </section>
   );
 };

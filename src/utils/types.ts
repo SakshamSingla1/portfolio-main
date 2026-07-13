@@ -177,6 +177,21 @@ export interface GitHubStats {
     externalPRs: number | null;
 }
 
+export interface GithubRepoResponse {
+    id: number;
+    name: string;
+    fullName?: string;
+    description?: string;
+    url?: string;
+    homepage?: string;
+    language?: string;
+    stars: number;
+    forks: number;
+    isPinned: boolean;
+    isVisible: boolean;
+    sortOrder: number;
+}
+
 export interface ServiceResponse {
     id: string;
     title: string;
@@ -222,6 +237,7 @@ export interface ProfileMaster {
     certifications: Certification[];
     socialLinks: SocialLinkResponse[];
     githubStats: GitHubStats | null;
+    githubRepos: GithubRepoResponse[];
     seoMeta: SeoMeta | null;
     languages: LanguageResponse[];
     services: ServiceResponse[];
