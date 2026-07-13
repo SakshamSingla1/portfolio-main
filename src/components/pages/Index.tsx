@@ -31,6 +31,7 @@ const ContactSection = lazy(() => import("../templates/ContactSection"));
 const GitHubSection = lazy(() => import("../templates/GitHubSection"));
 const LanguagesSection = lazy(() => import("../templates/LanguagesSection"));
 const ServicesSection = lazy(() => import("../templates/ServicesSection"));
+const PublicationsSection = lazy(() => import("../templates/PublicationsSection"));
 
 const Index = () => {
   const colors = useColors();
@@ -43,7 +44,7 @@ const Index = () => {
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       // bust stale cache if shape is missing new fields
-      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed)) {
+      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed) || !("publications" in parsed)) {
         localStorage.removeItem("portfolio_data");
         return null;
       }
@@ -356,6 +357,14 @@ const Index = () => {
               <ErrorBoundary fallback={null} key="languages">
                 <div className="mb-15">
                   <LanguagesSection languages={data.languages} />
+                </div>
+              </ErrorBoundary>
+            )}
+
+            {data.publications && data.publications.length > 0 && (
+              <ErrorBoundary fallback={null} key="publications">
+                <div className="mb-15">
+                  <PublicationsSection publications={data.publications} />
                 </div>
               </ErrorBoundary>
             )}

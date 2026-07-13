@@ -241,6 +241,20 @@ export interface ProfileMaster {
     seoMeta: SeoMeta | null;
     languages: LanguageResponse[];
     services: ServiceResponse[];
+    publications: PublicationResponse[];
+}
+
+export interface PublicationResponse {
+    id: number;
+    profileId: number;
+    title: string;
+    type: string;
+    url?: string;
+    publisher?: string;
+    publishedDate?: string;
+    description?: string;
+    coAuthors?: string;
+    sortOrder: number;
 }
 
 export type Option = {
