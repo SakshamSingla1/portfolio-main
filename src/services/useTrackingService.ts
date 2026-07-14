@@ -1,6 +1,5 @@
-import axios from "axios";
-
-const TRACK_URL = `${import.meta.env.VITE_API_V1_URL as string}/track-view`;
+import { request } from ".";
+import { API_METHOD } from "../utils/constants";
 
 const getSessionId = (): string => {
   const key = "_pv_sid";
@@ -48,7 +47,7 @@ export const trackPortfolioView = async (profileId: string): Promise<void> => {
   if (sessionStorage.getItem(seenKey)) return;
 
   try {
-    await axios.post(TRACK_URL, {
+    const res = await request(API_METHOD.POST, "/track-view", null, {
       profileId,
       sessionId: getSessionId(),
       device: getDevice(),
@@ -59,7 +58,7 @@ export const trackPortfolioView = async (profileId: string): Promise<void> => {
       language: navigator.language ?? "",
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone ?? "",
     });
-    sessionStorage.setItem(seenKey, "1");
+    if (res) sessionStorage.setItem(seenKey, "1");
   } catch {
     // Tracking must never break the portfolio — swallow all errors
   }
