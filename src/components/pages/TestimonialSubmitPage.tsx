@@ -126,7 +126,7 @@ const TestimonialSubmitPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                    background: colors.neutral0,
+                    background: colors.neutral50,
                     borderRadius: "16px",
                     boxShadow: "0 8px 40px rgba(0,0,0,0.10)",
                     padding: "36px 32px",

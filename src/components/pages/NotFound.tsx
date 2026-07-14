@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useColors } from "../../utils/theme";
 
@@ -25,13 +25,13 @@ const NotFound = () => {
         <p className="text-xl" style={{ color: colors.neutral400 }}>
           Oops! Page not found
         </p>
-        <a
-          href="/"
+        <Link
+          to="/"
           className="inline-block text-sm underline"
           style={{ color: colors.primary400 }}
         >
           Return to Home
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -267,7 +267,7 @@ export const Status = {
     INACTIVE: "INACTIVE",
     BLOCKED: "BLOCKED",
     DELETED: "DELETED",
-}
+} as const;
 
 export interface NavItem {
     label: string;

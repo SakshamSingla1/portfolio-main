@@ -223,10 +223,10 @@ const Index = () => {
         <meta property="og:image" content={seoData.image} />
         <meta property="og:url" content={seoData.siteUrl} />
 
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content={seoData.ogTitle} />
-        <meta property="twitter:description" content={seoData.ogDescription} />
-        <meta property="twitter:image" content={seoData.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoData.ogTitle} />
+        <meta name="twitter:description" content={seoData.ogDescription} />
+        <meta name="twitter:image" content={seoData.image} />
 
         {seoData.siteUrl && <link rel="canonical" href={seoData.siteUrl} />}
         

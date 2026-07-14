@@ -130,7 +130,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
                       style={{
                         backgroundColor: colors.primary500,
-                        border: `2px solid hsl(var(--background))`,
+                        border: `2px solid ${colors.neutral900}`,
                       }}
                     >
                       <span className="text-[8px] text-white font-bold">✓</span>
@@ -257,7 +257,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 transition: "all 0.35s ease",
               }}
             >
-              <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />
+              {t.imageUrl && <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />}
             </motion.button>
           ))}
         </div>

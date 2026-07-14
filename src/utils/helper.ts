@@ -45,12 +45,18 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
     items.push({ label: "Experience", section: "experience" });
   if (data?.projects?.length)
     items.push({ label: "Projects", section: "projects" });
+  if (data?.services?.some(s => s.isActive))
+    items.push({ label: "Services", section: "services" });
   if (data?.achievements?.some(a => a.status === "ACTIVE"))
     items.push({ label: "Achievements", section: "achievements" });
   if (data?.certifications?.some(c => c.status === "ACTIVE"))
     items.push({ label: "Certifications", section: "certifications" });
+  if (data?.publications?.length)
+    items.push({ label: "Publications", section: "publications" });
   if (data?.educations?.length)
     items.push({ label: "Education", section: "education" });
+  if (data?.languages?.length)
+    items.push({ label: "Languages", section: "languages" });
   if (data?.testimonials?.some(t => t.status === "ACTIVE"))
     items.push({ label: "Testimonials", section: "testimonials" });
   if (data?.githubStats)
