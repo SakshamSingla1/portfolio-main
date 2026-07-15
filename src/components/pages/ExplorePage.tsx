@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { request } from "../../services";
 import { useColors } from "../../utils/theme";
 import { motion } from "framer-motion";
 import { FiSearch, FiMapPin, FiUser } from "react-icons/fi";
-
-const API_BASE = import.meta.env.VITE_API_V1_URL as string;
 
 interface DiscoverProfile {
   id: number;
@@ -26,14 +24,13 @@ const ExplorePage = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get<{ data: DiscoverProfile[] }>(`${API_BASE}/explore`, {
-        params: {
-          search: query.search || undefined,
-          skill: query.skill || undefined,
-        },
-      })
-      .then((res) => setProfiles(res.data.data ?? []))
+    request('get', '/explore', null, undefined, {
+      params: {
+        search: query.search || undefined,
+        skill: query.skill || undefined,
+      },
+    })
+      .then((res) => setProfiles(res?.data?.data ?? []))
       .catch(() => setProfiles([]))
       .finally(() => setLoading(false));
   }, [query]);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import DOMPurify from 'dompurify';
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import {
@@ -337,7 +338,7 @@ const BlogPostPage = () => {
                 "--prose-th-bg": `${colors.neutral800}`,
                 "--prose-td-border": `${colors.neutral700}`,
               } as React.CSSProperties}
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content ?? '') }}
             />
           )}
 

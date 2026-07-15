@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { request } from "../../services";
 import { motion } from "framer-motion";
 import { useColors } from "../../utils/theme";
 import { FiSend, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
-
-const API_BASE = import.meta.env.VITE_API_V1_URL as string;
 
 interface PublicLinkDetails {
     ownerName: string;
@@ -46,23 +44,27 @@ const TestimonialSubmitPage = () => {
             setPageState("error");
             return;
         }
-        axios
-            .get(`${API_BASE}/public/testimonial-requests/${token}`)
+        request('get', `/public/testimonial-requests/${token}`, null)
             .then((res) => {
-                setLinkDetails(res.data?.data);
-                setPageState("form");
-            })
-            .catch((err) => {
-                const code = err?.response?.data?.exceptionCode;
-                if (code === "TESTIMONIAL_REQUEST_EXPIRED") {
-                    setErrorMessage("This testimonial link has expired.");
-                } else if (code === "TESTIMONIAL_REQUEST_ALREADY_USED") {
-                    setErrorMessage("This testimonial link has already been used.");
-                } else if (code === "TESTIMONIAL_REQUEST_NOT_FOUND") {
-                    setErrorMessage("This testimonial link is invalid or does not exist.");
+                if (res && res.status >= 200 && res.status < 300) {
+                    setLinkDetails(res.data?.data);
+                    setPageState("form");
                 } else {
-                    setErrorMessage("Something went wrong. Please try again later.");
+                    const code = res?.data?.exceptionCode;
+                    if (code === "TESTIMONIAL_REQUEST_EXPIRED") {
+                        setErrorMessage("This testimonial link has expired.");
+                    } else if (code === "TESTIMONIAL_REQUEST_ALREADY_USED") {
+                        setErrorMessage("This testimonial link has already been used.");
+                    } else if (code === "TESTIMONIAL_REQUEST_NOT_FOUND") {
+                        setErrorMessage("This testimonial link is invalid or does not exist.");
+                    } else {
+                        setErrorMessage("Something went wrong. Please try again later.");
+                    }
+                    setPageState("error");
                 }
+            })
+            .catch(() => {
+                setErrorMessage("Something went wrong. Please try again later.");
                 setPageState("error");
             });
     }, [token]);
@@ -80,8 +82,12 @@ const TestimonialSubmitPage = () => {
         if (!validate()) return;
         setSubmitting(true);
         try {
-            await axios.post(`${API_BASE}/public/testimonial-requests/${token}/submit`, form);
-            setPageState("success");
+            const res = await request('post', `/public/testimonial-requests/${token}/submit`, null, form);
+            if (res && res.status >= 200 && res.status < 300) {
+                setPageState("success");
+            } else {
+                setErrors({ message: "Submission failed. Please try again." });
+            }
         } catch {
             setErrors({ message: "Submission failed. Please try again." });
         } finally {

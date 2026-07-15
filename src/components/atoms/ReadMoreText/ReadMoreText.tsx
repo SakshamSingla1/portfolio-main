@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import DOMPurify from 'dompurify';
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { useColors } from "../../../utils/theme";
 
@@ -21,20 +22,21 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const textLimit = isMobile ? mobileLimit : limit;
+  const cleanText = DOMPurify.sanitize(text ?? '');
 
   const plainText = useMemo(() => {
     const div = document.createElement("div");
-    div.innerHTML = text;
+    div.innerHTML = cleanText;
     return div.textContent || div.innerText || "";
-  }, [text]);
+  }, [cleanText]);
 
   const shouldTrim = plainText.length > textLimit;
 
   const trimmedText = useMemo(() => {
-    if (!shouldTrim) return text;
+    if (!shouldTrim) return cleanText;
     const trimmed = plainText.slice(0, textLimit) + "...";
     return `<p>${trimmed}</p>`;
-  }, [text, plainText, textLimit, shouldTrim]);
+  }, [cleanText, plainText, textLimit, shouldTrim]);
 
   return (
     <div
@@ -64,7 +66,7 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
             style={{ overflow: "hidden" }}
-            dangerouslySetInnerHTML={{ __html: text }}
+            dangerouslySetInnerHTML={{ __html: cleanText }}
           />
         )}
       </AnimatePresence>

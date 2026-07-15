@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import DOMPurify from 'dompurify';
 import type { ServiceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -85,7 +86,7 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                     <p
                       className="text-sm leading-relaxed flex-1"
                       style={{ color: colors.neutral300 }}
-                      dangerouslySetInnerHTML={{ __html: service.description }}
+                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(service.description ?? '') }}
                     />
                   )}
 
