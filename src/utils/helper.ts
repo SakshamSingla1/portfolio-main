@@ -19,10 +19,6 @@ export const getColor = (theme: ColorTheme | null, colorName: string) => {
   return "";
 }
 
-export const sanitizeHtml = (html: string) => {
-  return (html || '').replace(/<[^>]*>/g, ' ');
-}
-
 export const toTitleCase = (value?: string | null) => {
   if (!value) return "—";
 
