@@ -139,12 +139,12 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 {/* Image container */}
                 <div
                   className="relative
-                    w-72 h-72
-                    sm:w-80 sm:h-80
-                    md:w-96 md:h-96
-                    lg:w-105 lg:h-105
-                    xl:w-120 xl:h-120
-                    2xl:w-130 2xl:h-130
+                    w-72
+                    sm:w-80
+                    md:w-96
+                    lg:w-105
+                    xl:w-120
+                    2xl:w-130
                     rounded-3xl overflow-hidden z-10"
                   style={{
                     border: `1px solid ${colors.neutral700}60`,
@@ -155,7 +155,7 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                   <img
                     src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-auto block transition-transform duration-700 group-hover:scale-105"
                     fetchPriority="high"
                     loading="eager"
                     decoding="async"
