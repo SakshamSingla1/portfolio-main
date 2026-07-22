@@ -265,27 +265,31 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               </motion.span>
             </motion.h1>
 
-            <motion.div
-              variants={stagger.item}
-              className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-6 h-10"
-              style={{ color: colors.neutral400 }}
-            >
-              <TypewriterText
-                words={[profile.title]}
-                colors={colors}
-              />
-            </motion.div>
+            {profile.title && (
+              <motion.div
+                variants={stagger.item}
+                className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-6 h-10"
+                style={{ color: colors.neutral400 }}
+              >
+                <TypewriterText
+                  words={[profile.title]}
+                  colors={colors}
+                />
+              </motion.div>
+            )}
 
-            <motion.div
-              variants={stagger.item}
-              className="flex items-center gap-2 mb-8 justify-center lg:justify-start"
-              style={{ color: colors.neutral400 }}
-            >
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm lg:text-base xl:text-lg">
-                {profile.location}
-              </span>
-            </motion.div>
+            {profile.location && (
+              <motion.div
+                variants={stagger.item}
+                className="flex items-center gap-2 mb-8 justify-center lg:justify-start"
+                style={{ color: colors.neutral400 }}
+              >
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm lg:text-base xl:text-lg">
+                  {profile.location}
+                </span>
+              </motion.div>
+            )}
 
             <motion.div
               variants={stagger.item}

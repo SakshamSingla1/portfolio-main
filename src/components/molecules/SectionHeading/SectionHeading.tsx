@@ -12,14 +12,6 @@ const SectionHeading = ({ title, subtitle }: Props) => {
 
   return (
     <div className="mb-16 md:mb-20 text-center relative">
-      {/* Ghost background text — more visible */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[6rem] md:text-[9rem] font-bold whitespace-nowrap pointer-events-none select-none"
-        style={{ color: `${colors.neutral700}12` }}
-      >
-        {title}
-      </div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -27,6 +19,13 @@ const SectionHeading = ({ title, subtitle }: Props) => {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="inline-block relative"
       >
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[6rem] md:text-[9rem] font-bold whitespace-nowrap pointer-events-none select-none -z-10"
+          style={{ color: `${colors.neutral700}12` }}
+        >
+          {title}
+        </div>
+
         {/* Eyebrow label — more visible, wider tracking */}
         <span
           className="text-[10px] font-mono uppercase block mb-3"

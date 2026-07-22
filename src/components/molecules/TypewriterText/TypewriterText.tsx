@@ -16,7 +16,7 @@ export const TypewriterText = ({ words, typingSpeed = 80, deletingSpeed = 40, pa
   const [isDeleting, setIsDeleting] = useState(false);
 
   const tick = useCallback(() => {
-    const currentWord = words[wordIdx];
+    const currentWord = words[wordIdx] || "";
     if (!isDeleting) {
       setText(currentWord.substring(0, text.length + 1));
       if (text.length + 1 === currentWord.length) {

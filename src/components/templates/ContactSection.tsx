@@ -76,7 +76,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
   const contactItems = [
     { icon: FiMail, label: "Email", value: profile.email, href: `mailto:${profile.email}`, color: colors.primary500 },
     ...(profile.phone ? [{ icon: FiPhone, label: "Phone", value: profile.phone, href: `tel:${profile.phone}`, color: colors.success500 }] : []),
-    { icon: FiMapPin, label: "Location", value: profile.location, href: undefined, color: colors.accent500 },
+    ...(profile.location ? [{ icon: FiMapPin, label: "Location", value: profile.location, href: undefined, color: colors.accent500 }] : []),
   ];
 
   const nextSteps = [
