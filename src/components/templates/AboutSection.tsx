@@ -71,7 +71,7 @@ const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSe
                 <img
                   src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
                   alt="About me"
-                  className="w-full h-auto block max-h-120 object-contain group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-auto block group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                 />
                 <div className="absolute inset-0" style={{
