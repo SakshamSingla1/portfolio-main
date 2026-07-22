@@ -59,7 +59,7 @@ const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSe
 
         <div className="grid md:grid-cols-2 gap-10 lg:gap-14 items-center">
           {profile.aboutMeImageUrl && (
-            <FadeInView className="relative group">
+            <FadeInView className="relative group max-w-md mx-auto md:mx-0">
               <motion.div
                 className="absolute -inset-4 rounded-2xl opacity-0 group-hover:opacity-40 blur-2xl transition-opacity duration-700"
                 style={{ background: g.cardBorderGradient }}

@@ -139,12 +139,12 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 {/* Image container */}
                 <div
                   className="relative
-                    w-72
-                    sm:w-80
-                    md:w-96
-                    lg:w-105
-                    xl:w-120
-                    2xl:w-130
+                    w-60
+                    sm:w-68
+                    md:w-80
+                    lg:w-88
+                    xl:w-100
+                    2xl:w-105
                     rounded-3xl overflow-hidden z-10"
                   style={{
                     border: `1px solid ${colors.neutral700}60`,
