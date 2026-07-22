@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "./components/molecules/Sonner/Sonner";
@@ -15,28 +15,46 @@ const TestimonialSubmitPage = lazy(() => import("./components/pages/TestimonialS
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <DefaultColorThemeProvider>
-        <TooltipProvider>
-          <Sonner />
-          <BrowserRouter>
-            <Suspense fallback={null}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/blogs" element={<BlogsPage />} />
-                <Route path="/blogs/:slug" element={<BlogPostPage />} />
-                <Route path="/explore" element={<ExplorePage />} />
-                <Route path="/testimonial/:token" element={<TestimonialSubmitPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </TooltipProvider>
-      </DefaultColorThemeProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+const CLOUDINARY_TRANSFORM_PATTERN = /(res\.cloudinary\.com\/[^/]+\/image\/upload\/)[^/]+\//;
+
+const App = () => {
+  useEffect(() => {
+    const handleImageError = (event: Event) => {
+      const img = event.target;
+      if (!(img instanceof HTMLImageElement)) return;
+      if (img.dataset.cloudinaryFallback) return;
+      const fallbackSrc = img.src.replace(CLOUDINARY_TRANSFORM_PATTERN, "$1");
+      if (fallbackSrc === img.src) return;
+      img.dataset.cloudinaryFallback = "true";
+      img.src = fallbackSrc;
+    };
+    document.addEventListener("error", handleImageError, true);
+    return () => document.removeEventListener("error", handleImageError, true);
+  }, []);
+
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <DefaultColorThemeProvider>
+          <TooltipProvider>
+            <Sonner />
+            <BrowserRouter>
+              <Suspense fallback={null}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/blogs" element={<BlogsPage />} />
+                  <Route path="/blogs/:slug" element={<BlogPostPage />} />
+                  <Route path="/explore" element={<ExplorePage />} />
+                  <Route path="/testimonial/:token" element={<TestimonialSubmitPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </TooltipProvider>
+        </DefaultColorThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+};
 
 export default App;
