@@ -48,7 +48,7 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Certifications" subtitle="Professional certifications and credentials" />
 
-        <div className="space-y-4">
+        <div className="space-y-4 max-w-4xl mx-auto">
           {certifications.map((cert, idx) => (
             <FadeInView key={cert.id} delay={idx * 0.1}>
               <motion.div

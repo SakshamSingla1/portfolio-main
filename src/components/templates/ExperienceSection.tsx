@@ -37,7 +37,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
           subtitle="Where I've worked and what I've built"
         />
 
-        <div className="relative">
+        <div className="relative max-w-4xl mx-auto">
 
           {!isMobile && (
             <>

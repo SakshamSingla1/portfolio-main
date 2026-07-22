@@ -43,7 +43,7 @@ const PublicationsSection = ({ publications }: PublicationsSectionProps) => {
             <div className="max-w-7xl mx-auto">
                 <SectionHeading title="Publications & Talks" subtitle="Research, articles, talks, and other contributions" />
 
-                <div className="space-y-10">
+                <div className="space-y-10 max-w-4xl mx-auto">
                     {Object.entries(grouped).map(([type, items]) => (
                         <div key={type}>
                             <div

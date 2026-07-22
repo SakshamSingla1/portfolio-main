@@ -23,6 +23,11 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
   const colors = useColors();
   const { username, publicRepos, followers, totalStars, externalPRs } = githubStats;
   const visibleRepos = githubRepos.filter(r => r.isVisible).slice(0, 6);
+  const repoGridColsClass =
+    visibleRepos.length === 1 ? "sm:grid-cols-1" :
+    visibleRepos.length === 2 ? "sm:grid-cols-2" :
+    "sm:grid-cols-2 lg:grid-cols-3";
+  const repoGridWidthClass = visibleRepos.length < 3 ? "max-w-4xl mx-auto" : "";
 
   const stats = [
     { icon: <FiBook />, label: "Public Repos", value: publicRepos },
@@ -108,7 +113,7 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
       {/* Pinned / visible repos */}
       {visibleRepos.length > 0 && (
         <FadeInView delay={0.2}>
-          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className={`mt-8 grid ${repoGridColsClass} gap-4 ${repoGridWidthClass}`}>
             {visibleRepos.map((repo, i) => {
               const langColor = repo.language ? (LANG_COLORS[repo.language] ?? colors.primary400) : colors.neutral500;
               return (

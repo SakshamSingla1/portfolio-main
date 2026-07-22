@@ -33,7 +33,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Education" subtitle="Academic background and qualifications" />
 
-        <div className="relative">
+        <div className="relative max-w-4xl mx-auto">
           {!isMobile && (
             <>
               {/* Timeline track */}

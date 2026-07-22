@@ -21,12 +21,18 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
   const colors = useColors();
   const s = shadows(colors);
 
+  const gridColsClass =
+    achievements.length === 1 ? "" :
+    achievements.length === 2 ? "md:grid-cols-2" :
+    "md:grid-cols-2 xl:grid-cols-3";
+  const gridWidthClass = achievements.length < 3 ? "max-w-4xl mx-auto" : "";
+
   return (
     <section id="achievements" className="section-padding relative">
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Achievements" subtitle="Recognition and accomplishments" />
 
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className={`grid ${gridColsClass} gap-6 ${gridWidthClass}`}>
           {achievements.map((ach, idx) => {
             const medal = idx < 3 ? medalConfig[idx] : null;
             const hoverBorderColor = medal ? medal.color : colors.primary500;

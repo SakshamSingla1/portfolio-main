@@ -16,12 +16,18 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
   const colors = useColors();
   const s = shadows(colors);
 
+  const gridColsClass =
+    services.length === 1 ? "sm:grid-cols-1" :
+    services.length === 2 ? "sm:grid-cols-2" :
+    "sm:grid-cols-2 lg:grid-cols-3";
+  const gridWidthClass = services.length < 3 ? "max-w-4xl mx-auto" : "";
+
   return (
     <section id="services" className="section-padding relative">
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Services" subtitle="What I can do for you" />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`grid ${gridColsClass} gap-6 ${gridWidthClass}`}>
           {services.map((service, idx) => (
             <FadeInView key={service.id} delay={idx * 0.08}>
               <motion.div
