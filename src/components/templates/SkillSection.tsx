@@ -255,7 +255,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         </div>
 
         <AnimatePresence mode="popLayout">
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-3">
+        <motion.div layout className="flex flex-wrap justify-center gap-3">
           {filteredSkills.map((skill) => {
             const cardHoverShadow = `0 12px 30px ${levelColor(skill.level)}25`;
             return (
@@ -266,7 +266,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.85 }}
               whileHover={{ y: -6, boxShadow: cardHoverShadow }}
-              className="rounded-xl p-4 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 backdrop-blur-md relative overflow-hidden"
+              className="w-[calc(50%-0.375rem)] sm:w-[calc(25%-0.5625rem)] md:w-[calc(16.6667%-0.625rem)] lg:w-[calc(10%-0.675rem)] rounded-xl p-4 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 backdrop-blur-md relative overflow-hidden"
               style={{
                 background: `${colors.neutral800}55`,
                 border: `1px solid ${colors.neutral700}30`,
