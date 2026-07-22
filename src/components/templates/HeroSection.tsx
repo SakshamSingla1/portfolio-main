@@ -149,12 +149,13 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                   style={{
                     border: `1px solid ${colors.neutral700}60`,
                     boxShadow: `0 0 50px ${colors.primary500}20`,
+                    background: colors.neutral900,
                   }}
                 >
                   <img
                     src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                     fetchPriority="high"
                     loading="eager"
                     decoding="async"

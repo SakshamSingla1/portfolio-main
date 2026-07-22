@@ -66,12 +66,12 @@ const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSe
               />
               <div
                 className="relative rounded-2xl overflow-hidden"
-                style={{ border: `1px solid ${colors.neutral700}30` }}
+                style={{ border: `1px solid ${colors.neutral700}30`, background: colors.neutral900 }}
               >
                 <img
                   src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
                   alt="About me"
-                  className="w-full h-80 lg:h-120 object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-80 lg:h-120 object-contain group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                 />
                 <div className="absolute inset-0" style={{
