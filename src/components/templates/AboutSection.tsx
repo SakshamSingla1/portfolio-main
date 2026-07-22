@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import type { ProfileRequest, SkillResponse } from "../../utils/types";
+import type { ProfileRequest } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { useColors, gradients } from "../../utils/theme";
@@ -19,29 +19,9 @@ interface AboutSectionProps {
     value: string;
     label: string;
   };
-  skills?: SkillResponse[];
 }
 
-const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSectionProps) => {
-  const badgePositions = [
-    { position: { top: "-10px", left: "-12px" }, delay: 0 },
-    { position: { top: "-10px", right: "-12px" }, delay: 0.6 },
-    { position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
-    { position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
-  ];
-
-  const badges = skills.length > 0
-    ? skills.slice(0, 4).map((skill, index) => ({
-        label: skill.logoName,
-        position: badgePositions[index % badgePositions.length].position,
-        delay: badgePositions[index % badgePositions.length].delay,
-      }))
-    : [
-        { label: "TypeScript", position: { top: "-10px", left: "-12px" }, delay: 0 },
-        { label: "React", position: { top: "-10px", right: "-12px" }, delay: 0.6 },
-        { label: "Spring Boot", position: { bottom: "-10px", left: "-12px" }, delay: 1.2 },
-        { label: "MongoDB", position: { bottom: "-10px", right: "-12px" }, delay: 1.8 },
-      ];
+const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) => {
   const colors = useColors();
   const g = gradients(colors);
   const [codeCardHovered, setCodeCardHovered] = useState(false);
@@ -80,54 +60,7 @@ const AboutSection = ({ profile, totalExp, totalProjects, skills = [] }: AboutSe
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(to top, ${colors.neutral900}90, transparent 50%)`,
                 }} />
-
-                {/* Available badge */}
-                <div
-                  className="absolute bottom-4 left-4 px-4 py-2 rounded-lg backdrop-blur-md font-mono text-xs flex items-center gap-2"
-                  style={{
-                    background: `${colors.neutral900}90`,
-                    border: `1px solid ${colors.neutral700}40`,
-                    color: colors.primary400,
-                  }}
-                >
-                  <span className="relative flex h-2 w-2">
-                    <motion.span
-                      className="absolute inline-flex h-full w-full rounded-full"
-                      animate={{ scale: [1, 1.8, 1], opacity: [0.75, 0, 0.75] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                      style={{ background: colors.success500 }}
-                    />
-                    <span
-                      className="relative inline-flex rounded-full h-2 w-2"
-                      style={{ background: colors.success500 }}
-                    />
-                  </span>
-                  Available for opportunities
-                </div>
               </div>
-
-              {/* Floating tech-label badges */}
-              {badges.map((badge) => (
-                <motion.div
-                  key={badge.label}
-                  className="absolute z-10 px-2.5 py-1 rounded-full font-mono text-xs whitespace-nowrap pointer-events-none"
-                  style={{
-                    ...badge.position,
-                    background: `${colors.neutral800}CC`,
-                    border: `1px solid ${colors.primary500}30`,
-                    color: colors.neutral300,
-                  }}
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{
-                    duration: 3.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: badge.delay,
-                  }}
-                >
-                  {badge.label}
-                </motion.div>
-              ))}
 
               <div className="absolute -bottom-2 -right-2 w-12 h-12 border-b-2 border-r-2 rounded-br-xl"
                 style={{ borderColor: `${colors.primary500}45` }} />

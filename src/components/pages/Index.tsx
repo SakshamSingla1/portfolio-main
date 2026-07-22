@@ -274,7 +274,6 @@ const Index = () => {
                 <div className="mb-15">
                   <AboutSection
                     profile={profile}
-                    skills={data.skills}
                     totalExp={{
                       value: displayExperience,
                       label: displayExperience === "Fresher" ? "" : "Years of Experience",
