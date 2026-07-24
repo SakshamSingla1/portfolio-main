@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import DOMPurify from 'dompurify';
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { useColors } from "../../../utils/theme";
@@ -24,19 +24,18 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
   const textLimit = isMobile ? mobileLimit : limit;
   const cleanText = DOMPurify.sanitize(text ?? '');
 
-  const plainText = useMemo(() => {
+  // Only used to decide whether a "Read More" toggle is needed at all — the collapsed view
+  // itself renders the full cleanText and visually clips it with line-clamp (below), rather
+  // than truncating the HTML string on a character count, which used to strip all markup
+  // (bullets, bold, paragraphs) down to a single flattened <p> of plain text.
+  const plainTextLength = useMemo(() => {
     const div = document.createElement("div");
     div.innerHTML = cleanText;
-    return div.textContent || div.innerText || "";
+    return (div.textContent || div.innerText || "").length;
   }, [cleanText]);
 
-  const shouldTrim = plainText.length > textLimit;
-
-  const trimmedText = useMemo(() => {
-    if (!shouldTrim) return cleanText;
-    const trimmed = plainText.slice(0, textLimit) + "...";
-    return `<p>${trimmed}</p>`;
-  }, [cleanText, plainText, textLimit, shouldTrim]);
+  const shouldTrim = plainTextLength > textLimit;
+  const approxLineCount = Math.max(2, Math.ceil(textLimit / 60));
 
   return (
     <div
@@ -47,29 +46,21 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
         lineHeight: "1.7",
       }}
     >
-      <AnimatePresence mode="wait">
-        {!expanded ? (
-          <motion.div
-            key="collapsed"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
-            dangerouslySetInnerHTML={{ __html: trimmedText }}
-          />
-        ) : (
-          <motion.div
-            key="expanded"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            style={{ overflow: "hidden" }}
-            dangerouslySetInnerHTML={{ __html: cleanText }}
-          />
-        )}
-      </AnimatePresence>
+      <motion.div
+        layout
+        transition={{ duration: 0.35, ease: "easeInOut" }}
+        style={
+          !expanded && shouldTrim
+            ? {
+                display: "-webkit-box",
+                WebkitLineClamp: approxLineCount,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }
+            : undefined
+        }
+        dangerouslySetInnerHTML={{ __html: cleanText }}
+      />
 
       {shouldTrim && (
         <motion.div
