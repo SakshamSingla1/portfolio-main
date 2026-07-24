@@ -31,20 +31,22 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
           {services.map((service, idx) => (
             <FadeInView key={service.id} delay={idx * 0.08}>
               <motion.div
-                whileHover={{ y: -4, boxShadow: s.card }}
+                whileHover={{ y: -6, boxShadow: s.card }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
                 className="rounded-xl overflow-hidden flex flex-col transition-all duration-300"
                 style={{
-                  background: `${colors.neutral800}60`,
+                  background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}85)`,
                   border: `1px solid ${colors.neutral700}40`,
                   backdropFilter: "blur(8px)",
+                  boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = `${colors.primary500}40`;
-                  e.currentTarget.style.boxShadow = `0 12px 40px ${colors.primary500}15`;
+                  e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px ${colors.primary500}20`;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = `${colors.neutral700}40`;
-                  e.currentTarget.style.boxShadow = "";
+                  e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`;
                 }}
               >
                 {/* Banner */}
@@ -90,7 +92,7 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                   {/* Description */}
                   {service.description && (
                     <p
-                      className="text-sm leading-relaxed flex-1"
+                      className="text-sm leading-relaxed flex-1 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5 [&_li]:mb-1"
                       style={{ color: colors.neutral300 }}
                       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(service.description ?? '') }}
                     />

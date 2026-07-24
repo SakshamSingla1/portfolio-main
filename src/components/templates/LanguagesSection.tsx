@@ -39,20 +39,22 @@ const LanguagesSection = ({ languages }: LanguagesSectionProps) => {
             return (
               <FadeInView key={lang.id} delay={idx * 0.08}>
                 <motion.div
-                  whileHover={{ y: -3 }}
+                  whileHover={{ y: -5 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   className="rounded-xl p-4 flex flex-col gap-3 transition-all duration-300"
                   style={{
-                    background: `${colors.neutral800}60`,
+                    background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}80)`,
                     border: `1px solid ${colors.neutral700}40`,
                     backdropFilter: "blur(8px)",
+                    boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${config.color}40`;
-                    e.currentTarget.style.boxShadow = `0 8px 30px ${config.color}12`;
+                    e.currentTarget.style.borderColor = `${config.color}45`;
+                    e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px -20px ${config.color}35`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = `${colors.neutral700}40`;
-                    e.currentTarget.style.boxShadow = "";
+                    e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`;
                   }}
                 >
                   <div className="flex items-center gap-2">

@@ -169,8 +169,11 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                     style={{
                       background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                       border: `1px solid ${isHovered ? `${colors.primary500}45` : `${colors.neutral700}30`}`,
-                      boxShadow: isHovered ? `0 8px 40px ${colors.primary500}12` : undefined,
-                      transition: 'all 0.4s ease',
+                      boxShadow: isHovered
+                        ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 48px -16px ${colors.primary500}30, 0 30px 60px -30px rgba(0,0,0,0.8)`
+                        : `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.65)`,
+                      transform: isHovered ? "translateY(-6px)" : "translateY(0)",
+                      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                     }}
                     onMouseEnter={() => setHoveredId(exp.id ?? null)}
                     onMouseLeave={() => setHoveredId(null)}

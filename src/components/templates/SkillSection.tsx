@@ -75,11 +75,13 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               {featuredSkills.map((skill) => (
                 <motion.div
                   key={skill.id}
-                  whileHover={{ y: -4, scale: 1.03 }}
-                  className="rounded-2xl p-4 flex flex-col items-center gap-2 shrink-0 w-24 cursor-default"
+                  whileHover={{ y: -6, scale: 1.04 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="rounded-2xl p-4 flex flex-col items-center gap-2 shrink-0 w-24 cursor-default backdrop-blur-md"
                   style={{
-                    background: `${colors.primary500}08`,
+                    background: `linear-gradient(145deg, ${colors.primary500}12, ${colors.neutral900}60)`,
                     border: `1px solid ${colors.primary500}25`,
+                    boxShadow: `0 1px 0 0 rgba(255,255,255,0.05) inset, 0 16px 32px -20px ${colors.primary500}35`,
                   }}
                 >
                   <div className="w-20 h-20 flex items-center justify-center">
@@ -112,18 +114,13 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         )}
 
         {/* Proficiency Overview Mini-Chart */}
-        <div
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 rounded-xl p-4 mb-8"
-          style={{
-            background: `${colors.neutral800}40`,
-            border: `1px solid ${colors.neutral700}30`,
-          }}
-        >
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {LEVELS.map((lvl) => (
             <motion.div
               key={lvl}
-              whileHover={{ scale: 1.05 }}
-              className="flex flex-col items-center gap-1"
+              whileHover={{ scale: 1.05, y: -3 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="stat-tile flex flex-col items-center gap-1 py-4"
             >
               <span
                 className="text-2xl font-mono font-bold"
@@ -270,6 +267,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               style={{
                 background: `${colors.neutral800}55`,
                 border: `1px solid ${colors.neutral700}30`,
+                boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = `${levelColor(skill.level)}40`;

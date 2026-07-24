@@ -52,19 +52,21 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
           {certifications.map((cert, idx) => (
             <FadeInView key={cert.id} delay={idx * 0.1}>
               <motion.div
-                whileHover={{ x: 4, boxShadow: s.card }}
+                whileHover={{ x: 4, y: -3, boxShadow: s.card }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
                 className="group rounded-xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 backdrop-blur-md transition-all duration-300 relative overflow-hidden"
                 style={{
-                  background: `${colors.neutral900}80`,
+                  background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}85)`,
                   border: `1px solid ${colors.neutral700}40`,
+                  boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = `${colors.primary500}40`;
-                  e.currentTarget.style.boxShadow = `0 4px 24px ${colors.primary500}12`;
+                  e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px -18px ${colors.primary500}25`;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = `${colors.neutral700}40`;
-                  e.currentTarget.style.boxShadow = "";
+                  e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`;
                 }}
               >
                 <div

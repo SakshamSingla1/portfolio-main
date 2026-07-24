@@ -36,9 +36,11 @@
     --gradient-primary: linear-gradient(135deg, hsl(239 84% 67%), hsl(280 70% 65%));
     --gradient-subtle: linear-gradient(135deg, hsl(239 84% 67% / 0.15), hsl(280 70% 65% / 0.15));
     --gradient-card: linear-gradient(145deg, hsl(230 20% 10%), hsl(230 20% 7%));
-    --gradient-card-hover: linear-gradient(145deg, hsl(230 20% 12%), hsl(230 20% 9%));
+    --gradient-card-hover: linear-gradient(145deg, hsl(230 22% 13%), hsl(230 22% 9%));
+    --gradient-border: linear-gradient(135deg, hsl(239 84% 67% / 0.5), hsl(230 15% 30% / 0.3) 45%, hsl(230 15% 30% / 0.3) 55%, hsl(280 70% 65% / 0.4));
 
-    --shadow-card-hover: 0 20px 40px -15px hsl(239 84% 67% / 0.15);
+    --shadow-card: 0 1px 0 0 hsl(0 0% 100% / 0.04) inset, 0 24px 48px -24px hsl(230 40% 2% / 0.65);
+    --shadow-card-hover: 0 1px 0 0 hsl(0 0% 100% / 0.06) inset, 0 24px 48px -16px hsl(239 84% 67% / 0.25), 0 30px 60px -30px hsl(230 40% 2% / 0.8);
 
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
@@ -91,14 +93,50 @@
   }
 
   .glass-card {
-    @apply rounded-2xl backdrop-blur-xl;
+    @apply relative rounded-2xl backdrop-blur-xl isolate;
     background: var(--gradient-card);
-    border: 1px solid hsl(var(--border) / 0.5);
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, background 0.4s ease;
+  }
+
+  /* Gradient hairline border, drawn via a masked pseudo-element so it can fade in on hover
+     without fighting the solid border color used for the resting state. */
+  .glass-card::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl pointer-events-none;
+    padding: 1px;
+    background: var(--gradient-border);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
   }
 
   .glass-card:hover {
     background: var(--gradient-card-hover);
     box-shadow: var(--shadow-card-hover);
+    transform: translateY(-6px);
+  }
+
+  .glass-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Soft ambient glow blob — place an empty div with this class inside a .glass-card
+     (absolute positioned by the caller) to add a colored bloom that fades in on hover. */
+  .card-glow {
+    @apply absolute rounded-full pointer-events-none -z-10;
+    background: radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%);
+    filter: blur(32px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .glass-card:hover .card-glow {
+    opacity: 1;
   }
 
   .section-container {
@@ -148,11 +186,139 @@
     background: hsl(var(--primary) / 0.1);
     color: hsl(var(--primary));
     border: 1px solid hsl(var(--primary) / 0.2);
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .skill-badge:hover {
+    background: hsl(var(--primary) / 0.18);
+    border-color: hsl(var(--primary) / 0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Flat stat tiles (skill/GitHub counters) — lighter-weight sibling of .glass-card. */
+  .stat-tile {
+    @apply relative rounded-2xl text-center overflow-hidden;
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border) / 0.6);
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .stat-tile:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .noise-overlay::after {
     content: '';
     @apply fixed inset-0 pointer-events-none;
     opacity: 0.02;
+  }
+
+  /* Blog post body — renders sanitized rich-text HTML (see BlogPostPage). The --prose-*
+     custom properties are set inline per-render (theme-driven colors); this class supplies
+     the actual element rules so headings/links/lists/code/tables/quotes all render instead
+     of falling back to unstyled default HTML. */
+  .blog-prose {
+    @apply text-base leading-relaxed;
+  }
+
+  .blog-prose > * + * {
+    margin-top: 1.25em;
+  }
+
+  .blog-prose h1, .blog-prose h2, .blog-prose h3, .blog-prose h4 {
+    color: var(--prose-headings, inherit);
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 1.75em;
+    margin-bottom: 0.5em;
+  }
+
+  .blog-prose h1 { font-size: 1.75em; }
+  .blog-prose h2 { font-size: 1.5em; }
+  .blog-prose h3 { font-size: 1.25em; }
+  .blog-prose h4 { font-size: 1.1em; }
+
+  .blog-prose p { margin: 1.25em 0; }
+
+  .blog-prose a {
+    color: var(--prose-link, hsl(var(--primary)));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .blog-prose strong { font-weight: 700; color: inherit; }
+  .blog-prose em { font-style: italic; }
+
+  .blog-prose ul, .blog-prose ol {
+    padding-left: 1.5em;
+    margin: 1.25em 0;
+  }
+
+  .blog-prose ul { list-style: disc; }
+  .blog-prose ol { list-style: decimal; }
+  .blog-prose li { margin: 0.4em 0; }
+  .blog-prose li::marker { color: var(--prose-link, hsl(var(--primary))); }
+
+  .blog-prose blockquote {
+    background: var(--prose-blockquote-bg, transparent);
+    border-left: 3px solid var(--prose-blockquote-border, hsl(var(--primary)));
+    padding: 0.75em 1.25em;
+    border-radius: 0 0.5rem 0.5rem 0;
+    font-style: italic;
+    margin: 1.5em 0;
+  }
+
+  .blog-prose code {
+    background: var(--prose-code-bg, hsl(var(--muted)));
+    padding: 0.15em 0.4em;
+    border-radius: 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .blog-prose pre {
+    background: var(--prose-pre-bg, hsl(var(--muted)));
+    padding: 1.25em;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+    margin: 1.5em 0;
+  }
+
+  .blog-prose pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .blog-prose img {
+    border-radius: 0.75rem;
+    margin: 1.5em 0;
+  }
+
+  .blog-prose hr {
+    border: none;
+    border-top: 1px solid var(--prose-hr, hsl(var(--border)));
+    margin: 2.5em 0;
+  }
+
+  .blog-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.9em;
+  }
+
+  .blog-prose th {
+    background: var(--prose-th-bg, hsl(var(--muted)));
+    text-align: left;
+    font-weight: 700;
+    padding: 0.6em 0.9em;
+  }
+
+  .blog-prose td {
+    padding: 0.6em 0.9em;
+    border-top: 1px solid var(--prose-td-border, hsl(var(--border)));
   }
 }

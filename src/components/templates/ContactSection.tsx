@@ -117,6 +117,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
               style={{
                 background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                 border: `1px solid ${colors.neutral700}35`,
+                boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -28px rgba(0,0,0,0.7)`,
               }}
             >
               {/* Card header strip */}
@@ -188,8 +189,9 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
             <div
               className="rounded-2xl p-5"
               style={{
-                background: `${colors.neutral800}50`,
+                background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                 border: `1px solid ${colors.neutral700}30`,
+                boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -28px rgba(0,0,0,0.7)`,
               }}
             >
               <p className="text-xs font-mono tracking-widest uppercase mb-4" style={{ color: colors.neutral500 }}>
@@ -220,7 +222,11 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
             {/* Terminal card */}
             <div
               className="rounded-xl p-4 font-mono text-xs"
-              style={{ background: `${colors.neutral900}90`, border: `1px solid ${colors.neutral700}35` }}
+              style={{
+                background: `linear-gradient(145deg, ${colors.neutral900}95, ${colors.neutral900}80)`,
+                border: `1px solid ${colors.neutral700}35`,
+                boxShadow: `0 1px 0 0 rgba(255,255,255,0.03) inset, 0 20px 40px -28px rgba(0,0,0,0.7)`,
+              }}
             >
               <div className="flex items-center gap-1.5 mb-3">
                 <div className="w-2.5 h-2.5 rounded-full" style={{ background: `${colors.error500}60` }} />
@@ -253,6 +259,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
               style={{
                 background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                 border: `1px solid ${colors.neutral700}35`,
+                boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 30px 60px -30px rgba(0,0,0,0.75)`,
               }}
             >
               {/* Form header */}

@@ -21,7 +21,6 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
 }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [showMoreSkills, setShowMoreSkills] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
   const cardRef = React.useRef<HTMLDivElement>(null);
@@ -43,22 +42,16 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
     <FadeInView delay={idx * 0.15}>
       <motion.div
         ref={cardRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => {
-          setIsHovered(false);
-        }}
         animate={{
           rotateX: 0,
           rotateY: 0,
           scale: 1
         }}
         transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
-        className={`rounded-2xl overflow-hidden group backdrop-blur-xl transition-all duration-500 relative flex flex-col ${idx % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
-        style={{
-          background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}90)`,
-          border: `1px solid ${isHovered ? `${colors.primary500}40` : `${colors.neutral700}30`}`,
-        }}
+        className={`glass-card overflow-hidden group flex flex-col ${idx % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
       >
+        <div className="card-glow w-72 h-72 -top-20 -left-20" />
+
         {images.length > 0 && (
           <div className="relative h-48 sm:h-[260px] lg:h-auto lg:min-h-[320px] lg:w-[44%] overflow-hidden shrink-0">
             <AnimatePresence mode="wait">
@@ -278,26 +271,28 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
           </div>
 
           <div className="flex items-center justify-between pt-6 border-t" style={{ borderColor: `${colors.neutral700}30` }}>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-3">
               {project.projectLink && (
                 <a
                   href={project.projectLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm font-bold tracking-tight group/link transition-colors"
-                  style={{ color: colors.primary400 }}
+                  className="flex items-center gap-2 text-sm font-bold tracking-tight rounded-full px-3.5 py-2 border transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    color: colors.primary300,
+                    background: `${colors.primary500}12`,
+                    borderColor: `${colors.primary500}30`,
+                  }}
                 >
-                  <div className="p-2 rounded-lg bg-primary-500/10 group-hover/link:bg-primary-500/20 transition-colors">
-                    <FiExternalLink size={16} />
-                  </div>
+                  <FiExternalLink size={15} />
                   <span>Live Demo</span>
                 </a>
               )}
 
               {project.githubRepositories.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-neutral-700/30">
-                    <FiGithub size={16} style={{ color: colors.neutral400 }} />
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="p-2 rounded-full" style={{ background: `${colors.neutral700}30` }}>
+                    <FiGithub size={15} style={{ color: colors.neutral400 }} />
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {project.githubRepositories.map((repo, i) => (
@@ -306,10 +301,11 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                         href={repo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] font-mono px-2 py-1 rounded-md transition-all hover:bg-primary-500/10 hover:text-primary-300"
+                        className="text-[10px] font-mono px-2.5 py-1.5 rounded-full border transition-all duration-300 hover:-translate-y-0.5"
                         style={{
-                          background: `${colors.neutral700}40`,
-                          color: colors.neutral400,
+                          background: `${colors.neutral700}30`,
+                          borderColor: `${colors.neutral700}50`,
+                          color: colors.neutral300,
                         }}
                       >
                         {repo.split("/").pop()}

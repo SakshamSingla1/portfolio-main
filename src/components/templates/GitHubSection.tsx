@@ -49,11 +49,13 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
           {stats.map((stat, i) => (
             <FadeInView key={stat.label} delay={i * 0.07}>
               <motion.div
-                whileHover={{ y: -3 }}
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 className="rounded-xl p-5 text-center relative overflow-hidden"
                 style={{
-                  background: `${colors.neutral800}80`,
+                  background: `linear-gradient(145deg, ${colors.neutral800}90, ${colors.neutral900}90)`,
                   border: `1px solid ${colors.neutral700}40`,
+                  boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                 }}
               >
                 <div
@@ -81,8 +83,9 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
           <div
             className="rounded-2xl p-6 md:p-8"
             style={{
-              background: `${colors.neutral800}60`,
+              background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}80)`,
               border: `1px solid ${colors.neutral700}40`,
+              boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.65)`,
             }}
           >
             <div className="flex items-center gap-2 mb-6">
@@ -123,23 +126,30 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
                     href={repo.url ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ y: -3 }}
+                    whileHover={{ y: -5 }}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="rounded-xl p-4 flex flex-col gap-2 cursor-pointer"
+                    transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 22 }}
+                    className="rounded-xl p-4 flex flex-col gap-2 cursor-pointer relative overflow-hidden"
                     style={{
-                      background: `${colors.neutral800}60`,
+                      background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}80)`,
                       border: `1px solid ${colors.neutral700}40`,
+                      boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                       textDecoration: "none",
                     }}
                     onMouseEnter={e => {
                       (e.currentTarget as HTMLElement).style.borderColor = `${colors.primary500}40`;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px -20px ${colors.primary500}30`;
                     }}
                     onMouseLeave={e => {
                       (e.currentTarget as HTMLElement).style.borderColor = `${colors.neutral700}40`;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`;
                     }}
                   >
+                    <div
+                      className="absolute top-0 left-0 right-0 h-px"
+                      style={{ background: `linear-gradient(90deg, transparent, ${langColor}60, transparent)` }}
+                    />
                     <div className="flex items-start justify-between gap-2">
                       <span className="font-semibold text-sm truncate" style={{ color: colors.neutral100 }}>
                         {repo.name}

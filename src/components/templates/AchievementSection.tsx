@@ -40,19 +40,21 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
             return (
               <FadeInView key={ach.id} delay={idx * 0.1}>
                 <motion.div
-                  whileHover={{ y: -4, boxShadow: s.card }}
+                  whileHover={{ y: -6, boxShadow: s.card }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
                   className="rounded-xl overflow-hidden backdrop-blur-md transition-all duration-500 h-full relative"
                   style={{
-                    background: `${colors.neutral800}60`,
+                    background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}85)`,
                     border: `1px solid ${colors.neutral700}40`,
+                    boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = `${hoverBorderColor}45`;
-                    e.currentTarget.style.boxShadow = `0 12px 40px ${hoverBorderColor}18`;
+                    e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px ${hoverBorderColor}20`;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.borderColor = `${colors.neutral700}40`;
-                    e.currentTarget.style.boxShadow = "";
+                    e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`;
                   }}
                 >
                   {/* Top shimmer accent line — gold for #1, primary for rest */}

@@ -37,12 +37,13 @@ const TestimonialsSection = ({ testimonials }: Props) => {
 
       <div className="max-w-4xl mx-auto">
         <div
-          className="glass-card-premium relative overflow-hidden"
+          className="relative overflow-hidden backdrop-blur-xl"
           style={{
             background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
             border: `1px solid ${colors.neutral700}40`,
             borderRadius: 20,
             padding: isMobile ? '1.25rem 1rem' : '2rem 2rem',
+            boxShadow: `0 1px 0 0 rgba(255,255,255,0.05) inset, 0 30px 60px -30px rgba(0,0,0,0.75)`,
           }}
         >
           {/* Ambient glow that shifts with active index */}

@@ -73,10 +73,13 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
             <div
               className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden"
               style={{
-                background: `${colors.neutral800}50`,
+                background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                 border: `1px solid ${codeCardHovered ? `${colors.primary500}30` : `${colors.neutral700}40`}`,
-                boxShadow: codeCardHovered ? `0 8px 40px ${colors.primary500}08` : undefined,
-                transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                boxShadow: codeCardHovered
+                  ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 48px -20px ${colors.primary500}25`
+                  : `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -28px rgba(0,0,0,0.65)`,
+                transform: codeCardHovered ? "translateY(-4px)" : "translateY(0)",
+                transition: 'border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
               }}
               onMouseEnter={() => setCodeCardHovered(true)}
               onMouseLeave={() => setCodeCardHovered(false)}
@@ -128,10 +131,12 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 <motion.div
                   key={stat.label}
                   whileHover={{ y: -5, boxShadow: `0 16px 40px ${stat.color}20` }}
+                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   className="rounded-xl p-4 text-center backdrop-blur-md transition-all duration-300 relative overflow-hidden"
                   style={{
-                    background: `${colors.neutral800}50`,
+                    background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
                     border: `1px solid ${colors.neutral700}35`,
+                    boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = `${stat.color}40`;

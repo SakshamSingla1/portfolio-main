@@ -65,8 +65,8 @@ const BlogCard = ({
           background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
           border: `1px solid ${hovered ? `${colors.primary500}40` : `${colors.neutral700}30`}`,
           boxShadow: hovered
-            ? `0 20px 60px -15px ${colors.primary500}25, 0 8px 24px -8px ${colors.accent500}15`
-            : "none",
+            ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 60px -15px ${colors.primary500}25, 0 8px 24px -8px ${colors.accent500}15`
+            : `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -28px rgba(0,0,0,0.7)`,
           transition: "border-color 0.3s, box-shadow 0.3s",
         }}
       >
