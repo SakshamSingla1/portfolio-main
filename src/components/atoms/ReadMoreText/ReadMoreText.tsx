@@ -48,6 +48,7 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
     >
       <motion.div
         layout
+        className="[&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5 [&_li]:mb-1"
         transition={{ duration: 0.35, ease: "easeInOut" }}
         style={
           !expanded && shouldTrim
