@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -29,6 +29,28 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
   const displaySkills = skills.slice(0, 2);
   const moreSkills = skills.slice(2);
 
+  // Mouse-tracking tilt + cursor-following spotlight. Percent-based (0-1) so the tilt
+  // direction and glow position both derive from the same pointer reading.
+  const mouseXPercent = useMotionValue(0.5);
+  const mouseYPercent = useMotionValue(0.5);
+  const rotateX = useSpring(useTransform(mouseYPercent, [0, 1], [5, -5]), { stiffness: 250, damping: 25 });
+  const rotateY = useSpring(useTransform(mouseXPercent, [0, 1], [-5, 5]), { stiffness: 250, damping: 25 });
+  const glowX = useTransform(mouseXPercent, (v) => `${v * 100}%`);
+  const glowY = useTransform(mouseYPercent, (v) => `${v * 100}%`);
+  const spotlightBackground = useMotionTemplate`radial-gradient(600px circle at ${glowX} ${glowY}, ${colors.primary500}18, transparent 65%)`;
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseXPercent.set((e.clientX - rect.left) / rect.width);
+    mouseYPercent.set((e.clientY - rect.top) / rect.height);
+  };
+
+  const resetCardTilt = () => {
+    mouseXPercent.set(0.5);
+    mouseYPercent.set(0.5);
+  };
+
   const statusColor = project.workStatus === "COMPLETED" ? "#10B981" : "#F59E0B";
   const duration = `${formatDate(project.projectStartDate)} — ${formatDate(project.projectEndDate)}`;
 
@@ -42,15 +64,16 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
     <FadeInView delay={idx * 0.15}>
       <motion.div
         ref={cardRef}
-        animate={{
-          rotateX: 0,
-          rotateY: 0,
-          scale: 1
-        }}
-        transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
+        onMouseMove={handleCardMouseMove}
+        onMouseLeave={resetCardTilt}
+        style={{ rotateX, rotateY, transformPerspective: 1200 }}
         className={`glass-card overflow-hidden group flex flex-col ${idx % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
       >
         <div className="card-glow w-72 h-72 -top-20 -left-20" />
+        <motion.div
+          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{ background: spotlightBackground }}
+        />
 
         {images.length > 0 && (
           <div className="relative h-48 sm:h-[260px] lg:h-auto lg:min-h-[320px] lg:w-[44%] overflow-hidden shrink-0">
@@ -213,9 +236,19 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
 
         <div className="p-6 md:p-8 lg:flex-1 flex flex-col justify-between relative z-10 overflow-hidden">
           <div className="relative h-full">
+            <span
+              className="absolute -top-2 right-0 font-display font-black leading-none select-none pointer-events-none"
+              style={{ fontSize: "4.5rem", color: `${colors.primary500}0d` }}
+            >
+              {String(idx + 1).padStart(2, "0")}
+            </span>
+
             <h3
-              className="text-2xl font-bold mb-3 group-hover:text-primary-400 transition-colors"
-              style={{ color: colors.neutral50 }}
+              className="relative text-2xl font-bold mb-3 transition-all duration-300 bg-clip-text group-hover:text-transparent w-fit text-(--title-color)"
+              style={{
+                "--title-color": colors.neutral50,
+                backgroundImage: `linear-gradient(135deg, ${colors.primary300}, ${colors.accent400})`,
+              } as React.CSSProperties}
             >
               {project.projectName}
             </h3>
