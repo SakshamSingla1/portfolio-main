@@ -3,8 +3,8 @@ import { request } from ".";
 import { replaceUrlParams } from "../utils/helper";
 
 const BLOG_URLS = {
-  LIST:   "/public/blog/:username",
-  DETAIL: "/public/blog/:username/:slug",
+  LIST:   "/blog/:username",
+  DETAIL: "/blog/:username/:slug",
 };
 
 export interface BlogTag {
