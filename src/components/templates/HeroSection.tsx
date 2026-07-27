@@ -252,10 +252,8 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 mb-6
                 leading-[1.05]"
             >
-              <motion.span
-                className="bg-clip-text text-transparent"
-                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              <span
+                className="hero-gradient-text bg-clip-text text-transparent"
                 style={{
                   backgroundImage: `linear-gradient(135deg, ${colors.neutral100}, ${colors.primary400}, ${colors.accent400})`,
                   backgroundSize: "200% 200%",
@@ -263,7 +261,7 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 }}
               >
                 {profile.fullName}
-              </motion.span>
+              </span>
             </motion.h1>
 
             {profile.title && (

@@ -13,7 +13,6 @@ import useProfileMasterService from "../../services/useProfileMasterService";
 import { getOptimizedImageUrl } from "../../utils/helper";
 import { HTTP_STATUS } from "../../utils/constants";
 import GridBackground from "../molecules/GridBackground/GridBackground";
-import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
 
 const getUsername = (): string | null => {
   try {
@@ -153,7 +152,6 @@ const BlogPostPage = () => {
 
       <style>{PROSE_STYLES}</style>
       <GridBackground />
-      <ScrollProgress />
 
       <div className="relative z-10">
         {/* Sticky top bar */}

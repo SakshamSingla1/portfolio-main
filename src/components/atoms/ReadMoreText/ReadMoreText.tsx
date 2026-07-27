@@ -22,7 +22,7 @@ export const ReadMoreText: React.FC<ReadMoreTextProps> = ({
   const [expanded, setExpanded] = useState(false);
 
   const textLimit = isMobile ? mobileLimit : limit;
-  const cleanText = DOMPurify.sanitize(text ?? '');
+  const cleanText = useMemo(() => DOMPurify.sanitize(text ?? ''), [text]);
 
   // Only used to decide whether a "Read More" toggle is needed at all — the collapsed view
   // itself renders the full cleanText and visually clips it with line-clamp (below), rather

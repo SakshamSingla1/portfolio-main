@@ -322,3 +322,23 @@
     border-top: 1px solid var(--prose-td-border, hsl(var(--border)));
   }
 }
+
+/* Animated gradient-text sheen on the hero name. Handed off to a native CSS
+   keyframe animation instead of framer-motion's per-frame JS style writes —
+   the browser's own animation timeline schedules this independently of the
+   React/JS main thread. */
+@keyframes hero-gradient-pan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-gradient-text {
+  animation: hero-gradient-pan 8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-gradient-text {
+    animation: none;
+  }
+}

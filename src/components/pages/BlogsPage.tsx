@@ -12,7 +12,6 @@ import useProfileMasterService from "../../services/useProfileMasterService";
 import { getOptimizedImageUrl } from "../../utils/helper";
 import { HTTP_STATUS } from "../../utils/constants";
 import GridBackground from "../molecules/GridBackground/GridBackground";
-import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 
 const getUsername = (): string | null => {
@@ -254,7 +253,6 @@ const BlogsPage = () => {
       </Helmet>
 
       <GridBackground />
-      <ScrollProgress />
 
       <div className="relative z-10">
         {/* Top navigation bar */}

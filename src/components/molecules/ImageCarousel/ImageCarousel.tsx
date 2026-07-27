@@ -54,6 +54,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 alt={`Preview ${index + 1}`}
                 onClick={() => onImageClick?.(images[index].url)}
                 className="w-full object-cover cursor-pointer transition-transform duration-700"
+                loading="lazy"
                 style={{
                     height: height,
                 }}

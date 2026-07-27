@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { SkillResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
@@ -15,9 +15,20 @@ const LEVELS = ["Expert", "Advanced", "Intermediate", "Beginner"] as const;
 
 const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const colors = useColors();
-  const categories = [...new Set(skills.map((sk) => sk.category))];
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  const categories = useMemo(
+    () => [...new Set(skills.map((sk) => sk.category))],
+    [skills]
+  );
+
+  const categoryCounts = useMemo(() => {
+    return skills.reduce<Record<string, number>>((acc, sk) => {
+      acc[sk.category] = (acc[sk.category] ?? 0) + 1;
+      return acc;
+    }, {});
+  }, [skills]);
 
   const levelColor = (level: string) => {
     switch (level) {
@@ -37,20 +48,29 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
     }
   };
 
-  const filteredSkills = skills
-    .filter((sk) => !activeCategory || sk.category === activeCategory)
-    .filter((sk) => sk.logoName.toLowerCase().includes(search.toLowerCase()));
+  const filteredSkills = useMemo(() => {
+    const query = search.toLowerCase();
+    return skills
+      .filter((sk) => !activeCategory || sk.category === activeCategory)
+      .filter((sk) => sk.logoName.toLowerCase().includes(query));
+  }, [skills, activeCategory, search]);
 
   // Proficiency counts from full skills array
-  const levelCounts = LEVELS.reduce<Record<string, number>>((acc, lvl) => {
-    acc[lvl] = skills.filter((sk) => sk.level === lvl).length;
-    return acc;
-  }, {});
+  const levelCounts = useMemo(() => {
+    return LEVELS.reduce<Record<string, number>>((acc, lvl) => {
+      acc[lvl] = skills.filter((sk) => sk.level === lvl).length;
+      return acc;
+    }, {});
+  }, [skills]);
 
   // Featured skills: Expert level, or top 4 if none
-  const expertSkills = skills.filter((sk) => sk.level === "Expert");
-  const featuredSkills = expertSkills.length > 0 ? expertSkills : skills.slice(0, 4);
-  const showFeatured = expertSkills.length > 0;
+  const { featuredSkills, showFeatured } = useMemo(() => {
+    const expertSkills = skills.filter((sk) => sk.level === "Expert");
+    return {
+      featuredSkills: expertSkills.length > 0 ? expertSkills : skills.slice(0, 4),
+      showFeatured: expertSkills.length > 0,
+    };
+  }, [skills]);
 
   return (
     <section
@@ -209,7 +229,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
             </span>
           </button>
           {categories.map((cat) => {
-            const count = skills.filter((sk) => sk.category === cat).length;
+            const count = categoryCounts[cat] ?? 0;
             return (
             <button
               key={cat}

@@ -11,7 +11,6 @@ import Footer from "../molecules/Footer/Footer";
 import ScrollToTop from "../molecules/ScrollToTop/ScrollToTop";
 import MouseGlow from "../molecules/MouseGlow/MouseGlow";
 import GridBackground from "../molecules/GridBackground/GridBackground";
-import ScrollProgress from "../molecules/ScrollProgress/ScrollProgress";
 import useProfileMasterService from "../../services/useProfileMasterService";
 import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
@@ -252,7 +251,6 @@ const Index = () => {
         )}
       </Helmet>
       <GridBackground />
-      <ScrollProgress />
 
       <div className="relative z-10">
         <MouseGlow />

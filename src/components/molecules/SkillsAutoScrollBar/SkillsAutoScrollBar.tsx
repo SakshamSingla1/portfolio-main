@@ -55,6 +55,9 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
               src={getOptimizedImageUrl(skill.logoUrl, { width: 80 })}
               alt={skill.logoName}
               className="h-8 w-8 object-contain transition-transform duration-300"
+              loading="lazy"
+              width={32}
+              height={32}
             />
             <p
               className="truncate text-sm font-semibold tracking-tight"

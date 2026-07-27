@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import { useDefaultColorTheme } from "../hooks/useDefaultColorTheme";
 import { getColor } from "./helper";
 
 export const useColors = () => {
   const { defaultTheme } = useDefaultColorTheme();
-  return {
+  return useMemo(() => ({
     primary50: getColor(defaultTheme, "primary50") || "#EEF2FF",
     primary100: getColor(defaultTheme, "primary100") || "#E0E7FF",
     primary200: getColor(defaultTheme, "primary200") || "#C7D2FE",
@@ -74,7 +75,7 @@ export const useColors = () => {
     warning700: getColor(defaultTheme, "warning700") || "#B45309",
     warning800: getColor(defaultTheme, "warning800") || "#92400E",
     warning900: getColor(defaultTheme, "warning900") || "#6F370D",
-  };
+  }), [defaultTheme]);
 };
 
 export type Colors = ReturnType<typeof useColors>;
