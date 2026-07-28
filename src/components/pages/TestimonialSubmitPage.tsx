@@ -44,7 +44,7 @@ const TestimonialSubmitPage = () => {
             setPageState("error");
             return;
         }
-        request('get', `/public/testimonial-requests/${token}`, null)
+        request('get', `/testimonial-requests/${token}`, null)
             .then((res) => {
                 if (res && res.status >= 200 && res.status < 300) {
                     setLinkDetails(res.data?.data);
@@ -82,7 +82,7 @@ const TestimonialSubmitPage = () => {
         if (!validate()) return;
         setSubmitting(true);
         try {
-            const res = await request('post', `/public/testimonial-requests/${token}/submit`, null, form);
+            const res = await request('post', `/testimonial-requests/${token}/submit`, null, form);
             if (res && res.status >= 200 && res.status < 300) {
                 setPageState("success");
             } else {
