@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { request } from "../../services";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useColors } from "../../utils/theme";
-import { FiSend, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+import { FiSend, FiCheckCircle, FiAlertCircle, FiMessageSquare } from "react-icons/fi";
 
 interface PublicLinkDetails {
     ownerName: string;
@@ -19,6 +19,11 @@ interface FormValues {
 }
 
 type PageState = "loading" | "form" | "success" | "error";
+
+const MESSAGE_MAX_LENGTH = 600;
+
+const getInitials = (name: string) =>
+    name.trim().split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase() || "?";
 
 const TestimonialSubmitPage = () => {
     const { token } = useParams<{ token: string }>();
@@ -97,21 +102,22 @@ const TestimonialSubmitPage = () => {
 
     const inputStyle: React.CSSProperties = {
         width: "100%",
-        padding: "10px 14px",
+        padding: "11px 14px",
         fontSize: "14px",
-        border: `1px solid ${colors.neutral200}`,
-        borderRadius: "8px",
-        background: colors.neutral50,
+        border: `1.5px solid ${colors.neutral200}`,
+        borderRadius: "10px",
+        background: "#ffffff",
         color: colors.neutral800,
         boxSizing: "border-box",
         outline: "none",
         fontFamily: "inherit",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease",
     };
 
     const labelStyle: React.CSSProperties = {
         fontSize: "13px",
-        fontWeight: 500,
-        color: colors.neutral600,
+        fontWeight: 600,
+        color: colors.neutral700,
         display: "block",
         marginBottom: "6px",
     };
@@ -120,159 +126,232 @@ const TestimonialSubmitPage = () => {
         <div
             style={{
                 minHeight: "100vh",
-                background: colors.neutral50,
+                background: `radial-gradient(ellipse 80% 60% at 50% -10%, ${colors.primary100}, transparent), ${colors.neutral50}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 padding: "24px 16px",
             }}
         >
+            <style>{`
+                .ts-field:focus {
+                    border-color: ${colors.primary400} !important;
+                    box-shadow: 0 0 0 3px ${colors.primary100};
+                }
+                .ts-field::placeholder { color: ${colors.neutral400}; }
+                .ts-submit-btn:hover:not(:disabled) { filter: brightness(1.06); }
+                .ts-submit-btn:active:not(:disabled) { transform: scale(0.98); }
+                @keyframes ts-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+                .ts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+                @media (max-width: 480px) { .ts-grid { grid-template-columns: 1fr; } }
+            `}</style>
+
             <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                    background: colors.neutral50,
-                    borderRadius: "16px",
-                    boxShadow: "0 8px 40px rgba(0,0,0,0.10)",
-                    padding: "36px 32px",
+                    background: "#ffffff",
+                    borderRadius: "20px",
+                    boxShadow: `0 20px 60px -12px ${colors.neutral900}1a, 0 4px 16px rgba(0,0,0,0.06)`,
                     width: "100%",
-                    maxWidth: "520px",
+                    maxWidth: "540px",
+                    overflow: "hidden",
                 }}
             >
-                {pageState === "loading" && (
-                    <div style={{ textAlign: "center", color: colors.neutral400, padding: "40px 0" }}>
-                        Loading…
-                    </div>
-                )}
+                <div style={{ height: "5px", background: `linear-gradient(90deg, ${colors.primary500}, ${colors.primary700})` }} />
 
-                {pageState === "error" && (
-                    <div style={{ textAlign: "center", padding: "32px 0" }}>
-                        <FiAlertCircle size={40} color={colors.error500} style={{ marginBottom: "16px" }} />
-                        <h2 style={{ fontSize: "18px", fontWeight: 700, color: colors.neutral900, marginBottom: "8px" }}>
-                            Link Unavailable
-                        </h2>
-                        <p style={{ fontSize: "14px", color: colors.neutral500 }}>{errorMessage}</p>
-                    </div>
-                )}
-
-                {pageState === "form" && linkDetails && (
-                    <>
-                        <div style={{ marginBottom: "28px" }}>
-                            <h1 style={{ fontSize: "20px", fontWeight: 700, color: colors.neutral900, margin: "0 0 6px" }}>
-                                Write a Testimonial
-                            </h1>
-                            <p style={{ fontSize: "14px", color: colors.neutral500, margin: 0 }}>
-                                Share your experience with{" "}
-                                <strong style={{ color: colors.primary600 }}>{linkDetails.ownerName}</strong>.
-                                {linkDetails.requesterName && (
-                                    <> Hi <strong>{linkDetails.requesterName}</strong>, we'd love to hear from you!</>
-                                )}
-                            </p>
+                <div style={{ padding: "34px 32px" }}>
+                    {pageState === "loading" && (
+                        <div>
+                            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: colors.neutral100, marginBottom: "20px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "60%", height: "20px", borderRadius: "6px", background: colors.neutral100, marginBottom: "10px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "85%", height: "14px", borderRadius: "6px", background: colors.neutral100, marginBottom: "28px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: colors.neutral100, marginBottom: "14px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: colors.neutral100, animation: "ts-pulse 1.4s ease-in-out infinite" }} />
                         </div>
+                    )}
 
-                        <form onSubmit={handleSubmit} noValidate>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "14px" }}>
-                                <div>
-                                    <label style={labelStyle}>Your Name *</label>
-                                    <input
-                                        style={inputStyle}
-                                        type="text"
-                                        placeholder="Jane Smith"
-                                        value={form.name}
-                                        onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                                    />
-                                    {errors.name && <span style={{ fontSize: "11px", color: colors.error500 }}>{errors.name}</span>}
+                    {pageState === "error" && (
+                        <div style={{ textAlign: "center", padding: "20px 0" }}>
+                            <div style={{
+                                width: "64px", height: "64px", borderRadius: "50%", background: colors.error50,
+                                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px",
+                            }}>
+                                <FiAlertCircle size={30} color={colors.error500} />
+                            </div>
+                            <h2 style={{ fontSize: "18px", fontWeight: 700, color: colors.neutral900, marginBottom: "8px" }}>
+                                Link Unavailable
+                            </h2>
+                            <p style={{ fontSize: "14px", color: colors.neutral500, margin: 0 }}>{errorMessage}</p>
+                        </div>
+                    )}
+
+                    {pageState === "form" && linkDetails && (
+                        <>
+                            <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "26px" }}>
+                                <div style={{
+                                    width: "48px", height: "48px", borderRadius: "14px", flexShrink: 0,
+                                    background: `linear-gradient(135deg, ${colors.primary500}, ${colors.primary700})`,
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    color: "#fff", fontWeight: 700, fontSize: "16px",
+                                    boxShadow: `0 6px 16px -4px ${colors.primary500}80`,
+                                }}>
+                                    {getInitials(linkDetails.ownerName)}
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Your Role</label>
-                                    <input
-                                        style={inputStyle}
-                                        type="text"
-                                        placeholder="Software Engineer"
-                                        value={form.role}
-                                        onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
-                                    />
+                                    <h1 style={{ fontSize: "19px", fontWeight: 800, color: colors.neutral900, margin: 0, letterSpacing: "-0.01em" }}>
+                                        Write a Testimonial
+                                    </h1>
+                                    <p style={{ fontSize: "13px", color: colors.neutral500, margin: "2px 0 0" }}>
+                                        for <strong style={{ color: colors.primary600 }}>{linkDetails.ownerName}</strong>
+                                    </p>
                                 </div>
                             </div>
 
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "14px" }}>
-                                <div>
-                                    <label style={labelStyle}>Company</label>
-                                    <input
-                                        style={inputStyle}
-                                        type="text"
-                                        placeholder="Acme Inc."
-                                        value={form.company}
-                                        onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-                                    />
+                            {linkDetails.requesterName && (
+                                <div style={{
+                                    display: "flex", alignItems: "center", gap: "8px",
+                                    background: colors.primary50, border: `1px solid ${colors.primary100}`,
+                                    borderRadius: "10px", padding: "10px 14px", marginBottom: "22px",
+                                }}>
+                                    <FiMessageSquare size={14} color={colors.primary600} style={{ flexShrink: 0 }} />
+                                    <p style={{ fontSize: "13px", color: colors.primary700, margin: 0 }}>
+                                        Hi <strong>{linkDetails.requesterName}</strong>, thanks for taking the time — your feedback means a lot!
+                                    </p>
                                 </div>
-                                <div>
-                                    <label style={labelStyle}>LinkedIn URL</label>
-                                    <input
-                                        style={inputStyle}
-                                        type="url"
-                                        placeholder="https://linkedin.com/in/..."
-                                        value={form.linkedInUrl}
-                                        onChange={e => setForm(f => ({ ...f, linkedInUrl: e.target.value }))}
-                                    />
+                            )}
+
+                            <form onSubmit={handleSubmit} noValidate>
+                                <div className="ts-grid">
+                                    <div>
+                                        <label style={labelStyle}>Your Name *</label>
+                                        <input
+                                            className="ts-field"
+                                            style={{ ...inputStyle, borderColor: errors.name ? colors.error400 : colors.neutral200 }}
+                                            type="text"
+                                            placeholder="Jane Smith"
+                                            value={form.name}
+                                            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                                        />
+                                        {errors.name && <span style={{ fontSize: "11px", color: colors.error500, marginTop: "4px", display: "block" }}>{errors.name}</span>}
+                                    </div>
+                                    <div>
+                                        <label style={labelStyle}>Your Role</label>
+                                        <input
+                                            className="ts-field"
+                                            style={inputStyle}
+                                            type="text"
+                                            placeholder="Software Engineer"
+                                            value={form.role}
+                                            onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style={{ marginBottom: "22px" }}>
-                                <label style={labelStyle}>Your Testimonial *</label>
-                                <textarea
-                                    style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
-                                    placeholder="Share what it was like working with them…"
-                                    value={form.message}
-                                    onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                                />
-                                {errors.message && <span style={{ fontSize: "11px", color: colors.error500 }}>{errors.message}</span>}
-                            </div>
+                                <div className="ts-grid">
+                                    <div>
+                                        <label style={labelStyle}>Company</label>
+                                        <input
+                                            className="ts-field"
+                                            style={inputStyle}
+                                            type="text"
+                                            placeholder="Acme Inc."
+                                            value={form.company}
+                                            onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={labelStyle}>LinkedIn URL</label>
+                                        <input
+                                            className="ts-field"
+                                            style={inputStyle}
+                                            type="url"
+                                            placeholder="https://linkedin.com/in/..."
+                                            value={form.linkedInUrl}
+                                            onChange={e => setForm(f => ({ ...f, linkedInUrl: e.target.value }))}
+                                        />
+                                    </div>
+                                </div>
 
-                            <button
-                                type="submit"
-                                disabled={submitting}
-                                style={{
-                                    width: "100%",
-                                    padding: "12px",
-                                    background: colors.primary600,
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: "9px",
-                                    fontSize: "15px",
-                                    fontWeight: 600,
-                                    cursor: submitting ? "not-allowed" : "pointer",
-                                    opacity: submitting ? 0.7 : 1,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    gap: "8px",
-                                }}
+                                <div style={{ marginBottom: "22px" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                                        <label style={labelStyle}>Your Testimonial *</label>
+                                        <span style={{ fontSize: "11px", color: form.message.length > MESSAGE_MAX_LENGTH ? colors.error500 : colors.neutral400 }}>
+                                            {form.message.length}/{MESSAGE_MAX_LENGTH}
+                                        </span>
+                                    </div>
+                                    <textarea
+                                        className="ts-field"
+                                        style={{ ...inputStyle, minHeight: "130px", resize: "vertical", borderColor: errors.message ? colors.error400 : colors.neutral200 }}
+                                        placeholder="Share what it was like working with them…"
+                                        value={form.message}
+                                        maxLength={MESSAGE_MAX_LENGTH}
+                                        onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                                    />
+                                    {errors.message && <span style={{ fontSize: "11px", color: colors.error500, marginTop: "4px", display: "block" }}>{errors.message}</span>}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="ts-submit-btn"
+                                    disabled={submitting}
+                                    style={{
+                                        width: "100%",
+                                        padding: "13px",
+                                        background: `linear-gradient(135deg, ${colors.primary600}, ${colors.primary700})`,
+                                        color: "#fff",
+                                        border: "none",
+                                        borderRadius: "11px",
+                                        fontSize: "15px",
+                                        fontWeight: 700,
+                                        cursor: submitting ? "not-allowed" : "pointer",
+                                        opacity: submitting ? 0.7 : 1,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        gap: "8px",
+                                        boxShadow: `0 8px 20px -6px ${colors.primary600}80`,
+                                        transition: "filter 0.15s ease, transform 0.1s ease",
+                                    }}
+                                >
+                                    <FiSend size={16} />
+                                    {submitting ? "Submitting…" : "Submit Testimonial"}
+                                </button>
+                            </form>
+                        </>
+                    )}
+
+                    <AnimatePresence>
+                        {pageState === "success" && linkDetails && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.4 }}
+                                style={{ textAlign: "center", padding: "20px 0" }}
                             >
-                                <FiSend size={16} />
-                                {submitting ? "Submitting…" : "Submit Testimonial"}
-                            </button>
-                        </form>
-                    </>
-                )}
-
-                {pageState === "success" && linkDetails && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4 }}
-                        style={{ textAlign: "center", padding: "32px 0" }}
-                    >
-                        <FiCheckCircle size={48} color={colors.success600} style={{ marginBottom: "18px" }} />
-                        <h2 style={{ fontSize: "20px", fontWeight: 700, color: colors.neutral900, marginBottom: "10px" }}>
-                            Thank you!
-                        </h2>
-                        <p style={{ fontSize: "14px", color: colors.neutral500 }}>
-                            Your testimonial has been submitted. {linkDetails.ownerName} will review it shortly.
-                        </p>
-                    </motion.div>
-                )}
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
+                                    style={{
+                                        width: "72px", height: "72px", borderRadius: "50%", background: colors.success50,
+                                        display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px",
+                                    }}
+                                >
+                                    <FiCheckCircle size={36} color={colors.success600} />
+                                </motion.div>
+                                <h2 style={{ fontSize: "20px", fontWeight: 800, color: colors.neutral900, marginBottom: "10px" }}>
+                                    Thank you!
+                                </h2>
+                                <p style={{ fontSize: "14px", color: colors.neutral500, margin: 0, lineHeight: 1.6 }}>
+                                    Your testimonial has been submitted.<br />
+                                    <strong style={{ color: colors.neutral700 }}>{linkDetails.ownerName}</strong> will review it shortly.
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </motion.div>
         </div>
     );
