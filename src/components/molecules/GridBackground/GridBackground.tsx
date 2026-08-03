@@ -147,15 +147,34 @@ const GridBackground = () => {
 
     const handleVisibilityChange = () => {
       if (document.hidden) stop();
-      else start();
+      else if (!scrollTimeout) start();
+    };
+
+    // This canvas repaints 70 dots every frame, which directly competes with
+    // the browser's own scroll compositing work. Pausing it while the page is
+    // actively scrolling (and resuming a beat after scrolling settles) removes
+    // that contention during the exact moment users feel jank, since the
+    // ambient background motion isn't noticeable while the page is in motion
+    // anyway.
+    let scrollTimeout: ReturnType<typeof setTimeout> | 0 = 0;
+    const handleScroll = () => {
+      if (!scrollTimeout) stop();
+      else clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = 0;
+        if (!document.hidden) start();
+      }, 150);
     };
 
     start();
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       stop();
+      if (scrollTimeout) clearTimeout(scrollTimeout);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", resize);
       unsubscribeMouse();
     };

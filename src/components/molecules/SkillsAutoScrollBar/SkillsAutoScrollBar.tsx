@@ -44,9 +44,16 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
         {repeatedSkills.map((skill, index) => (
           <motion.div
             key={`${skill.id}-${index}`}
-            className="group flex min-w-[200px] items-center gap-4 rounded-2xl border px-6 py-5 backdrop-blur-xl transition-all duration-300"
+            // No backdrop-blur here: this card is duplicated x4 and the whole
+            // strip is continuously translated via the parent's infinite x
+            // animation, so every card's blur sample region would need
+            // recomputing on every single frame — the most expensive
+            // animation+filter combination on the page. A slightly more
+            // opaque solid background keeps the same "frosted chip" look
+            // without that per-frame cost.
+            className="group flex min-w-[200px] items-center gap-4 rounded-2xl border px-6 py-5 transition-all duration-300"
             style={{
-              background: `linear-gradient(135deg, ${colors.neutral100}12, ${colors.neutral100}05)`,
+              background: `linear-gradient(135deg, ${colors.neutral800}E6, ${colors.neutral900}D9)`,
               borderColor: `${colors.neutral100}15`,
               boxShadow: `0 15px 35px -15px rgba(0, 0, 0, 0.3)`,
             }}

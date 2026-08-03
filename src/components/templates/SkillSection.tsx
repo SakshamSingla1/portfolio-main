@@ -271,13 +271,18 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           })}
         </div>
 
-        <AnimatePresence mode="popLayout">
-        <motion.div layout className="flex flex-wrap justify-center gap-3">
+        {/* No `layout`/popLayout FLIP animation here: with an unpaginated,
+            live-filterable grid, every keystroke in the search box or
+            category click would force a getBoundingClientRect measurement
+            pass across every visible card just to animate the reflow. A
+            plain fade/scale on mount/unmount keeps the transition without
+            that per-interaction layout cost. */}
+        <AnimatePresence>
+        <motion.div className="flex flex-wrap justify-center gap-3">
           {filteredSkills.map((skill) => {
             const cardHoverShadow = `0 12px 30px ${levelColor(skill.level)}25`;
             return (
             <motion.div
-              layout
               key={skill.id}
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}

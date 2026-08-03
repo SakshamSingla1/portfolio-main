@@ -74,8 +74,14 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
         scrolled
           ? {
               backgroundColor: `${colors.neutral900}E8`,
-              backdropFilter: "blur(32px) saturate(200%)",
-              WebkitBackdropFilter: "blur(32px) saturate(200%)",
+              // This is a fixed-position element live for essentially the
+              // entire time a visitor scrolls past 50px, so the browser has
+              // to re-sample and re-blur whatever scrolls underneath it on
+              // every frame. A much smaller radius reads almost identically
+              // as "frosted" at typical navbar heights but is far cheaper to
+              // recompute continuously.
+              backdropFilter: "blur(14px) saturate(150%)",
+              WebkitBackdropFilter: "blur(14px) saturate(150%)",
               borderBottom: `1px solid ${colors.neutral700}35`,
               boxShadow: `0 4px 40px rgba(0,0,0,0.4), inset 0 1px 0 ${colors.neutral700}15`,
             }
