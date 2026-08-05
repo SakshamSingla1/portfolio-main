@@ -43,9 +43,11 @@ const LanguagesSection = ({ languages }: LanguagesSectionProps) => {
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
                   className="rounded-xl p-4 flex flex-col gap-3 transition-all duration-300"
                   style={{
-                    background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}80)`,
+                    // No backdrop-blur: unpaginated grid, one card per language —
+                    // a more opaque gradient keeps the look without the per-card,
+                    // per-scroll-frame resample cost.
+                    background: `linear-gradient(145deg, ${colors.neutral800}F0, ${colors.neutral900}FA)`,
                     border: `1px solid ${colors.neutral700}40`,
-                    backdropFilter: "blur(8px)",
                     boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                   }}
                   onMouseEnter={(e) => {

@@ -42,9 +42,12 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
                 <motion.div
                   whileHover={{ y: -6, boxShadow: s.card }}
                   transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                  className="rounded-xl overflow-hidden backdrop-blur-md transition-all duration-500 h-full relative"
+                  className="rounded-xl overflow-hidden transition-all duration-500 h-full relative"
                   style={{
-                    background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}85)`,
+                    // No backdrop-blur: unpaginated grid, one card per achievement —
+                    // a more opaque gradient keeps the look without the per-card,
+                    // per-scroll-frame resample cost.
+                    background: `linear-gradient(145deg, ${colors.neutral800}F0, ${colors.neutral900}FA)`,
                     border: `1px solid ${colors.neutral700}40`,
                     boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`,
                   }}

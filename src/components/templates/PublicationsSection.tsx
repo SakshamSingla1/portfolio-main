@@ -64,9 +64,12 @@ const PublicationsSection = ({ publications }: PublicationsSectionProps) => {
                                     return (
                                     <FadeInView key={pub.id} delay={idx * 0.08}>
                                         <div
-                                            className="rounded-xl p-5 backdrop-blur-md transition-all duration-300 relative overflow-hidden"
+                                            className="rounded-xl p-5 transition-all duration-300 relative overflow-hidden"
                                             style={{
-                                                background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}85)`,
+                                                // No backdrop-blur: unpaginated list, one card per publication —
+                                                // a more opaque gradient keeps the look without the per-card,
+                                                // per-scroll-frame resample cost.
+                                                background: `linear-gradient(145deg, ${colors.neutral800}F0, ${colors.neutral900}FA)`,
                                                 border: `1px solid ${isHovered ? `${colors.primary500}40` : `${colors.neutral700}40`}`,
                                                 boxShadow: isHovered
                                                     ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 20px 40px -20px ${colors.primary500}25`

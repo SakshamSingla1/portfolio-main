@@ -97,9 +97,9 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
                   key={skill.id}
                   whileHover={{ y: -6, scale: 1.04 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="rounded-2xl p-4 flex flex-col items-center gap-2 shrink-0 w-24 cursor-default backdrop-blur-md"
+                  className="rounded-2xl p-4 flex flex-col items-center gap-2 shrink-0 w-24 cursor-default"
                   style={{
-                    background: `linear-gradient(145deg, ${colors.primary500}12, ${colors.neutral900}60)`,
+                    background: `linear-gradient(145deg, ${colors.primary500}18, ${colors.neutral900}E8)`,
                     border: `1px solid ${colors.primary500}25`,
                     boxShadow: `0 1px 0 0 rgba(255,255,255,0.05) inset, 0 16px 32px -20px ${colors.primary500}35`,
                   }}
@@ -288,19 +288,24 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.85 }}
               whileHover={{ y: -6, boxShadow: cardHoverShadow }}
-              className="w-[calc(50%-0.375rem)] sm:w-[calc(25%-0.5625rem)] md:w-[calc(16.6667%-0.625rem)] lg:w-[calc(10%-0.675rem)] rounded-xl p-4 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 backdrop-blur-md relative overflow-hidden"
+              className="w-[calc(50%-0.375rem)] sm:w-[calc(25%-0.5625rem)] md:w-[calc(16.6667%-0.625rem)] lg:w-[calc(10%-0.675rem)] rounded-xl p-4 flex flex-col items-center gap-3 group cursor-default transition-all duration-300 relative overflow-hidden"
               style={{
-                background: `${colors.neutral800}55`,
+                // No backdrop-blur: this grid is unpaginated (every filtered skill
+                // renders at once) and scrolls with the page, so a live-blurred
+                // layer here would have to resample its whole background on every
+                // scroll frame, multiplied by however many skill cards are on
+                // screen. A more opaque solid background keeps the same look.
+                background: `${colors.neutral800}E6`,
                 border: `1px solid ${colors.neutral700}30`,
                 boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = `${levelColor(skill.level)}40`;
-                e.currentTarget.style.background = `${colors.neutral800}80`;
+                e.currentTarget.style.background = `${colors.neutral800}F2`;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = `${colors.neutral700}30`;
-                e.currentTarget.style.background = `${colors.neutral800}55`;
+                e.currentTarget.style.background = `${colors.neutral800}E6`;
               }}
             >
               <div

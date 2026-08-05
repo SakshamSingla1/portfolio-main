@@ -54,9 +54,12 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
               <motion.div
                 whileHover={{ x: 4, y: -3, boxShadow: s.card }}
                 transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                className="group rounded-xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 backdrop-blur-md transition-all duration-300 relative overflow-hidden"
+                className="group rounded-xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4 transition-all duration-300 relative overflow-hidden"
                 style={{
-                  background: `linear-gradient(145deg, ${colors.neutral800}60, ${colors.neutral900}85)`,
+                  // No backdrop-blur: unpaginated list, one card per certification —
+                  // a more opaque gradient keeps the look without the per-card,
+                  // per-scroll-frame resample cost.
+                  background: `linear-gradient(145deg, ${colors.neutral800}F0, ${colors.neutral900}FA)`,
                   border: `1px solid ${colors.neutral700}40`,
                   boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 16px 32px -24px rgba(0,0,0,0.7)`,
                 }}
