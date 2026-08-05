@@ -102,7 +102,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 <div
                   className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300"
                 >
-                  <div className="p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 transform translate-z-20">
+                  <div className="p-3 rounded-full bg-white/20 border border-white/20 transform translate-z-20">
                     <FiMaximize2 className="text-white w-5 h-5" />
                   </div>
                 </div>
@@ -113,10 +113,10 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
 
             <div className="absolute top-4 left-4 z-20">
               <div
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider border backdrop-blur-md"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider border"
                 style={{
-                  background: `${statusColor}20`,
-                  borderColor: `${statusColor}40`,
+                  background: `${colors.neutral900}CC`,
+                  borderColor: `${statusColor}60`,
                   color: statusColor,
                 }}
               >
@@ -126,9 +126,9 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
             </div>
 
             <div className="absolute top-4 right-4 z-20">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border backdrop-blur-md"
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono border"
                 style={{
-                  background: `${colors.neutral900}60`,
+                  background: `${colors.neutral900}CC`,
                   borderColor: `${colors.neutral700}40`,
                   color: colors.neutral100
                 }}>
@@ -142,9 +142,9 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                 {displaySkills.map((skill) => (
                   <div
                     key={skill.id}
-                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono border backdrop-blur-md transition-all duration-300"
+                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono border transition-all duration-300"
                     style={{
-                      background: `${colors.neutral900}80`,
+                      background: `${colors.neutral900}D9`,
                       borderColor: `${colors.neutral700}40`,
                       color: colors.neutral200,
                     }}
@@ -162,11 +162,11 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       }}
                       onMouseEnter={() => setShowMoreSkills(true)}
                       onMouseLeave={() => setShowMoreSkills(false)}
-                      className="px-2 py-0.5 rounded-full text-[9px] font-mono border backdrop-blur-md transition-all duration-300"
+                      className="px-2 py-0.5 rounded-full text-[9px] font-mono border transition-all duration-300"
                       aria-label="View technical stack"
                       style={{
-                        background: showMoreSkills ? `${colors.primary500}40` : `${colors.primary500}20`,
-                        borderColor: showMoreSkills ? colors.primary500 : `${colors.primary500}40`,
+                        background: showMoreSkills ? colors.primary500 : `${colors.neutral900}D9`,
+                        borderColor: showMoreSkills ? colors.primary500 : `${colors.primary500}60`,
                         color: showMoreSkills ? colors.neutral50 : colors.primary300
                       }}>
                       +{moreSkills.length}
@@ -177,7 +177,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
             )}
 
             {images.length > 1 && (
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 p-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 z-20">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 p-1.5 rounded-full bg-black/70 border border-white/10 z-20">
                 {images.map((_, i) => (
                   <motion.button
                     key={i}

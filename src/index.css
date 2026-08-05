@@ -93,7 +93,12 @@
   }
 
   .glass-card {
-    @apply relative rounded-2xl backdrop-blur-xl isolate;
+    /* No backdrop-blur: this card already has an opaque `--gradient-card`
+       background painted on top, so the blur was compositing a live sample
+       of whatever sits behind it for essentially no visible difference —
+       pure cost. This class is used once per project, unpaginated, so it's
+       the single biggest concentration of backdrop-filter cost on the page. */
+    @apply relative rounded-2xl isolate;
     background: var(--gradient-card);
     border: 1px solid hsl(var(--border) / 0.6);
     box-shadow: var(--shadow-card);
@@ -130,7 +135,11 @@
   .card-glow {
     @apply absolute rounded-full pointer-events-none -z-10;
     background: radial-gradient(circle, hsl(var(--primary) / 0.35), transparent 70%);
-    filter: blur(32px);
+    /* Smaller radius than before (was 32px): this blob is mounted once per
+       project card, unpaginated, so its filter-layer cost multiplies by
+       however many projects a profile has even though it's only visible
+       on hover. */
+    filter: blur(18px);
     opacity: 0;
     transition: opacity 0.5s ease;
   }

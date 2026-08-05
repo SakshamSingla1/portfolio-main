@@ -137,9 +137,11 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
         <div
           className="hidden md:flex items-center gap-1 rounded-full px-3 py-2 lg:px-4 lg:py-2.5 relative"
           style={{
-            backgroundColor: `${colors.neutral800}70`,
+            // No backdrop-blur: this pill lives inside the fixed navbar, which
+            // already repaints on every scroll frame — a second live-blurred
+            // layer here just doubles that cost for an always-mounted element.
+            backgroundColor: `${colors.neutral800}B3`,
             border: `1px solid ${colors.neutral700}28`,
-            backdropFilter: "blur(12px)",
           }}
         >
           {/* Hover ghost track */}

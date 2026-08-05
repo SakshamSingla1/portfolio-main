@@ -147,9 +147,13 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                   )}
 
                   <div
-                    className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
+                    // No backdrop-blur — see ExperienceSection's identical fix:
+                    // this combines with a per-entry infinite pulse-ring
+                    // animation and is unpaginated, so it's the same expensive
+                    // animation+filter pattern repeated once per education entry.
+                    className="rounded-2xl p-6 md:p-8 relative overflow-hidden group"
                     style={{
-                      background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
+                      background: `linear-gradient(135deg, ${colors.neutral800}90, ${colors.neutral900}B3)`,
                       border: `1px solid ${isHovered ? `${colors.accent500}40` : `${colors.neutral700}30`}`,
                       boxShadow: isHovered
                         ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 48px -16px ${colors.accent500}28, 0 30px 60px -30px rgba(0,0,0,0.8)`

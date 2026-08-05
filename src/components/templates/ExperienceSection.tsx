@@ -110,9 +110,15 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile }: ExperienceCar
       )}
 
       <div
-        className="rounded-2xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group"
+        // No backdrop-blur: this card also has an infinite pulse-ring animation
+        // running the entire time the page is open (see above), and it's
+        // rendered once per experience entry with no pagination — combining a
+        // live-sampled blur with a perpetual animation on every card is the
+        // single most expensive pattern on the page. A slightly more opaque
+        // background keeps the tinted-glass look without the live blur.
+        className="rounded-2xl p-6 md:p-8 relative overflow-hidden group"
         style={{
-          background: `linear-gradient(135deg, ${colors.neutral800}60, ${colors.neutral900}80)`,
+          background: `linear-gradient(135deg, ${colors.neutral800}90, ${colors.neutral900}B3)`,
           border: `1px solid ${isHovered ? `${colors.primary500}45` : `${colors.neutral700}30`}`,
           boxShadow: isHovered
             ? `0 1px 0 0 rgba(255,255,255,0.06) inset, 0 24px 48px -16px ${colors.primary500}30, 0 30px 60px -30px rgba(0,0,0,0.8)`
