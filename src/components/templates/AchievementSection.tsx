@@ -148,7 +148,6 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
                       {ach.description}
                     </p>
 
-                    {/* View Proof button — only when proofUrl AND proofPublicId exist */}
                     {ach.proofUrl && ach.proofPublicId && (
                       <div className="mt-4 pt-3" style={{ borderTop: `1px solid ${colors.neutral700}30` }}>
                         <a

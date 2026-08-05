@@ -77,7 +77,6 @@ const Index = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // If we don't have data, we show the loading state
         if (!data) setLoading(true);
 
         const res = await profileService.get();

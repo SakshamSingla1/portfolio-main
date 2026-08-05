@@ -51,7 +51,6 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                   e.currentTarget.style.boxShadow = `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 40px -24px rgba(0,0,0,0.7)`;
                 }}
               >
-                {/* Banner */}
                 {service.bannerUrl && (
                   <div className="h-40 overflow-hidden relative">
                     <img
@@ -69,7 +68,6 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                 )}
 
                 <div className="p-5 flex flex-col gap-3 flex-1">
-                  {/* Icon + title */}
                   <div className="flex items-start gap-3">
                     <div
                       className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-lg"
@@ -91,7 +89,6 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                     </div>
                   </div>
 
-                  {/* Description */}
                   {service.description && (
                     <p
                       className="text-sm leading-relaxed flex-1 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5 [&_li]:mb-1"
@@ -100,7 +97,6 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                     />
                   )}
 
-                  {/* Price + Delivery badges */}
                   {(service.priceRange || service.deliveryTime) && (
                     <div
                       className="flex flex-wrap gap-2 pt-3"

@@ -55,7 +55,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
       .filter((sk) => sk.logoName.toLowerCase().includes(query));
   }, [skills, activeCategory, search]);
 
-  // Proficiency counts from full skills array
   const levelCounts = useMemo(() => {
     return LEVELS.reduce<Record<string, number>>((acc, lvl) => {
       acc[lvl] = skills.filter((sk) => sk.level === lvl).length;
@@ -63,7 +62,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
     }, {});
   }, [skills]);
 
-  // Featured skills: Expert level, or top 4 if none
   const { featuredSkills, showFeatured } = useMemo(() => {
     const expertSkills = skills.filter((sk) => sk.level === "Expert");
     return {
@@ -82,7 +80,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         <SkillsAutoScrollBar skills={skills} />
 
-        {/* Featured Skills Row */}
         {showFeatured && (
           <div className="mb-8">
             <p
@@ -133,7 +130,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           </div>
         )}
 
-        {/* Proficiency Overview Mini-Chart */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {LEVELS.map((lvl) => (
             <motion.div
@@ -162,7 +158,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           ))}
         </div>
 
-        {/* Search Input */}
         <div className="flex flex-col md:flex-row md:items-center gap-3 mb-4">
           <div className="relative w-full md:w-64">
             <input
@@ -191,7 +186,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           </div>
         </div>
 
-        {/* Category Filter Buttons */}
         <div className="flex flex-wrap gap-2 mb-10">
           <button
             onClick={() => setActiveCategory(null)}

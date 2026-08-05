@@ -87,7 +87,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
 
   return (
     <section id="contact" className="section-padding relative overflow-hidden">
-      {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div style={{
           position: "absolute", top: "15%", right: "-8%", width: 600, height: 600,
@@ -108,10 +107,8 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
 
         <div className="grid lg:grid-cols-5 gap-8 xl:gap-12">
 
-          {/* ── Left panel ── */}
           <FadeInView className="lg:col-span-2 flex flex-col gap-5">
 
-            {/* Contact info card */}
             <div
               className="rounded-2xl overflow-hidden"
               style={{
@@ -120,7 +117,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                 boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -28px rgba(0,0,0,0.7)`,
               }}
             >
-              {/* Card header strip */}
               <div
                 className="px-6 py-4 flex items-center justify-between"
                 style={{
@@ -185,7 +181,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
               </div>
             </div>
 
-            {/* What happens next card */}
             <div
               className="rounded-2xl p-5"
               style={{
@@ -219,7 +214,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
               </div>
             </div>
 
-            {/* Terminal card */}
             <div
               className="rounded-xl p-4 font-mono text-xs"
               style={{
@@ -251,7 +245,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
             </div>
           </FadeInView>
 
-          {/* ── Form ── */}
           <FadeInView delay={0.15} className="lg:col-span-3">
             <form
               onSubmit={formik.handleSubmit}
@@ -262,7 +255,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                 boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 30px 60px -30px rgba(0,0,0,0.75)`,
               }}
             >
-              {/* Form header */}
               <div
                 style={{
                   height: 3,
@@ -282,7 +274,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {/* Name */}
                   <div>
                     <label className="block text-[11px] font-mono mb-2 tracking-wider" style={{ color: colors.neutral500 }}>
                       <span className="inline-block w-1.5 h-1.5 rounded-full mr-2 align-middle" style={{ background: colors.primary500 }} />
@@ -311,7 +302,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     )}
                   </div>
 
-                  {/* Email */}
                   <div>
                     <label className="block text-[11px] font-mono mb-2 tracking-wider" style={{ color: colors.neutral500 }}>
                       <span className="inline-block w-1.5 h-1.5 rounded-full mr-2 align-middle" style={{ background: colors.primary500 }} />
@@ -341,7 +331,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="block text-[11px] font-mono mb-2 tracking-wider" style={{ color: colors.neutral500 }}>
                     PHONE <span className="text-[10px] opacity-50">(optional)</span>
@@ -369,7 +358,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   )}
                 </div>
 
-                {/* Message */}
                 <div>
                   <label className="block text-[11px] font-mono mb-2 tracking-wider" style={{ color: colors.neutral500 }}>
                     <span className="inline-block w-1.5 h-1.5 rounded-full mr-2 align-middle" style={{ background: colors.primary500 }} />
@@ -396,13 +384,11 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   {hasErr("message") && (
                     <p className="text-[11px] mt-1.5 font-mono" style={{ color: colors.error400 }}>{formik.errors.message}</p>
                   )}
-                  {/* Character count */}
                   <p className="text-[10px] font-mono mt-1 text-right" style={{ color: colors.neutral600 }}>
                     {formik.values.message.length} chars
                   </p>
                 </div>
 
-                {/* Success message */}
                 <AnimatePresence>
                   {sent && (
                     <motion.div
@@ -422,7 +408,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                   )}
                 </AnimatePresence>
 
-                {/* Submit button */}
                 <motion.button
                   type="submit"
                   disabled={formik.isSubmitting}
@@ -435,7 +420,6 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     transition: "background 0.4s ease, box-shadow 0.3s ease",
                   }}
                 >
-                  {/* Shimmer */}
                   {!formik.isSubmitting && !sent && (
                     <motion.div
                       style={{

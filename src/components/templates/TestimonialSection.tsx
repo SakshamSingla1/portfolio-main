@@ -61,7 +61,6 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             }}
           />
 
-          {/* Counter top-right */}
           <div
             className="absolute top-4 right-5 font-mono text-xs select-none"
             style={{ color: colors.neutral600, zIndex: 1 }}

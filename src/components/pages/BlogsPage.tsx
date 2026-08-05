@@ -69,7 +69,6 @@ const BlogCard = ({
           transition: "border-color 0.3s, box-shadow 0.3s",
         }}
       >
-        {/* Cover image */}
         <div className="relative overflow-hidden" style={{ height: 200 }}>
           {post.coverImageUrl ? (
             <motion.img
@@ -95,7 +94,6 @@ const BlogCard = ({
             }}
           />
 
-          {/* Tags floating on image */}
           {post.tags.length > 0 && (
             <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
               {post.tags.slice(0, 3).map((tag) => (
@@ -116,9 +114,7 @@ const BlogCard = ({
           )}
         </div>
 
-        {/* Card body */}
         <div className="flex flex-col flex-1 p-5">
-          {/* Meta */}
           <div className="flex items-center gap-3 mb-3">
             {post.publishedAt && (
               <span className="flex items-center gap-1.5 text-[11px]" style={{ color: colors.neutral500 }}>
@@ -140,7 +136,6 @@ const BlogCard = ({
             )}
           </div>
 
-          {/* Title */}
           <h2
             className="font-bold text-base leading-snug mb-2 line-clamp-2"
             style={{ color: colors.neutral100 }}
@@ -148,7 +143,6 @@ const BlogCard = ({
             {post.title}
           </h2>
 
-          {/* Excerpt */}
           {post.excerpt && (
             <p
               className="text-sm leading-relaxed line-clamp-3 flex-1"
@@ -158,7 +152,6 @@ const BlogCard = ({
             </p>
           )}
 
-          {/* Read more link */}
           <Link
             to={`/blogs/${post.slug}`}
             className="flex items-center gap-2 mt-4 text-sm font-semibold self-start group/link"
@@ -174,7 +167,6 @@ const BlogCard = ({
           </Link>
         </div>
 
-        {/* Bottom accent line */}
         <motion.div
           className="h-px mx-5 mb-0"
           animate={{ scaleX: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
@@ -216,7 +208,6 @@ const BlogsPage = () => {
     });
   }, []);
 
-  // Debounce search
   useEffect(() => {
     const t = setTimeout(() => { setDebouncedSearch(search); setPage(0); }, 350);
     return () => clearTimeout(t);
@@ -255,7 +246,6 @@ const BlogsPage = () => {
       <GridBackground />
 
       <div className="relative z-10">
-        {/* Top navigation bar */}
         <div
           className="sticky top-0 z-40 backdrop-blur-md"
           style={{ background: `${colors.neutral900}CC`, borderBottom: `1px solid ${colors.neutral800}60` }}
@@ -284,7 +274,6 @@ const BlogsPage = () => {
         </div>
 
         <main className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
-          {/* Header */}
           <div className="mb-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -308,7 +297,6 @@ const BlogsPage = () => {
               </p>
             </motion.div>
 
-            {/* Decorative underline */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -321,7 +309,6 @@ const BlogsPage = () => {
             </motion.div>
           </div>
 
-          {/* Search */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -349,7 +336,6 @@ const BlogsPage = () => {
             />
           </motion.div>
 
-          {/* Posts grid */}
           <AnimatePresence mode="wait">
             {loading ? (
               <motion.div
@@ -397,7 +383,6 @@ const BlogsPage = () => {
             )}
           </AnimatePresence>
 
-          {/* Pagination */}
           {!loading && totalPages > 1 && (
             <motion.div
               initial={{ opacity: 0 }}

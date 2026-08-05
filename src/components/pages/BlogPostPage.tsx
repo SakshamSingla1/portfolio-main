@@ -78,7 +78,6 @@ const BlogPostPage = () => {
   const [profileMeta, setProfileMeta] = useState(getProfileMeta());
   const [copied, setCopied] = useState(false);
 
-  // Resolve username
   useEffect(() => {
     if (username) return;
     profileService.get().then((res) => {
@@ -92,7 +91,6 @@ const BlogPostPage = () => {
     });
   }, []);
 
-  // Fetch post once username is known
   useEffect(() => {
     if (!username || !slug) return;
     setLoading(true);
@@ -154,13 +152,11 @@ const BlogPostPage = () => {
       <GridBackground />
 
       <div className="relative z-10">
-        {/* Sticky top bar */}
         <div
           className="sticky top-0 z-40 backdrop-blur-md"
           style={{ background: `${colors.neutral900}CC`, borderBottom: `1px solid ${colors.neutral800}60` }}
         >
           <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-            {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-sm" style={{ color: colors.neutral500 }}>
               <button
                 onClick={() => navigate("/blogs")}
@@ -179,7 +175,6 @@ const BlogPostPage = () => {
               </span>
             </div>
 
-            {/* Actions */}
             <div className="flex items-center gap-2">
               <button
                 onClick={handleShare}
@@ -198,7 +193,6 @@ const BlogPostPage = () => {
         </div>
 
         <article className="max-w-3xl mx-auto px-4 sm:px-6 pb-24">
-          {/* Cover image */}
           {post.coverImageUrl && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -219,14 +213,12 @@ const BlogPostPage = () => {
             </motion.div>
           )}
 
-          {/* Article header */}
           <motion.header
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className={post.coverImageUrl ? "" : "mt-12"}
           >
-            {/* Tags */}
             {post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {post.tags.map((tag) => (
@@ -246,7 +238,6 @@ const BlogPostPage = () => {
               </div>
             )}
 
-            {/* Title */}
             <h1
               className="font-bold text-2xl sm:text-3xl md:text-4xl leading-tight mb-5"
               style={{ color: colors.neutral50 }}
@@ -254,7 +245,6 @@ const BlogPostPage = () => {
               {post.title}
             </h1>
 
-            {/* Meta row */}
             <div
               className="flex flex-wrap items-center gap-4 pb-6 mb-8"
               style={{ borderBottom: `1px solid ${colors.neutral800}` }}
@@ -303,7 +293,6 @@ const BlogPostPage = () => {
               )}
             </div>
 
-            {/* Excerpt */}
             {post.excerpt && (
               <p
                 className="text-base italic mb-8 pl-4"
@@ -317,7 +306,6 @@ const BlogPostPage = () => {
             )}
           </motion.header>
 
-          {/* Article content */}
           {post.content && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -340,7 +328,6 @@ const BlogPostPage = () => {
             />
           )}
 
-          {/* Bottom: tags + back link */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

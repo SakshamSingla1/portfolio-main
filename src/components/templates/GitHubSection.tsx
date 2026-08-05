@@ -44,7 +44,6 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
           subtitle={`Contributions & activity from @${username}`}
         />
 
-        {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {stats.map((stat, i) => (
             <FadeInView key={stat.label} delay={i * 0.07}>
@@ -78,7 +77,6 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
           ))}
         </div>
 
-        {/* Contribution calendar */}
         <FadeInView delay={0.1}>
           <div
             className="rounded-2xl p-6 md:p-8"
@@ -114,7 +112,6 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
             </div>
           </div>
         </FadeInView>
-        {/* Pinned / visible repos */}
         {visibleRepos.length > 0 && (
           <FadeInView delay={0.2}>
             <div className={`mt-8 grid ${repoGridColsClass} gap-4 ${repoGridWidthClass}`}>

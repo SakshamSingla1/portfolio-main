@@ -14,7 +14,6 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
 
   return (
     <div className="relative w-full overflow-hidden py-6 mb-8">
-      {/* Left fade */}
       <div
         className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32"
         style={{
@@ -22,7 +21,6 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
         }}
       />
 
-      {/* Right fade */}
       <div
         className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32"
         style={{

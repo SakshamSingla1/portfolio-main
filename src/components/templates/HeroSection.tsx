@@ -72,7 +72,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
       id="hero"
       className="relative flex items-center overflow-hidden mx-auto"
     >
-      {/* Ambient background orbs */}
       <div
         className="absolute top-0 right-0 pointer-events-none"
         style={{
@@ -101,7 +100,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
         className="section-container relative z-10 w-full py-24 lg:py-32 xl:py-40"
       >
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24 xl:gap-32">
-          {/* Profile image column */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -136,7 +134,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                   style={{ background: `linear-gradient(135deg, ${colors.primary500}40, ${colors.accent500}40)` }}
                 />
 
-                {/* Image container */}
                 <div
                   className="relative
                     w-60
@@ -161,10 +158,8 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                     decoding="async"
                   />
 
-                  {/* Bottom vignette */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
 
-                  {/* Inner glow layer */}
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -223,7 +218,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
             )}
           </motion.div>
 
-          {/* Text content column */}
           <motion.div
             variants={stagger.container}
             initial="hidden"
@@ -238,7 +232,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               Hello, I'm
             </motion.p>
 
-            {/* Animated gradient name */}
             <motion.h1
               variants={stagger.item}
               className="font-display
@@ -321,7 +314,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               </motion.button>
             </motion.div>
 
-            {/* Social links with hover color */}
             <motion.div
               variants={stagger.item}
               className="flex gap-3 justify-center lg:justify-start"
@@ -356,7 +348,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               ))}
             </motion.div>
 
-            {/* Floating tech stack pills */}
             <motion.div
               variants={stagger.item}
               className="flex gap-2 flex-wrap justify-center lg:justify-start mt-4"
@@ -397,7 +388,6 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
           </motion.div>
         </div>
 
-        {/* Premium scroll indicator */}
         <motion.button
           onClick={scrollToAbout}
           className="mt-16 mx-auto flex flex-col items-center gap-3 group"

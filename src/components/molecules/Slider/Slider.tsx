@@ -32,7 +32,6 @@ function Slider<T>({
     setIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
-  /* ---------------- MOBILE SWIPE ---------------- */
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!isMobile) return;
     setTouchStart(e.touches[0].clientX);
@@ -49,7 +48,6 @@ function Slider<T>({
     setTouchStart(null);
   };
 
-  /* ---------------- SIMPLE LAYOUT IF SMALL ---------------- */
   if (items.length <= cardsPerView) {
     return (
       <div className="flex gap-8">
@@ -65,7 +63,6 @@ function Slider<T>({
   return (
     <div className="relative mt-8 w-full">
 
-      {/* ---------------- DESKTOP ARROWS ---------------- */}
       {!isMobile && (
         <>
           <button
@@ -98,7 +95,6 @@ function Slider<T>({
         </>
       )}
 
-      {/* ---------------- TRACK ---------------- */}
       <div
         className="overflow-hidden"
         onTouchStart={handleTouchStart}
@@ -124,7 +120,6 @@ function Slider<T>({
         </div>
       </div>
 
-      {/* ---------------- DOTS ---------------- */}
       <div className="flex justify-center gap-3 mt-8">
         {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button

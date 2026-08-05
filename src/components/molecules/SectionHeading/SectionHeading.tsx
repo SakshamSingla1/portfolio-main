@@ -37,7 +37,6 @@ const SectionHeading = ({ title, subtitle }: Props) => {
           {"// " + title.toLowerCase().replace(/\s/g, "_")}
         </span>
 
-        {/* Animated gradient title */}
         <h2
           className="section-heading-gradient-text font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent"
           style={{

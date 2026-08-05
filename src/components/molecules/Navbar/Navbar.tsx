@@ -88,7 +88,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
           : undefined
       }
     >
-      {/* Scroll progress bar */}
       <motion.div
         style={{
           scaleX,
@@ -105,7 +104,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
 
       <div className="max-w-350 xl:max-w-400 mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between h-16 lg:h-20 xl:h-24">
 
-        {/* Logo */}
         <button
           className="font-display font-bold text-lg lg:text-xl xl:text-2xl cursor-pointer flex items-center gap-3 group"
           onClick={() => scrollTo("hero")}
@@ -133,7 +131,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
           </span>
         </button>
 
-        {/* Desktop nav pill */}
         <div
           className="hidden md:flex items-center gap-1 rounded-full px-3 py-2 lg:px-4 lg:py-2.5 relative"
           style={{
@@ -144,7 +141,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
             border: `1px solid ${colors.neutral700}28`,
           }}
         >
-          {/* Hover ghost track */}
           <AnimatePresence>
             {hoveredItem && hoveredItem !== activeSection && (
               <motion.div
@@ -201,7 +197,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
           ))}
         </div>
 
-        {/* Desktop right actions */}
         <div className="hidden md:flex items-center gap-2.5">
           <motion.button
             onClick={() => scrollTo("contact")}
@@ -217,7 +212,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
           </motion.button>
         </div>
 
-        {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden p-2.5 rounded-xl transition-colors duration-200"
@@ -242,7 +236,6 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

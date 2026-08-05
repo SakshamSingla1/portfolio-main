@@ -45,7 +45,6 @@ const ExplorePage = () => {
       className="min-h-screen"
       style={{ background: colors.neutral900, color: colors.neutral100 }}
     >
-      {/* Header */}
       <div
         className="py-16 px-4 text-center"
         style={{ borderBottom: `1px solid ${colors.neutral800}` }}
@@ -62,7 +61,6 @@ const ExplorePage = () => {
           Discover developers and designers by skill or role
         </p>
 
-        {/* Search bar */}
         <form
           onSubmit={handleSearch}
           className="flex flex-col sm:flex-row gap-3 justify-center max-w-xl mx-auto"
@@ -105,7 +103,6 @@ const ExplorePage = () => {
         </form>
       </div>
 
-      {/* Results grid */}
       <div className="max-w-5xl mx-auto px-4 py-12">
         {loading ? (
           <div className="text-center py-20 text-sm" style={{ color: colors.neutral500 }}>
