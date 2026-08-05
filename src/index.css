@@ -346,8 +346,17 @@
   animation: hero-gradient-pan 8s linear infinite;
 }
 
+/* Same pattern as .hero-gradient-text, reused by SectionHeading — mounted 13x
+   across the page, each running its own infinite shimmer for as long as it's
+   mounted, so keeping this off framer-motion's per-frame JS writes matters
+   even more here than for the single hero instance. */
+.section-heading-gradient-text {
+  animation: hero-gradient-pan 10s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-gradient-text {
+  .hero-gradient-text,
+  .section-heading-gradient-text {
     animation: none;
   }
 }

@@ -38,17 +38,15 @@ const SectionHeading = ({ title, subtitle }: Props) => {
         </span>
 
         {/* Animated gradient title */}
-        <motion.h2
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent"
+        <h2
+          className="section-heading-gradient-text font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.neutral100}, ${colors.primary400}, ${colors.accent400}, ${colors.neutral100})`,
             backgroundSize: "300% 300%",
           }}
         >
           {title}
-        </motion.h2>
+        </h2>
       </motion.div>
 
       {subtitle && (

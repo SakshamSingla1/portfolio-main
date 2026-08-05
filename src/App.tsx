@@ -1,7 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "./components/molecules/Sonner/Sonner";
-import { TooltipProvider } from "./components/molecules/Tooltip/Tooltip";
 import { DefaultColorThemeProvider } from "./contexts/DefaultColorThemeContext";
 import Index from "./components/pages/Index";
 import NotFound from "./components/pages/NotFound";
@@ -11,6 +9,7 @@ const BlogsPage = lazy(() => import("./components/pages/BlogsPage"));
 const BlogPostPage = lazy(() => import("./components/pages/BlogPostPage"));
 const ExplorePage = lazy(() => import("./components/pages/ExplorePage"));
 const TestimonialSubmitPage = lazy(() => import("./components/pages/TestimonialSubmitPage"));
+const Sonner = lazy(() => import("./components/molecules/Sonner/Sonner").then((m) => ({ default: m.Toaster })));
 
 const CLOUDINARY_TRANSFORM_PATTERN = /(res\.cloudinary\.com\/[^/]+\/image\/upload\/)[^/]+\//;
 
@@ -32,21 +31,21 @@ const App = () => {
   return (
     <HelmetProvider>
       <DefaultColorThemeProvider>
-        <TooltipProvider>
+        <Suspense fallback={null}>
           <Sonner />
-          <BrowserRouter>
-            <Suspense fallback={null}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/blogs" element={<BlogsPage />} />
-                <Route path="/blogs/:slug" element={<BlogPostPage />} />
-                <Route path="/explore" element={<ExplorePage />} />
-                <Route path="/testimonial/:token" element={<TestimonialSubmitPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </TooltipProvider>
+        </Suspense>
+        <BrowserRouter>
+          <Suspense fallback={null}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/blogs" element={<BlogsPage />} />
+              <Route path="/blogs/:slug" element={<BlogPostPage />} />
+              <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/testimonial/:token" element={<TestimonialSubmitPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
       </DefaultColorThemeProvider>
     </HelmetProvider>
   );
