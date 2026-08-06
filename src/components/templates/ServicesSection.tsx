@@ -4,13 +4,56 @@ import DOMPurify from 'dompurify';
 import type { ServiceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { TbBriefcase, TbClock, TbCurrencyDollar } from "react-icons/tb";
+import {
+  TbBriefcase, TbClock, TbCurrencyDollar, TbCode, TbServer, TbCompass, TbPalette,
+  TbDatabase, TbShieldCheck, TbCloud, TbDeviceMobile, TbLayoutGrid, TbTerminal2,
+  TbBolt, TbTool, TbSettings, TbWorld, TbCamera, TbVideo, TbPencil, TbChartBar,
+  TbRocket, TbUsers, TbHeadset, TbLock, TbSearch, TbMail, TbBrandGithub,
+} from "react-icons/tb";
 import { useColors, shadows } from "../../utils/theme";
 import { getOptimizedImageUrl } from "../../utils/helper";
 
 interface ServicesSectionProps {
   services: ServiceResponse[];
 }
+
+const SERVICE_ICON_MAP: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
+  code: TbCode, development: TbCode, web: TbCode,
+  server: TbServer, backend: TbServer, api: TbServer,
+  compass: TbCompass, consulting: TbCompass, strategy: TbCompass,
+  design: TbPalette, ui: TbPalette, ux: TbPalette, palette: TbPalette,
+  database: TbDatabase, data: TbDatabase,
+  security: TbShieldCheck, shield: TbShieldCheck,
+  cloud: TbCloud, devops: TbCloud, infrastructure: TbCloud,
+  mobile: TbDeviceMobile, app: TbDeviceMobile,
+  frontend: TbLayoutGrid, layout: TbLayoutGrid,
+  terminal: TbTerminal2, cli: TbTerminal2,
+  performance: TbBolt, optimization: TbBolt, zap: TbBolt,
+  tool: TbTool, tools: TbTool, maintenance: TbTool,
+  settings: TbSettings, automation: TbSettings,
+  globe: TbWorld, seo: TbWorld, marketing: TbWorld,
+  camera: TbCamera, photography: TbCamera,
+  video: TbVideo, motion: TbVideo,
+  content: TbPencil, writing: TbPencil, pencil: TbPencil,
+  analytics: TbChartBar, chart: TbChartBar,
+  rocket: TbRocket, launch: TbRocket, deployment: TbRocket,
+  team: TbUsers, mentoring: TbUsers, users: TbUsers,
+  support: TbHeadset, headset: TbHeadset,
+  auth: TbLock, lock: TbLock,
+  search: TbSearch,
+  email: TbMail, mail: TbMail,
+  github: TbBrandGithub,
+};
+
+const EMOJI_RE = /\p{Extended_Pictographic}/u;
+
+const resolveServiceIcon = (icon: string | undefined): React.ReactNode => {
+  if (!icon) return null;
+  const trimmed = icon.trim();
+  if (EMOJI_RE.test(trimmed)) return <span>{trimmed}</span>;
+  const Icon = SERVICE_ICON_MAP[trimmed.toLowerCase()];
+  return Icon ? <Icon size={20} /> : null;
+};
 
 const ServicesSection = ({ services }: ServicesSectionProps) => {
   const colors = useColors();
@@ -74,13 +117,10 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
                       style={{
                         background: `linear-gradient(135deg, ${colors.primary500}20, ${colors.primary700}15)`,
                         border: `1px solid ${colors.primary500}25`,
+                        color: colors.primary400,
                       }}
                     >
-                      {service.icon ? (
-                        <span>{service.icon}</span>
-                      ) : (
-                        <TbBriefcase size={20} style={{ color: colors.primary400 }} />
-                      )}
+                      {resolveServiceIcon(service.icon) ?? <TbBriefcase size={20} />}
                     </div>
                     <div>
                       <h3 className="font-display font-bold leading-tight" style={{ color: colors.neutral50 }}>

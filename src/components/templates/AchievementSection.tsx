@@ -12,9 +12,9 @@ interface AchievementsSectionProps {
 }
 
 const medalConfig = [
-  { emoji: "🥇", color: "#f59e0b", glow: "#f59e0b" },   // idx 0 — gold
-  { emoji: "🥈", color: "#94a3b8", glow: "#94a3b8" },   // idx 1 — silver
-  { emoji: "🥉", color: "#cd7f32", glow: "#cd7f32" },   // idx 2 — bronze
+  { color: "#f59e0b", glow: "#f59e0b" },   // idx 0 — gold
+  { color: "#94a3b8", glow: "#94a3b8" },   // idx 1 — silver
+  { color: "#cd7f32", glow: "#cd7f32" },   // idx 2 — bronze
 ];
 
 const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
@@ -73,7 +73,7 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
                   {/* Medal badge — top-left corner, overlapping border */}
                   {medal && (
                     <div
-                      className="absolute z-10 flex items-center justify-center rounded-full text-sm select-none"
+                      className="absolute z-10 flex items-center justify-center rounded-full select-none"
                       style={{
                         top: "-10px",
                         left: "-10px",
@@ -84,7 +84,7 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
                         boxShadow: `0 0 10px ${medal.glow}40`,
                       }}
                     >
-                      {medal.emoji}
+                      <FiAward size={13} style={{ color: medal.color }} />
                     </div>
                   )}
 

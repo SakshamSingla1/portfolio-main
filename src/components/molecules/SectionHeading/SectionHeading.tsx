@@ -26,22 +26,29 @@ const SectionHeading = ({ title, subtitle }: Props) => {
           {title}
         </div>
 
-        {/* Eyebrow label — more visible, wider tracking */}
         <span
-          className="text-[10px] font-mono uppercase block mb-3"
+          className="inline-flex items-center gap-2 mb-4 rounded-full text-[10px] font-mono uppercase"
           style={{
-            color: `${colors.primary400}90`,
-            letterSpacing: "0.4em",
+            color: colors.primary300,
+            letterSpacing: "0.3em",
+            padding: "6px 14px 6px 10px",
+            background: `${colors.primary500}14`,
+            border: `1px solid ${colors.primary500}30`,
           }}
         >
-          {"// " + title.toLowerCase().replace(/\s/g, "_")}
+          <span
+            className="inline-block rounded-full"
+            style={{ width: 5, height: 5, background: colors.accent400 }}
+          />
+          {title.toLowerCase().replace(/\s/g, "_")}
         </span>
 
         <h2
-          className="section-heading-gradient-text font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent"
+          className="section-heading-gradient-text font-display text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent relative"
           style={{
             backgroundImage: `linear-gradient(135deg, ${colors.neutral100}, ${colors.primary400}, ${colors.accent400}, ${colors.neutral100})`,
             backgroundSize: "300% 300%",
+            filter: `drop-shadow(0 0 24px ${colors.primary500}25)`,
           }}
         >
           {title}

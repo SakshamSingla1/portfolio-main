@@ -132,69 +132,84 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
         </button>
 
         <div
-          className="hidden md:flex items-center gap-1 rounded-full px-3 py-2 lg:px-4 lg:py-2.5 relative"
+          className="hidden md:flex items-center rounded-full px-1.5 py-2 lg:px-2 lg:py-2.5 relative min-w-0 flex-1 mx-4 lg:mx-6"
           style={{
             // No backdrop-blur: this pill lives inside the fixed navbar, which
             // already repaints on every scroll frame — a second live-blurred
             // layer here just doubles that cost for an always-mounted element.
             backgroundColor: `${colors.neutral800}B3`,
             border: `1px solid ${colors.neutral700}28`,
+            maxWidth: "fit-content",
           }}
         >
-          <AnimatePresence>
-            {hoveredItem && hoveredItem !== activeSection && (
-              <motion.div
-                key={hoveredItem}
-                layoutId="navHover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-y-1.5 rounded-full pointer-events-none"
-                style={{
-                  backgroundColor: `${colors.neutral700}40`,
-                }}
-              />
-            )}
-          </AnimatePresence>
+          {/* When there are enough sections that the pill would otherwise blow
+              out the navbar's width (a rich, fully-filled-out profile), this
+              scrolls horizontally instead of overflowing — with a soft mask
+              fade at each edge as the only affordance, so it stays visually
+              calm instead of needing arrow buttons. */}
+          <div
+            className="flex items-center gap-1 overflow-x-auto no-scrollbar relative"
+            style={{
+              maskImage: "linear-gradient(90deg, transparent 0, black 20px, black calc(100% - 20px), transparent 100%)",
+              WebkitMaskImage: "linear-gradient(90deg, transparent 0, black 20px, black calc(100% - 20px), transparent 100%)",
+              scrollbarWidth: "none",
+            }}
+          >
+            <AnimatePresence>
+              {hoveredItem && hoveredItem !== activeSection && (
+                <motion.div
+                  key={hoveredItem}
+                  layoutId="navHover"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-y-1.5 rounded-full pointer-events-none"
+                  style={{
+                    backgroundColor: `${colors.neutral700}40`,
+                  }}
+                />
+              )}
+            </AnimatePresence>
 
-          {items.map((item) => (
-            <button
-              key={item.section}
-              onClick={() => scrollTo(item.section)}
-              onMouseEnter={() => setHoveredItem(item.section)}
-              onMouseLeave={() => setHoveredItem(null)}
-              className="relative text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-colors duration-200"
-              style={{
-                color: activeSection === item.section ? colors.primary400 : colors.neutral400,
-                fontWeight: activeSection === item.section ? 500 : undefined,
-              }}
-            >
-              {activeSection === item.section && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    backgroundColor: `${colors.primary500}18`,
-                    border: `1px solid ${colors.primary500}28`,
-                    boxShadow: `inset 0 0 12px ${colors.primary500}08`,
-                  }}
-                />
-              )}
-              <span className="relative z-10">{item.label}</span>
-              {activeSection === item.section && (
-                <motion.div
-                  layoutId="activeUnderline"
-                  className="absolute bottom-1 left-4 right-4"
-                  style={{
-                    height: 1.5,
-                    borderRadius: 99,
-                    background: `linear-gradient(90deg, ${colors.primary500}, ${colors.accent500})`,
-                    opacity: 0.7,
-                  }}
-                />
-              )}
-            </button>
-          ))}
+            {items.map((item) => (
+              <button
+                key={item.section}
+                onClick={() => scrollTo(item.section)}
+                onMouseEnter={() => setHoveredItem(item.section)}
+                onMouseLeave={() => setHoveredItem(null)}
+                className="relative shrink-0 text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-colors duration-200"
+                style={{
+                  color: activeSection === item.section ? colors.primary400 : colors.neutral400,
+                  fontWeight: activeSection === item.section ? 500 : undefined,
+                }}
+              >
+                {activeSection === item.section && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      backgroundColor: `${colors.primary500}18`,
+                      border: `1px solid ${colors.primary500}28`,
+                      boxShadow: `inset 0 0 12px ${colors.primary500}08`,
+                    }}
+                  />
+                )}
+                <span className="relative z-10">{item.label}</span>
+                {activeSection === item.section && (
+                  <motion.div
+                    layoutId="activeUnderline"
+                    className="absolute bottom-1 left-4 right-4"
+                    style={{
+                      height: 1.5,
+                      borderRadius: 99,
+                      background: `linear-gradient(90deg, ${colors.primary500}, ${colors.accent500})`,
+                      opacity: 0.7,
+                    }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="hidden md:flex items-center gap-2.5">
