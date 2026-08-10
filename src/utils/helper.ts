@@ -1,3 +1,4 @@
+import type { SyntheticEvent } from "react";
 import { DEGREE_OPTIONS } from "./constants";
 import type { ColorTheme, NavItem, ProfileMaster } from "./types";
 
@@ -110,4 +111,9 @@ export const getOptimizedImageUrl = (
 
   const transformStr = transformations.join(",");
   return `${parts[0]}/image/upload/${transformStr}/${parts[1]}`;
+};
+
+/** Hides a broken/dead image instead of leaving the browser's broken-image glyph on screen. */
+export const onImageError = (e: SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.style.visibility = "hidden";
 };

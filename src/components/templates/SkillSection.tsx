@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { SkillResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
-import { toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
+import { toTitleCase, getOptimizedImageUrl, onImageError } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import React from "react";
 import SkillsAutoScrollBar from "../molecules/SkillsAutoScrollBar/SkillsAutoScrollBar";
@@ -106,6 +106,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
                       src={getOptimizedImageUrl(skill.logoUrl, { width: 120 })}
                       alt={skill.logoName}
                       className="w-14 h-14 object-contain"
+                      onError={onImageError}
                     />
                   </div>
                   <p
@@ -308,7 +309,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               />
 
               <div className="w-11 h-11 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <img src={getOptimizedImageUrl(skill.logoUrl, { width: 100 })} alt={skill.logoName} className="w-9 h-9 object-contain" />
+                <img src={getOptimizedImageUrl(skill.logoUrl, { width: 100 })} alt={skill.logoName} className="w-9 h-9 object-contain" onError={onImageError} />
               </div>
               <div className="text-center w-full">
                 <p className="text-sm font-medium" style={{ color: colors.neutral100 }}>

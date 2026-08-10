@@ -7,7 +7,7 @@ import { useRef, useState } from "react";
 import React from "react";
 import { getSocialIcon } from "../../utils/socialIcons";
 import { usePublicResumeService } from "../../services/usePublicResumeService";
-import { getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
 
 interface Props {
   profile: ProfileRequest;
@@ -156,6 +156,7 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                     fetchPriority="high"
                     loading="eager"
                     decoding="async"
+                    onError={onImageError}
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />

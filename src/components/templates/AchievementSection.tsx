@@ -3,7 +3,7 @@ import type { Achievement } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { FiAward, FiCalendar, FiExternalLink } from "react-icons/fi";
-import { formatDate, getOptimizedImageUrl } from "../../utils/helper";
+import { formatDate, getOptimizedImageUrl, onImageError } from "../../utils/helper";
 import { useColors, shadows } from "../../utils/theme";
 import React from "react";
 
@@ -94,6 +94,7 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
                         src={getOptimizedImageUrl(ach.proofUrl, { width: 800 })}
                         alt={ach.title}
                         className="w-full h-full object-cover"
+                        onError={onImageError}
                       />
                       <div
                         className="absolute inset-0"

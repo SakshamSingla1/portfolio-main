@@ -7,7 +7,7 @@ import { useColors, gradients } from "../../utils/theme";
 import { FiCode, FiCoffee, FiZap } from "react-icons/fi";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
 
 interface AboutSectionProps {
   profile: ProfileRequest;
@@ -53,6 +53,7 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                   alt="About me"
                   className="w-full h-auto block group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
+                  onError={onImageError}
                 />
                 <div className="absolute inset-0" style={{
                   background: `linear-gradient(135deg, ${colors.primary900}60 0%, transparent 50%, ${colors.accent900}40 100%)`,

@@ -7,7 +7,7 @@ import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, Fi
 import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
+import { formatDate, toTitleCase, getOptimizedImageUrl, onImageError } from "../../utils/helper";
 import type { Colors } from "../../utils/theme";
 
 interface ProjectsSectionProps {
@@ -149,7 +149,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       color: colors.neutral200,
                     }}
                   >
-                    <img src={skill.logoUrl} alt={skill.logoName} className="w-3 h-3 object-contain" />
+                    <img src={skill.logoUrl} alt={skill.logoName} className="w-3 h-3 object-contain" onError={onImageError} />
                     {skill.logoName}
                   </div>
                 ))}
@@ -293,7 +293,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                           color: colors.neutral200,
                         }}
                       >
-                        <img src={skill.logoUrl} alt={skill.logoName} className="w-4 h-4 object-contain" />
+                        <img src={skill.logoUrl} alt={skill.logoName} className="w-4 h-4 object-contain" onError={onImageError} />
                         <span className="text-[10px] font-medium">{skill.logoName}</span>
                       </div>
                     ))}
@@ -446,7 +446,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     aria-label={`View image ${i + 1}`}
                     className={`relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${i === previewIndex ? "border-primary-500 scale-110 shadow-lg shadow-primary-500/20" : "border-transparent opacity-50 hover:opacity-100"}`}
                   >
-                    <img src={getOptimizedImageUrl(img.url, { width: 200, height: 150 })} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} />
+                    <img src={getOptimizedImageUrl(img.url, { width: 200, height: 150 })} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} onError={onImageError} />
                   </button>
                 ))}
               </div>

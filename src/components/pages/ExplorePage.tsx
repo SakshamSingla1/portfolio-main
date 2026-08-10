@@ -3,6 +3,7 @@ import { request } from "../../services";
 import { useColors } from "../../utils/theme";
 import { motion } from "framer-motion";
 import { FiSearch, FiMapPin, FiUser } from "react-icons/fi";
+import { onImageError } from "../../utils/helper";
 
 interface DiscoverProfile {
   id: number;
@@ -133,6 +134,7 @@ const ExplorePage = () => {
                       alt={p.fullName}
                       className="rounded-full object-cover"
                       style={{ width: 48, height: 48, flexShrink: 0 }}
+                      onError={onImageError}
                     />
                   ) : (
                     <div

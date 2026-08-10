@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useColors } from "../../../utils/theme";
 import type { SkillResponse } from "../../../utils/types";
-import { getOptimizedImageUrl } from "../../../utils/helper";
+import { getOptimizedImageUrl, onImageError } from "../../../utils/helper";
 
 interface SkillsAutoScrollBarProps {
   skills: SkillResponse[];
@@ -63,6 +63,7 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
               loading="lazy"
               width={32}
               height={32}
+              onError={onImageError}
             />
             <p
               className="truncate text-sm font-semibold tracking-tight"

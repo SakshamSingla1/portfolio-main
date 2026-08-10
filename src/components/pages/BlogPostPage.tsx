@@ -10,7 +10,7 @@ import {
 import { useColors, gradients } from "../../utils/theme";
 import { usePublicBlogService, type BlogPostDetail } from "../../services/usePublicBlogService";
 import useProfileMasterService from "../../services/useProfileMasterService";
-import { getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
 import { HTTP_STATUS } from "../../utils/constants";
 import GridBackground from "../molecules/GridBackground/GridBackground";
 
@@ -205,6 +205,7 @@ const BlogPostPage = () => {
                 src={getOptimizedImageUrl(post.coverImageUrl, { width: 1200 })}
                 alt={post.title}
                 className="w-full h-full object-cover"
+                onError={onImageError}
               />
               <div
                 className="absolute inset-0"
@@ -255,6 +256,7 @@ const BlogPostPage = () => {
                     src={profileMeta.logoUrl}
                     alt={profileMeta.name}
                     className="w-7 h-7 rounded-full object-cover"
+                    onError={onImageError}
                   />
                 ) : (
                   <div
