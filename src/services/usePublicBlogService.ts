@@ -4,6 +4,7 @@ import { replaceUrlParams } from "../utils/helper";
 
 const BLOG_URLS = {
   LIST:   "/blog/:username",
+  TAGS:   "/blog/:username/tags",
   DETAIL: "/blog/:username/:slug",
 };
 
@@ -45,10 +46,13 @@ export const usePublicBlogService = () => {
   const getPosts = (username: string, params?: BlogListParams) =>
     request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.LIST, { username }), null, null, params ? { params } : null);
 
+  const getTags = (username: string) =>
+    request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.TAGS, { username }), null, null);
+
   const getPost = (username: string, slug: string) =>
     request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.DETAIL, { username, slug }), null, null);
 
-  return { getPosts, getPost };
+  return { getPosts, getTags, getPost };
 };
 
 export default usePublicBlogService;

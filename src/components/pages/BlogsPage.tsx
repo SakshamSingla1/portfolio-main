@@ -7,7 +7,7 @@ import {
   FiArrowRight, FiHash, FiBookOpen, FiLoader,
 } from "react-icons/fi";
 import { useColors, gradients } from "../../utils/theme";
-import { usePublicBlogService, type BlogPostSummary } from "../../services/usePublicBlogService";
+import { usePublicBlogService, type BlogPostSummary, type BlogTag } from "../../services/usePublicBlogService";
 import useProfileMasterService from "../../services/useProfileMasterService";
 import { getOptimizedImageUrl } from "../../utils/helper";
 import { HTTP_STATUS } from "../../utils/constants";
@@ -50,6 +50,7 @@ const BlogCard = ({
   colors: ReturnType<typeof useColors>;
 }) => {
   const [hovered, setHovered] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
   const g = gradients(colors);
 
   return (
@@ -70,7 +71,7 @@ const BlogCard = ({
         }}
       >
         <div className="relative overflow-hidden" style={{ height: 200 }}>
-          {post.coverImageUrl ? (
+          {post.coverImageUrl && !imgFailed ? (
             <motion.img
               src={getOptimizedImageUrl(post.coverImageUrl, { width: 800 })}
               alt={post.title}
@@ -78,6 +79,7 @@ const BlogCard = ({
               animate={{ scale: hovered ? 1.05 : 1 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               loading="lazy"
+              onError={() => setImgFailed(true)}
             />
           ) : (
             <div
@@ -193,6 +195,8 @@ const BlogsPage = () => {
   const [profileMeta, setProfileMeta] = useState(getProfileMeta());
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(0);
+  const [tags, setTags] = useState<BlogTag[]>([]);
+  const [activeTag, setActiveTag] = useState<BlogTag | null>(null);
 
   // Resolve username from cache or API
   useEffect(() => {
@@ -213,6 +217,18 @@ const BlogsPage = () => {
     return () => clearTimeout(t);
   }, [search]);
 
+  // Tags come from the profile's full published set, independent of the
+  // current page/filter — so the chip row doesn't shrink to whatever tags
+  // happen to appear on the currently-filtered page.
+  useEffect(() => {
+    if (!username) return;
+    blogService.getTags(username).then((res) => {
+      if (res?.status === HTTP_STATUS.OK) {
+        setTags(res.data?.data ?? []);
+      }
+    });
+  }, [username]);
+
   const fetchPosts = useCallback(async () => {
     if (!username) return;
     setLoading(true);
@@ -223,6 +239,7 @@ const BlogsPage = () => {
         sortBy: "publishedAt",
         sortDir: "desc",
         search: debouncedSearch || undefined,
+        tagId: activeTag?.id,
       });
       if (res?.status === HTTP_STATUS.OK) {
         const data = res.data?.data;
@@ -232,9 +249,14 @@ const BlogsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [username, page, debouncedSearch]);
+  }, [username, page, debouncedSearch, activeTag]);
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
+
+  const handleSelectTag = (tag: BlogTag | null) => {
+    setActiveTag(tag);
+    setPage(0);
+  };
 
   return (
     <div className="min-h-screen relative" style={{ background: colors.neutral900, color: colors.neutral100 }}>
@@ -336,6 +358,45 @@ const BlogsPage = () => {
             />
           </motion.div>
 
+          {tags.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-wrap items-center justify-center gap-2 mb-10 -mt-4"
+            >
+              <button
+                onClick={() => handleSelectTag(null)}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+                style={{
+                  background: !activeTag ? `${colors.primary500}20` : `${colors.neutral800}50`,
+                  color: !activeTag ? colors.primary300 : colors.neutral400,
+                  border: `1px solid ${!activeTag ? `${colors.primary500}40` : `${colors.neutral700}40`}`,
+                }}
+              >
+                All posts
+              </button>
+              {tags.map((tag) => {
+                const isActive = activeTag?.id === tag.id;
+                return (
+                  <button
+                    key={tag.id}
+                    onClick={() => handleSelectTag(tag)}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200"
+                    style={{
+                      background: isActive ? `${colors.primary500}20` : `${colors.neutral800}50`,
+                      color: isActive ? colors.primary300 : colors.neutral400,
+                      border: `1px solid ${isActive ? `${colors.primary500}40` : `${colors.neutral700}40`}`,
+                    }}
+                  >
+                    <FiHash size={9} />
+                    {tag.name}
+                  </button>
+                );
+              })}
+            </motion.div>
+          )}
+
           <AnimatePresence mode="wait">
             {loading ? (
               <motion.div
@@ -360,7 +421,11 @@ const BlogsPage = () => {
               >
                 <FiLoader size={32} className="mx-auto mb-4 opacity-30" style={{ color: colors.neutral500 }} />
                 <p className="text-sm" style={{ color: colors.neutral500 }}>
-                  {debouncedSearch ? `No posts matching "${debouncedSearch}"` : "No posts published yet."}
+                  {debouncedSearch
+                    ? `No posts matching "${debouncedSearch}"`
+                    : activeTag
+                    ? `No posts tagged "${activeTag.name}"`
+                    : "No posts published yet."}
                 </p>
               </motion.div>
             ) : (
