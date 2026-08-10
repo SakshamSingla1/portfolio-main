@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FiFileText, FiMic, FiVideo, FiHeadphones, FiExternalLink, FiUsers } from "react-icons/fi";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -137,4 +137,4 @@ const PublicationsSection = ({ publications }: PublicationsSectionProps) => {
     );
 };
 
-export default PublicationsSection;
+export default React.memo(PublicationsSection);

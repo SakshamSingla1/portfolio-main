@@ -86,11 +86,27 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
               boxShadow: `0 1px 0 0 rgba(255,255,255,0.04) inset, 0 24px 48px -24px rgba(0,0,0,0.65)`,
             }}
           >
-            <div className="flex items-center gap-2 mb-6">
-              <FaGithub style={{ color: colors.primary400 }} className="text-lg" />
-              <span className="text-sm font-mono" style={{ color: `${colors.neutral400}BB` }}>
-                @{username} · contribution activity
-              </span>
+            <div className="flex items-center justify-between gap-2 mb-6 flex-wrap">
+              <div className="flex items-center gap-2">
+                <FaGithub style={{ color: colors.primary400 }} className="text-lg" />
+                <span className="text-sm font-mono" style={{ color: `${colors.neutral400}BB` }}>
+                  @{username} · contribution activity
+                </span>
+              </div>
+              <a
+                href={`https://github.com/${username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit @${username} on GitHub`}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200"
+                style={{
+                  color: colors.primary400,
+                  background: `${colors.primary500}12`,
+                  border: `1px solid ${colors.primary500}28`,
+                }}
+              >
+                View Profile <FiExternalLink size={12} />
+              </a>
             </div>
             <div className="overflow-x-auto flex justify-center">
               <GitHubCalendar

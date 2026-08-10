@@ -8,7 +8,7 @@ import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
 
 interface Props {
   testimonials: Testimonial[];
@@ -18,14 +18,15 @@ const TestimonialsSection = ({ testimonials }: Props) => {
   const colors = useColors();
   const isMobile = useIsMobile();
   const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (!testimonials.length) return;
+    if (!testimonials.length || isPaused) return;
     const timer = setInterval(() => {
       setActive((a) => (a + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [testimonials.length]);
+  }, [testimonials.length, isPaused]);
 
   if (!testimonials.length) return null;
 
@@ -38,6 +39,10 @@ const TestimonialsSection = ({ testimonials }: Props) => {
       <div className="max-w-4xl mx-auto">
         <div
           className="relative overflow-hidden backdrop-blur-xl"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
           style={{
             background: `linear-gradient(135deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
             border: `1px solid ${colors.neutral700}40`,
@@ -103,6 +108,9 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               style={{ position: "relative", zIndex: 1 }}
+              role="group"
+              aria-live="polite"
+              aria-label={`Testimonial ${active + 1} of ${testimonials.length}, from ${current.name}`}
             >
               <div
                 className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
@@ -125,6 +133,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                       className="w-12 h-12 rounded-full object-cover"
                       style={{ border: `2px solid ${colors.primary500}50`, boxShadow: `0 0 16px ${colors.primary500}20` }}
                       loading="lazy"
+                      onError={onImageError}
                     />
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
@@ -198,6 +207,8 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                   <button
                     key={idx}
                     onClick={() => setActive(idx)}
+                    aria-label={`Go to testimonial ${idx + 1}`}
+                    aria-current={idx === active}
                     className="h-1 rounded-full transition-all duration-500"
                     style={{
                       width: idx === active ? "1.5rem" : "0.5rem",
@@ -214,6 +225,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                   onClick={() =>
                     setActive((a) => (a - 1 + testimonials.length) % testimonials.length)
                   }
+                  aria-label="Previous testimonial"
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
                   style={{
                     border: `1px solid ${colors.neutral700}33`,
@@ -225,6 +237,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
 
                 <button
                   onClick={() => setActive((a) => (a + 1) % testimonials.length)}
+                  aria-label="Next testimonial"
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
                   style={{
                     border: `1px solid ${colors.neutral700}33`,
@@ -243,6 +256,8 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             <motion.button
               key={i}
               onClick={() => setActive(i)}
+              aria-label={`Show testimonial from ${t.name}`}
+              aria-current={i === active}
               whileHover={{ scale: 1.12 }}
               className="rounded-full overflow-hidden relative"
               style={{
@@ -257,7 +272,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 transition: "all 0.35s ease",
               }}
             >
-              {t.imageUrl && <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" />}
+              {t.imageUrl && <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" onError={onImageError} />}
             </motion.button>
           ))}
         </div>

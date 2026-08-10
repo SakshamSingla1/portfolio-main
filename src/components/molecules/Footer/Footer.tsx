@@ -33,6 +33,7 @@ const Footer = ({ profile, socialLinks }: Props) => {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`Visit my ${link.platform} profile`}
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all duration-300"
                 style={{
                   color: colors.neutral500,
