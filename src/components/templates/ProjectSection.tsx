@@ -102,6 +102,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     className="w-full h-full object-cover origin-center"
                     loading="lazy"
+                    onError={onImageError}
                   />
 
                 <div
@@ -435,6 +436,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   className="max-w-full max-h-full object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] select-none"
                   onClick={(e) => e.stopPropagation()}
+                  onError={onImageError}
                 />
               </AnimatePresence>
             </div>
