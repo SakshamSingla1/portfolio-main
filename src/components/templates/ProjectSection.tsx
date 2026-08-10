@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, FiMaximize2, FiX, FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, FiMaximize2, FiX, FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
 import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { formatDate, toTitleCase, getOptimizedImageUrl, onImageError } from "../../utils/helper";
 import type { Colors } from "../../utils/theme";
+
+// Below this count every project is already visible without scrolling
+// past more than a screen or two — a filter bar would just be noise for
+// a portfolio with 2-3 projects.
+const FILTER_BAR_MIN_PROJECTS = 4;
 
 interface ProjectsSectionProps {
   projects: ProjectResponse[];
@@ -460,22 +465,142 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
 
 const ProjectsSection = ({ projects }: ProjectsSectionProps) => {
   const colors = useColors();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  const showFilterBar = projects.length >= FILTER_BAR_MIN_PROJECTS;
+
+  const statuses = useMemo(
+    () => [...new Set(projects.map((p) => p.workStatus))],
+    [projects]
+  );
+
+  const statusCounts = useMemo(() => {
+    return projects.reduce<Record<string, number>>((acc, p) => {
+      acc[p.workStatus] = (acc[p.workStatus] ?? 0) + 1;
+      return acc;
+    }, {});
+  }, [projects]);
+
+  const filteredProjects = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return projects
+      .filter((p) => !statusFilter || p.workStatus === statusFilter)
+      .filter((p) => {
+        if (!query) return true;
+        const inName = p.projectName.toLowerCase().includes(query);
+        const inSkills = (p.skills ?? []).some((s) => s.logoName.toLowerCase().includes(query));
+        return inName || inSkills;
+      });
+  }, [projects, statusFilter, search]);
 
   return (
     <section id="projects" className="section-padding relative">
       <div className="max-w-6xl mx-auto">
         <SectionHeading title="Projects" subtitle="Things I've built and shipped" />
 
-        <div className="grid grid-cols-1 gap-8">
-          {projects.map((project, idx) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              idx={idx}
-              colors={colors}
-            />
-          ))}
-        </div>
+        {showFilterBar && (
+          <div className="flex flex-col md:flex-row md:items-center gap-3 mb-8">
+            <div className="relative w-full md:w-64">
+              <FiSearch
+                size={14}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                style={{ color: colors.neutral500 }}
+              />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search projects or tech..."
+                className="rounded-xl pl-9 pr-4 py-2 font-mono text-sm w-full"
+                style={{
+                  background: `${colors.neutral800}60`,
+                  border: `1px solid ${colors.neutral700}40`,
+                  color: colors.neutral100,
+                  outline: "none",
+                }}
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono leading-none"
+                  style={{ color: colors.neutral400 }}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setStatusFilter(null)}
+                className="rounded-full font-mono text-xs px-4 py-2 transition-all duration-300 flex items-center gap-1.5"
+                style={{
+                  color: !statusFilter ? colors.primary300 : colors.neutral400,
+                  background: !statusFilter ? `${colors.primary500}15` : `${colors.neutral700}30`,
+                  border: `1px solid ${!statusFilter ? colors.primary500 + "30" : colors.neutral700 + "20"}`,
+                  fontWeight: !statusFilter ? 600 : undefined,
+                }}
+              >
+                All
+                <span
+                  className="inline-flex items-center justify-center rounded-full text-[9px] px-1 min-w-[16px]"
+                  style={{
+                    background: !statusFilter ? `${colors.primary500}30` : `${colors.neutral700}50`,
+                    color: !statusFilter ? colors.primary300 : colors.neutral600,
+                  }}
+                >
+                  {projects.length}
+                </span>
+              </button>
+              {statuses.map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className="rounded-full font-mono text-xs px-4 py-2 transition-all duration-300 flex items-center gap-1.5"
+                  style={{
+                    color: statusFilter === status ? colors.primary300 : colors.neutral400,
+                    background: statusFilter === status ? `${colors.primary500}15` : `${colors.neutral700}30`,
+                    border: `1px solid ${statusFilter === status ? colors.primary500 + "30" : colors.neutral700 + "20"}`,
+                    fontWeight: statusFilter === status ? 600 : undefined,
+                  }}
+                >
+                  {toTitleCase(status)}
+                  <span
+                    className="inline-flex items-center justify-center rounded-full text-[9px] px-1 min-w-[16px]"
+                    style={{
+                      background: statusFilter === status ? `${colors.primary500}30` : `${colors.neutral700}50`,
+                      color: statusFilter === status ? colors.primary300 : colors.neutral600,
+                    }}
+                  >
+                    {statusCounts[status] ?? 0}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {filteredProjects.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8">
+            {filteredProjects.map((project, idx) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                idx={idx}
+                colors={colors}
+              />
+            ))}
+          </div>
+        ) : (
+          <div
+            className="rounded-2xl py-16 text-center font-mono text-sm"
+            style={{ color: colors.neutral500, border: `1px dashed ${colors.neutral700}40` }}
+          >
+            No projects match &quot;{search || toTitleCase(statusFilter ?? "")}&quot;
+          </div>
+        )}
       </div>
     </section>
   );
