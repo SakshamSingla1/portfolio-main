@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import {
@@ -186,17 +186,25 @@ const BlogsPage = () => {
   const blogService = usePublicBlogService();
   const profileService = useProfileMasterService();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [search, setSearch] = useState(() => searchParams.get("search") || "");
+  const [debouncedSearch, setDebouncedSearch] = useState(() => searchParams.get("search") || "");
   const [username, setUsername] = useState<string | null>(getUsername());
   const [profileMeta, setProfileMeta] = useState(getProfileMeta());
   const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => Number(searchParams.get("page")) || 0);
   const [tags, setTags] = useState<BlogTag[]>([]);
-  const [activeTag, setActiveTag] = useState<BlogTag | null>(null);
+  // Only the id is persisted (state + URL) — the display object is derived
+  // once `tags` loads, so a page refresh doesn't need the tag list to have
+  // already arrived before it can restore the selection.
+  const [activeTagId, setActiveTagId] = useState<number | null>(() => {
+    const raw = searchParams.get("tagId");
+    return raw ? Number(raw) : null;
+  });
+  const activeTag = tags.find((t) => t.id === activeTagId) ?? null;
 
   // Resolve username from cache or API
   useEffect(() => {
@@ -239,7 +247,7 @@ const BlogsPage = () => {
         sortBy: "publishedAt",
         sortDir: "desc",
         search: debouncedSearch || undefined,
-        tagId: activeTag?.id,
+        tagId: activeTagId ?? undefined,
       });
       if (res?.status === HTTP_STATUS.OK) {
         const data = res.data?.data;
@@ -249,12 +257,22 @@ const BlogsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [username, page, debouncedSearch, activeTag]);
+  }, [username, page, debouncedSearch, activeTagId]);
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
+  // Keeps the URL a shareable/bookmarkable/back-button-safe representation
+  // of the current filters, matching the pattern every admin listing page
+  // already uses — this page was the one spot in the app missing it.
+  useEffect(() => {
+    const params: Record<string, string> = { page: page.toString() };
+    if (debouncedSearch) params.search = debouncedSearch;
+    if (activeTagId !== null) params.tagId = activeTagId.toString();
+    setSearchParams(params, { replace: true });
+  }, [page, debouncedSearch, activeTagId, setSearchParams]);
+
   const handleSelectTag = (tag: BlogTag | null) => {
-    setActiveTag(tag);
+    setActiveTagId(tag?.id ?? null);
     setPage(0);
   };
 
