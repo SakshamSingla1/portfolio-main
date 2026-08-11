@@ -3,9 +3,10 @@ import type { Achievement } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { FiAward, FiCalendar, FiExternalLink } from "react-icons/fi";
-import { formatDate, getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { formatDate, getOptimizedImageUrl } from "../../utils/helper";
 import { useColors, shadows } from "../../utils/theme";
 import React from "react";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface AchievementsSectionProps {
   achievements: Achievement[];
@@ -90,11 +91,12 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
 
                   {ach.proofUrl && (
                     <div className="h-48 overflow-hidden relative">
-                      <img
+                      <SafeImage
                         src={getOptimizedImageUrl(ach.proofUrl, { width: 800 })}
                         alt={ach.title}
                         className="w-full h-full object-cover"
-                        onError={onImageError}
+                        fallbackClassName="w-full h-full"
+                        iconSize={28}
                       />
                       <div
                         className="absolute inset-0"

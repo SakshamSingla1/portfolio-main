@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useColors } from "../../../utils/theme";
 import type { SkillResponse } from "../../../utils/types";
-import { getOptimizedImageUrl, onImageError } from "../../../utils/helper";
+import { getOptimizedImageUrl } from "../../../utils/helper";
+import SafeImage from "../../atoms/SafeImage/SafeImage";
 
 interface SkillsAutoScrollBarProps {
   skills: SkillResponse[];
@@ -56,14 +57,15 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
               boxShadow: `0 15px 35px -15px rgba(0, 0, 0, 0.3)`,
             }}
           >
-            <img
+            <SafeImage
               src={getOptimizedImageUrl(skill.logoUrl, { width: 80 })}
               alt={skill.logoName}
               className="h-8 w-8 object-contain transition-transform duration-300"
+              fallbackClassName="h-8 w-8 rounded-lg"
+              iconSize={16}
               loading="lazy"
               width={32}
               height={32}
-              onError={onImageError}
             />
             <p
               className="truncate text-sm font-semibold tracking-tight"

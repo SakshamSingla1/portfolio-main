@@ -3,11 +3,12 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useMo
 import type { ProjectResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, FiMaximize2, FiX, FiArrowLeft, FiArrowRight, FiSearch } from "react-icons/fi";
+import { FiExternalLink, FiGithub, FiChevronLeft, FiChevronRight, FiCalendar, FiMaximize2, FiX, FiArrowLeft, FiArrowRight, FiSearch, FiImage } from "react-icons/fi";
 import { useColors } from "../../utils/theme";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { formatDate, toTitleCase, getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 import type { Colors } from "../../utils/theme";
 
 // Below this count every project is already visible without scrolling
@@ -28,6 +29,8 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
   const [showMoreSkills, setShowMoreSkills] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
+  const markImageFailed = (i: number) => setFailedImages((prev) => new Set(prev).add(i));
   const cardRef = React.useRef<HTMLDivElement>(null);
   const images = project.projectImages;
   const skills = project.skills || [];
@@ -91,19 +94,28 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                   setIsPreviewOpen(true);
                 }}
               >
-                  <motion.img
-                    src={getOptimizedImageUrl(images[currentImage].url, { width: 1000 })}
-                    alt={project.projectName}
-                    initial={{ opacity: 0, scale: 1.2 }}
-                    animate={{
-                      opacity: 1
-                    }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="w-full h-full object-cover origin-center"
-                    loading="lazy"
-                    onError={onImageError}
-                  />
+                  {failedImages.has(currentImage) ? (
+                    <div
+                      className="w-full h-full flex items-center justify-center"
+                      style={{ background: `${colors.neutral800}80` }}
+                    >
+                      <FiImage size={32} style={{ color: `${colors.neutral500}90` }} />
+                    </div>
+                  ) : (
+                    <motion.img
+                      src={getOptimizedImageUrl(images[currentImage].url, { width: 1000 })}
+                      alt={project.projectName}
+                      initial={{ opacity: 0, scale: 1.2 }}
+                      animate={{
+                        opacity: 1
+                      }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                      className="w-full h-full object-cover origin-center"
+                      loading="lazy"
+                      onError={() => markImageFailed(currentImage)}
+                    />
+                  )}
 
                 <div
                   className="absolute inset-0 flex items-center justify-center bg-black/10 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300"
@@ -155,7 +167,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                       color: colors.neutral200,
                     }}
                   >
-                    <img src={skill.logoUrl} alt={skill.logoName} className="w-3 h-3 object-contain" onError={onImageError} />
+                    <SafeImage src={skill.logoUrl} alt={skill.logoName} className="w-3 h-3 object-contain" fallbackClassName="w-3 h-3 rounded-sm" iconSize={8} />
                     {skill.logoName}
                   </div>
                 ))}
@@ -299,7 +311,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                           color: colors.neutral200,
                         }}
                       >
-                        <img src={skill.logoUrl} alt={skill.logoName} className="w-4 h-4 object-contain" onError={onImageError} />
+                        <SafeImage src={skill.logoUrl} alt={skill.logoName} className="w-4 h-4 object-contain" fallbackClassName="w-4 h-4 rounded-sm" iconSize={10} />
                         <span className="text-[10px] font-medium">{skill.logoName}</span>
                       </div>
                     ))}
@@ -426,18 +438,31 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
               onClick={() => setIsPreviewOpen(false)}
             >
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.div
                   key={previewIndex}
-                  src={getOptimizedImageUrl(images[previewIndex].url, { width: 1600 })}
-                  alt="Project Preview"
                   initial={{ opacity: 0, scale: 0.9, x: 20 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 1.1, x: -20 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="max-w-full max-h-full object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] select-none"
+                  className="max-w-full max-h-full flex items-center justify-center"
                   onClick={(e) => e.stopPropagation()}
-                  onError={onImageError}
-                />
+                >
+                  {failedImages.has(previewIndex) ? (
+                    <div
+                      className="w-[60vw] max-w-2xl aspect-video rounded-lg flex items-center justify-center"
+                      style={{ background: `${colors.neutral800}80` }}
+                    >
+                      <FiImage size={48} style={{ color: `${colors.neutral500}90` }} />
+                    </div>
+                  ) : (
+                    <img
+                      src={getOptimizedImageUrl(images[previewIndex].url, { width: 1600 })}
+                      alt="Project Preview"
+                      className="max-w-full max-h-full object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] select-none"
+                      onError={() => markImageFailed(previewIndex)}
+                    />
+                  )}
+                </motion.div>
               </AnimatePresence>
             </div>
 
@@ -453,7 +478,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     aria-label={`View image ${i + 1}`}
                     className={`relative shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-all duration-300 ${i === previewIndex ? "border-primary-500 scale-110 shadow-lg shadow-primary-500/20" : "border-transparent opacity-50 hover:opacity-100"}`}
                   >
-                    <img src={getOptimizedImageUrl(img.url, { width: 200, height: 150 })} className="w-full h-full object-cover" alt={`Thumbnail ${i + 1}`} onError={onImageError} />
+                    <SafeImage src={getOptimizedImageUrl(img.url, { width: 200, height: 150 })} className="w-full h-full object-cover" fallbackClassName="w-full h-full" iconSize={14} alt={`Thumbnail ${i + 1}`} />
                   </button>
                 ))}
               </div>

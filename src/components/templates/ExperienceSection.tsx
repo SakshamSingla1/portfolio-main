@@ -2,12 +2,13 @@ import { motion } from "framer-motion";
 import type { ExperienceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
-import { formatDate, toTitleCase, getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import { FiBriefcase, FiMapPin } from "react-icons/fi";
 import React from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface ExperienceSectionProps {
   experiences: ExperienceResponse[];
@@ -214,12 +215,13 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile }: ExperienceCar
                   e.currentTarget.style.color = colors.neutral300;
                 }}
               >
-                <img
+                <SafeImage
                   src={getOptimizedImageUrl(skill.logoUrl, { width: 60 })}
                   alt={skill.logoName}
                   className="w-3.5 h-3.5"
+                  fallbackClassName="w-3.5 h-3.5 rounded-sm"
+                  iconSize={8}
                   loading="lazy"
-                  onError={onImageError}
                 />
                 {skill.logoName}
               </span>

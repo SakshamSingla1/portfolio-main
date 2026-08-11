@@ -8,7 +8,8 @@ import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import { useColors } from "../../utils/theme";
 import type { Testimonial } from "../../utils/types";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
-import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { getOptimizedImageUrl } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface Props {
   testimonials: Testimonial[];
@@ -127,13 +128,14 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               <div className="flex items-center gap-4">
                 {current.imageUrl && (
                   <div className="relative">
-                    <img
+                    <SafeImage
                       src={getOptimizedImageUrl(current.imageUrl, { width: 100, height: 100 })}
                       alt={current.name}
                       className="w-12 h-12 rounded-full object-cover"
+                      fallbackClassName="w-12 h-12 rounded-full"
+                      iconSize={16}
                       style={{ border: `2px solid ${colors.primary500}50`, boxShadow: `0 0 16px ${colors.primary500}20` }}
                       loading="lazy"
-                      onError={onImageError}
                     />
                     <div
                       className="absolute -bottom-0.5 -right-0.5 w-4.5 h-4.5 rounded-full flex items-center justify-center"
@@ -272,7 +274,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 transition: "all 0.35s ease",
               }}
             >
-              {t.imageUrl && <img src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" loading="lazy" onError={onImageError} />}
+              {t.imageUrl && <SafeImage src={getOptimizedImageUrl(t.imageUrl, { width: 100, height: 100 })} alt={t.name} className="w-full h-full object-cover" fallbackClassName="w-full h-full" iconSize={14} loading="lazy" />}
             </motion.button>
           ))}
         </div>

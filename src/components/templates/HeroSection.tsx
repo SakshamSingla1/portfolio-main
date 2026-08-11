@@ -7,7 +7,8 @@ import { useRef, useState } from "react";
 import React from "react";
 import { getSocialIcon } from "../../utils/socialIcons";
 import { usePublicResumeService } from "../../services/usePublicResumeService";
-import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { getOptimizedImageUrl } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface Props {
   profile: ProfileRequest;
@@ -149,14 +150,16 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                     background: colors.neutral900,
                   }}
                 >
-                  <img
+                  <SafeImage
                     src={getOptimizedImageUrl(profile.profileImageUrl, { width: 800 })}
                     alt={profile.fullName}
                     className="w-full h-auto block transition-transform duration-700 group-hover:scale-105"
+                    fallbackClassName="w-full"
+                    iconSize={40}
+                    style={{ minHeight: 280 }}
                     fetchPriority="high"
                     loading="eager"
                     decoding="async"
-                    onError={onImageError}
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />

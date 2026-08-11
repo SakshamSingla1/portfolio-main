@@ -10,7 +10,8 @@ import {
 import { useColors, gradients } from "../../utils/theme";
 import { usePublicBlogService, type BlogPostDetail } from "../../services/usePublicBlogService";
 import useProfileMasterService from "../../services/useProfileMasterService";
-import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { getOptimizedImageUrl } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 import { HTTP_STATUS } from "../../utils/constants";
 import GridBackground from "../molecules/GridBackground/GridBackground";
 
@@ -201,11 +202,12 @@ const BlogPostPage = () => {
               className="relative overflow-hidden rounded-2xl mt-8 mb-10"
               style={{ height: 340 }}
             >
-              <img
+              <SafeImage
                 src={getOptimizedImageUrl(post.coverImageUrl, { width: 1200 })}
                 alt={post.title}
                 className="w-full h-full object-cover"
-                onError={onImageError}
+                fallbackClassName="w-full h-full"
+                iconSize={28}
               />
               <div
                 className="absolute inset-0"
@@ -252,11 +254,12 @@ const BlogPostPage = () => {
             >
               <div className="flex items-center gap-2">
                 {profileMeta?.logoUrl ? (
-                  <img
+                  <SafeImage
                     src={profileMeta.logoUrl}
                     alt={profileMeta.name}
                     className="w-7 h-7 rounded-full object-cover"
-                    onError={onImageError}
+                    fallbackClassName="w-7 h-7 rounded-full"
+                    iconSize={12}
                   />
                 ) : (
                   <div

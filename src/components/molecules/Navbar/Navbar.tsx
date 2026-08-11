@@ -3,7 +3,8 @@ import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X, ArrowUpRight, Download } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
 import type { NavItem } from "../../../utils/types";
-import { getOptimizedImageUrl, onImageError } from "../../../utils/helper";
+import { getOptimizedImageUrl } from "../../../utils/helper";
+import SafeImage from "../../atoms/SafeImage/SafeImage";
 import { usePublicResumeService } from "../../../services/usePublicResumeService";
 
 interface Props {
@@ -111,12 +112,13 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
         >
           {logoUrl && (
             <div className="relative">
-              <img
+              <SafeImage
                 src={getOptimizedImageUrl(logoUrl, { width: 120, height: 120 })}
                 alt="Logo"
                 className="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full transition-transform duration-300 group-hover:scale-105"
+                fallbackClassName="h-8 w-8 lg:h-10 lg:w-10 xl:h-12 xl:w-12 rounded-full"
+                iconSize={14}
                 style={{ boxShadow: `0 0 16px ${colors.primary500}25` }}
-                onError={onImageError}
               />
               <div
                 className="absolute -inset-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"

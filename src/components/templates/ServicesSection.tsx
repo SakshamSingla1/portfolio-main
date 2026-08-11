@@ -11,7 +11,8 @@ import {
   TbRocket, TbUsers, TbHeadset, TbLock, TbSearch, TbMail, TbBrandGithub,
 } from "react-icons/tb";
 import { useColors, shadows } from "../../utils/theme";
-import { getOptimizedImageUrl, onImageError } from "../../utils/helper";
+import { getOptimizedImageUrl } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface ServicesSectionProps {
   services: ServiceResponse[];
@@ -96,11 +97,12 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
               >
                 {service.bannerUrl && (
                   <div className="h-40 overflow-hidden relative">
-                    <img
+                    <SafeImage
                       src={getOptimizedImageUrl(service.bannerUrl, { width: 600 })}
                       alt={service.title}
                       className="w-full h-full object-cover"
-                      onError={onImageError}
+                      fallbackClassName="w-full h-full"
+                      iconSize={24}
                     />
                     <div
                       className="absolute inset-0"

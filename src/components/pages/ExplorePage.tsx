@@ -3,7 +3,7 @@ import { request } from "../../services";
 import { useColors } from "../../utils/theme";
 import { motion } from "framer-motion";
 import { FiSearch, FiMapPin, FiUser } from "react-icons/fi";
-import { onImageError } from "../../utils/helper";
+import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface DiscoverProfile {
   id: number;
@@ -129,12 +129,13 @@ const ExplorePage = () => {
               >
                 <div className="flex items-center gap-3">
                   {p.profileImageUrl ? (
-                    <img
+                    <SafeImage
                       src={p.profileImageUrl}
                       alt={p.fullName}
                       className="rounded-full object-cover"
+                      fallbackClassName="rounded-full"
+                      iconSize={16}
                       style={{ width: 48, height: 48, flexShrink: 0 }}
-                      onError={onImageError}
                     />
                   ) : (
                     <div
