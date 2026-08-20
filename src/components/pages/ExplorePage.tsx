@@ -50,6 +50,16 @@ const ExplorePage = () => {
       <Helmet>
         <title>Explore Portfolios — PortfoliosBuilder</title>
         <meta name="description" content="Discover developers and designers by skill or role on PortfoliosBuilder." />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Explore Portfolios — PortfoliosBuilder" />
+        <meta property="og:description" content="Discover developers and designers by skill or role on PortfoliosBuilder." />
+        <meta property="og:image" content="/og-image.jpg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Explore Portfolios — PortfoliosBuilder" />
+        <meta name="twitter:description" content="Discover developers and designers by skill or role on PortfoliosBuilder." />
+        <meta name="twitter:image" content="/og-image.jpg" />
       </Helmet>
 
       <div

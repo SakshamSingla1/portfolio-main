@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { useColors } from "../../utils/theme";
 
 const NotFound = () => {
@@ -15,6 +16,10 @@ const NotFound = () => {
       className="flex min-h-screen items-center justify-center"
       style={{ background: colors.neutral900 }}
     >
+      <Helmet>
+        <title>Page Not Found — PortfoliosBuilder</title>
+        <meta name="robots" content="noindex, follow" />
+      </Helmet>
       <div className="text-center space-y-3">
         <h1
           className="text-7xl font-bold"

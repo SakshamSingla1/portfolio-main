@@ -147,6 +147,11 @@ const BlogPostPage = () => {
         <meta property="og:type" content="article" />
         {post.publishedAt && <meta property="article:published_time" content={post.publishedAt} />}
         {post.tags.map((t) => <meta key={t.id} property="article:tag" content={t.name} />)}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDesc} />
+        {post.coverImageUrl && <meta name="twitter:image" content={post.coverImageUrl} />}
       </Helmet>
 
       <style>{PROSE_STYLES}</style>

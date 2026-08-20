@@ -281,6 +281,16 @@ const BlogsPage = () => {
       <Helmet>
         <title>Blog{profileMeta?.name ? ` — ${profileMeta.name}` : ""}</title>
         <meta name="description" content={`Articles and thoughts by ${profileMeta?.name ?? "the author"}`} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`Blog${profileMeta?.name ? ` — ${profileMeta.name}` : ""}`} />
+        <meta property="og:description" content={`Articles and thoughts by ${profileMeta?.name ?? "the author"}`} />
+        {profileMeta?.logoUrl && <meta property="og:image" content={profileMeta.logoUrl} />}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Blog${profileMeta?.name ? ` — ${profileMeta.name}` : ""}`} />
+        <meta name="twitter:description" content={`Articles and thoughts by ${profileMeta?.name ?? "the author"}`} />
+        {profileMeta?.logoUrl && <meta name="twitter:image" content={profileMeta.logoUrl} />}
       </Helmet>
 
       <GridBackground />
