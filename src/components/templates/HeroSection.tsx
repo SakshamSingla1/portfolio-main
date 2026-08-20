@@ -7,7 +7,7 @@ import { useRef, useState } from "react";
 import React from "react";
 import { getSocialIcon } from "../../utils/socialIcons";
 import { usePublicResumeService } from "../../services/usePublicResumeService";
-import { getOptimizedImageUrl } from "../../utils/helper";
+import { getOptimizedImageUrl, formatDate } from "../../utils/helper";
 import SafeImage from "../atoms/SafeImage/SafeImage";
 
 interface Props {
@@ -216,6 +216,20 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                       />
                     </span>
                     {profile.availabilityNote || "Available for Work"}
+                  </div>
+                )}
+
+                {/* Not available today, but has a known return date — softer, non-pulsing badge */}
+                {!profile.availableForWork && profile.availableFrom && new Date(profile.availableFrom) > new Date() && (
+                  <div
+                    className="absolute -bottom-3 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md text-xs font-semibold"
+                    style={{
+                      background: `${colors.neutral700}30`,
+                      border: `1px solid ${colors.neutral600}40`,
+                      color: colors.neutral300,
+                    }}
+                  >
+                    Available from {formatDate(profile.availableFrom)}
                   </div>
                 )}
               </div>

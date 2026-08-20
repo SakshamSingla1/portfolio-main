@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { request } from "../../services";
 import { useColors } from "../../utils/theme";
 import { motion } from "framer-motion";
@@ -46,6 +47,11 @@ const ExplorePage = () => {
       className="min-h-screen"
       style={{ background: colors.neutral900, color: colors.neutral100 }}
     >
+      <Helmet>
+        <title>Explore Portfolios — PortfoliosBuilder</title>
+        <meta name="description" content="Discover developers and designers by skill or role on PortfoliosBuilder." />
+      </Helmet>
+
       <div
         className="py-16 px-4 text-center"
         style={{ borderBottom: `1px solid ${colors.neutral800}` }}

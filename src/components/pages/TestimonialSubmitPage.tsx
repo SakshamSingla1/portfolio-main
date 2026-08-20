@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { request } from "../../services";
 import { motion, AnimatePresence } from "framer-motion";
 import { useColors } from "../../utils/theme";
@@ -133,6 +134,11 @@ const TestimonialSubmitPage = () => {
                 padding: "24px 16px",
             }}
         >
+            <Helmet>
+                <title>{linkDetails?.ownerName ? `Leave a testimonial for ${linkDetails.ownerName}` : "Leave a Testimonial"} — PortfoliosBuilder</title>
+                <meta name="description" content="Share a quick testimonial to help build their professional portfolio." />
+                <meta name="robots" content="noindex, nofollow" />
+            </Helmet>
             <style>{`
                 .ts-field:focus {
                     border-color: ${colors.primary400} !important;

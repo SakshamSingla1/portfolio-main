@@ -22,7 +22,10 @@ interface Props {
 const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
   const colors = useColors();
   const { username, publicRepos, followers, totalStars, externalPRs } = githubStats;
-  const visibleRepos = githubRepos.filter(r => r.isVisible).slice(0, 6);
+  const visibleRepos = githubRepos
+    .filter(r => r.isVisible)
+    .sort((a, b) => (Number(b.isPinned) - Number(a.isPinned)) || (a.sortOrder - b.sortOrder))
+    .slice(0, 6);
   const repoGridColsClass =
     visibleRepos.length === 1 ? "sm:grid-cols-1" :
     visibleRepos.length === 2 ? "sm:grid-cols-2" :
@@ -133,17 +136,17 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
             <div className={`mt-8 grid ${repoGridColsClass} gap-4 ${repoGridWidthClass}`}>
               {visibleRepos.map((repo, i) => {
                 const langColor = repo.language ? (LANG_COLORS[repo.language] ?? colors.primary400) : colors.neutral500;
+                const href = repo.url || repo.homepage || null;
+                const Wrapper = href ? motion.a : motion.div;
                 return (
-                  <motion.a
+                  <Wrapper
                     key={repo.id}
-                    href={repo.url ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    {...(href ? { href, target: "_blank", rel: "noopener noreferrer" } : {})}
                     whileHover={{ y: -5 }}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05, type: "spring", stiffness: 300, damping: 22 }}
-                    className="rounded-xl p-4 flex flex-col gap-2 cursor-pointer relative overflow-hidden"
+                    className={`rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden ${href ? "cursor-pointer" : "cursor-default"}`}
                     style={{
                       background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}80)`,
                       border: `1px solid ${colors.neutral700}40`,
@@ -167,7 +170,7 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
                       <span className="font-semibold text-sm truncate" style={{ color: colors.neutral100 }}>
                         {repo.name}
                       </span>
-                      <FiExternalLink size={11} style={{ color: colors.neutral500, flexShrink: 0 }} />
+                      {href && <FiExternalLink size={11} style={{ color: colors.neutral500, flexShrink: 0 }} />}
                     </div>
 
                     {repo.description && (
@@ -190,7 +193,7 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
                         <FiGitBranch size={10} /> {repo.forks}
                       </span>
                     </div>
-                  </motion.a>
+                  </Wrapper>
                 );
               })}
             </div>
