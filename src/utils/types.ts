@@ -228,6 +228,7 @@ export interface SeoMeta {
 export interface ProfileMaster {
     profile : ProfileRequest | null;
     colorTheme : ColorTheme | null;
+    templateKey?: string;
     projects: ProjectResponse[];
     experiences: ExperienceResponse[];
     educations: Education[];

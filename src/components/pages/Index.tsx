@@ -5,32 +5,22 @@ import type { ProfileMaster } from "../../utils/types";
 import { useColors } from "../../utils/theme";
 import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 
-import Navbar from "../molecules/Navbar/Navbar";
-import HeroSection from "../templates/HeroSection";
-import Footer from "../molecules/Footer/Footer";
-import ScrollToTop from "../molecules/ScrollToTop/ScrollToTop";
-import MouseGlow from "../molecules/MouseGlow/MouseGlow";
-import GridBackground from "../molecules/GridBackground/GridBackground";
 import useProfileMasterService from "../../services/useProfileMasterService";
 import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { Helmet } from "react-helmet-async";
 import { Suspense, lazy } from "react";
-import { ErrorBoundary } from "../atoms/ErrorBoundary/ErrorBoundary";
+import type { VisibleSections } from "../portfolio-templates/types";
 
-const AboutSection = lazy(() => import("../templates/AboutSection"));
-const SkillsSection = lazy(() => import("../templates/SkillSection"));
-const ExperienceSection = lazy(() => import("../templates/ExperienceSection"));
-const ProjectsSection = lazy(() => import("../templates/ProjectSection"));
-const AchievementsSection = lazy(() => import("../templates/AchievementSection"));
-const CertificationsSection = lazy(() => import("../templates/CertificationSection"));
-const EducationSection = lazy(() => import("../templates/EducationSection"));
-const TestimonialsSection = lazy(() => import("../templates/TestimonialSection"));
-const ContactSection = lazy(() => import("../templates/ContactSection"));
-const GitHubSection = lazy(() => import("../templates/GitHubSection"));
-const LanguagesSection = lazy(() => import("../templates/LanguagesSection"));
-const ServicesSection = lazy(() => import("../templates/ServicesSection"));
-const PublicationsSection = lazy(() => import("../templates/PublicationsSection"));
+const ClassicTemplate = lazy(() => import("../portfolio-templates/ClassicTemplate"));
+const ModernTemplate = lazy(() => import("../portfolio-templates/ModernTemplate"));
+const MinimalTemplate = lazy(() => import("../portfolio-templates/MinimalTemplate"));
+
+const TEMPLATE_MAP = {
+  CLASSIC: ClassicTemplate,
+  MODERN: ModernTemplate,
+  MINIMAL: MinimalTemplate,
+} as const;
 
 const Index = () => {
   const colors = useColors();
@@ -43,7 +33,7 @@ const Index = () => {
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       // bust stale cache if shape is missing new fields
-      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed) || !("publications" in parsed)) {
+      if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed) || !("publications" in parsed) || !("templateKey" in parsed)) {
         localStorage.removeItem("portfolio_data");
         return null;
       }
@@ -202,11 +192,27 @@ const Index = () => {
   const activeAchievements = data.achievements.filter((a) => a.status === Status.ACTIVE);
   const activeCertifications = data.certifications.filter((c) => c.status === Status.ACTIVE);
 
+  // Computed once so every template applies identical show/hide-by-data-presence
+  // rules by construction, rather than each template re-deriving this itself.
+  const visibleSections: VisibleSections = {
+    about: !!profile.aboutMe,
+    services: (data.services?.length ?? 0) > 0,
+    skills: data.skills.length > 0,
+    experience: data.experiences.length > 0,
+    projects: data.projects.length > 0,
+    achievements: activeAchievements.length > 0,
+    certifications: activeCertifications.length > 0,
+    education: data.educations.length > 0,
+    testimonials: activeTestimonials.length > 0,
+    languages: (data.languages?.length ?? 0) > 0,
+    publications: (data.publications?.length ?? 0) > 0,
+    github: !!data.githubStats,
+  };
+
+  const TemplateComponent = TEMPLATE_MAP[(data.templateKey as keyof typeof TEMPLATE_MAP) ?? "CLASSIC"] ?? ClassicTemplate;
+
   return (
-    <div
-      className="min-h-screen relative overflow-x-hidden"
-      style={{ background: colors.neutral900, color: colors.neutral100 }}
-    >
+    <>
       <Helmet>
         <title>{seoData.title}</title>
         <meta name="description" content={seoData.description} />
@@ -226,7 +232,7 @@ const Index = () => {
         <meta name="twitter:image" content={seoData.image} />
 
         {seoData.siteUrl && <link rel="canonical" href={seoData.siteUrl} />}
-        
+
         {profile.logoUrl && (
           <>
             <link rel="icon" href={profile.logoUrl} />
@@ -249,144 +255,22 @@ const Index = () => {
           </script>
         )}
       </Helmet>
-      <GridBackground />
 
-      <div className="relative z-10">
-        <MouseGlow />
-
-        <ErrorBoundary fallback={null} key="navbar">
-          <Navbar items={navItems || []} profileName={profile.fullName || ""} logoUrl={profile.logoUrl} userName={profile.userName} />
-        </ErrorBoundary>
-
-        <ErrorBoundary fallback={null} key="hero">
-          <div className="mb-15">
-            <HeroSection profile={profile} socialLinks={activeSocialLinks} skills={data.skills} />
-          </div>
-        </ErrorBoundary>
-
-        <main className="px-4">
-          <Suspense fallback={null}>
-            {profile.aboutMe && (
-              <ErrorBoundary fallback={null} key="about">
-                <div className="mb-15">
-                  <AboutSection
-                    profile={profile}
-                    totalExp={{
-                      value: displayExperience,
-                      label: displayExperience === "Fresher" ? "" : "Years of Experience",
-                    }}
-                    totalProjects={{
-                      value: `${totalProjects}+`,
-                      label: "Projects Shipped",
-                    }}
-                  />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.services && data.services.length > 0 && (
-              <ErrorBoundary fallback={null} key="services">
-                <div className="mb-15">
-                  <ServicesSection services={data.services} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.skills.length > 0 && (
-              <ErrorBoundary fallback={null} key="skills">
-                <div className="mb-15">
-                  <SkillsSection skills={data.skills} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.experiences.length > 0 && (
-              <ErrorBoundary fallback={null} key="experience">
-                <div className="mb-15">
-                  <ExperienceSection experiences={data.experiences} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.projects.length > 0 && (
-              <ErrorBoundary fallback={null} key="projects">
-                <div className="mb-15">
-                  <ProjectsSection projects={data.projects} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {activeAchievements.length > 0 && (
-              <ErrorBoundary fallback={null} key="achievements">
-                <div className="mb-15">
-                  <AchievementsSection achievements={activeAchievements} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {activeCertifications.length > 0 && (
-              <ErrorBoundary fallback={null} key="certifications">
-                <div className="mb-15">
-                  <CertificationsSection certifications={activeCertifications} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.educations.length > 0 && (
-              <ErrorBoundary fallback={null} key="education">
-                <div className="mb-15">
-                  <EducationSection educations={data.educations} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {activeTestimonials.length > 0 && (
-              <ErrorBoundary fallback={null} key="testimonials">
-                <div className="mb-15">
-                  <TestimonialsSection testimonials={activeTestimonials} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.languages && data.languages.length > 0 && (
-              <ErrorBoundary fallback={null} key="languages">
-                <div className="mb-15">
-                  <LanguagesSection languages={data.languages} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.publications && data.publications.length > 0 && (
-              <ErrorBoundary fallback={null} key="publications">
-                <div className="mb-15">
-                  <PublicationsSection publications={data.publications} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            {data.githubStats && (
-              <ErrorBoundary fallback={null} key="open-source">
-                <div className="mb-15">
-                  <GitHubSection githubStats={data.githubStats} githubRepos={data.githubRepos ?? []} />
-                </div>
-              </ErrorBoundary>
-            )}
-
-            <ErrorBoundary fallback={null} key="contact">
-              <div className="mb-40">
-                <ContactSection profile={profile} />
-              </div>
-            </ErrorBoundary>
-          </Suspense>
-        </main>
-
-        <ErrorBoundary fallback={null} key="footer">
-          <Footer profile={profile} socialLinks={activeSocialLinks} />
-        </ErrorBoundary>
-
-        <ScrollToTop />
-      </div>
-    </div>
+      <Suspense fallback={null}>
+        <TemplateComponent
+          profile={profile}
+          data={data}
+          navItems={navItems}
+          visibleSections={visibleSections}
+          displayExperience={displayExperience}
+          totalProjects={totalProjects}
+          activeSocialLinks={activeSocialLinks}
+          activeTestimonials={activeTestimonials}
+          activeAchievements={activeAchievements}
+          activeCertifications={activeCertifications}
+        />
+      </Suspense>
+    </>
   );
 };
 
