@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ProfileRequest } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
@@ -11,6 +11,8 @@ import * as Yup from "yup";
 import { useContactUsService } from "../../services/useContactUsService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { toast } from "sonner";
+
+const Toaster = lazy(() => import("../molecules/Sonner/Sonner").then((m) => ({ default: m.Toaster })));
 
 interface ContactSectionProps {
   profile: ProfileRequest;
@@ -87,6 +89,9 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
 
   return (
     <section id="contact" className="section-padding relative overflow-hidden">
+      <Suspense fallback={null}>
+        <Toaster />
+      </Suspense>
       <div className="absolute inset-0 pointer-events-none">
         <div style={{
           position: "absolute", top: "15%", right: "-8%", width: 600, height: 600,

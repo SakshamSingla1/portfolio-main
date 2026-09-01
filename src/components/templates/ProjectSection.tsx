@@ -458,6 +458,7 @@ const ProjectCard = React.memo(({ project, idx, colors }: {
                     <img
                       src={getOptimizedImageUrl(images[previewIndex].url, { width: 1600 })}
                       alt="Project Preview"
+                      loading="lazy"
                       className="max-w-full max-h-full object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] select-none"
                       onError={() => markImageFailed(previewIndex)}
                     />

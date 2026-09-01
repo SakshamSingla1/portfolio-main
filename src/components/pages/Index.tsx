@@ -22,6 +22,12 @@ const TEMPLATE_MAP = {
   MINIMAL: MinimalTemplate,
 } as const;
 
+const PROFILE_CACHE_KEY = "portfolio_data";
+const PROFILE_CACHE_TIMESTAMP_KEY = "portfolio_data_fetched_at";
+// Cached profile data younger than this is considered fresh enough to skip
+// the network round trip entirely; older/missing data still triggers a fetch.
+const PROFILE_CACHE_TTL_MS = 5 * 60 * 1000;
+
 const Index = () => {
   const colors = useColors();
   const profileService = useProfileMasterService();
@@ -29,12 +35,13 @@ const Index = () => {
 
   const [data, setData] = useState<ProfileMaster | null>(() => {
     try {
-      const cached = localStorage.getItem("portfolio_data");
+      const cached = localStorage.getItem(PROFILE_CACHE_KEY);
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       // bust stale cache if shape is missing new fields
       if (!("githubStats" in parsed) || !("languages" in parsed) || !("services" in parsed) || !("githubRepos" in parsed) || !("publications" in parsed) || !("templateKey" in parsed)) {
-        localStorage.removeItem("portfolio_data");
+        localStorage.removeItem(PROFILE_CACHE_KEY);
+        localStorage.removeItem(PROFILE_CACHE_TIMESTAMP_KEY);
         return null;
       }
       return parsed;
@@ -67,14 +74,23 @@ const Index = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        if (!data) setLoading(true);
+        if (data) {
+          // Cached data already rendered (stale-while-revalidate) — only skip
+          // the network call itself when that cache is still within the TTL.
+          const fetchedAt = Number(localStorage.getItem(PROFILE_CACHE_TIMESTAMP_KEY));
+          const isFresh = Number.isFinite(fetchedAt) && fetchedAt > 0 && Date.now() - fetchedAt < PROFILE_CACHE_TTL_MS;
+          if (isFresh) return;
+        } else {
+          setLoading(true);
+        }
 
         const res = await profileService.get();
 
         if (res?.status === HTTP_STATUS.OK) {
           const newData = res.data.data;
           setData(newData);
-          localStorage.setItem("portfolio_data", JSON.stringify(newData));
+          localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(newData));
+          localStorage.setItem(PROFILE_CACHE_TIMESTAMP_KEY, String(Date.now()));
           setDefaultTheme(newData?.colorTheme ?? null);
         }
       } catch (error) {

@@ -1,11 +1,14 @@
+import { lazy, Suspense, useMemo } from "react";
 import { motion } from "framer-motion";
-import GitHubCalendar from "react-github-calendar";
+import { useInView } from "react-intersection-observer";
 import { FiStar, FiUsers, FiGitPullRequest, FiBook, FiGitBranch, FiExternalLink } from "react-icons/fi";
 import { FaGithub } from "react-icons/fa";
 import { useColors } from "../../utils/theme";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import type { GitHubStats, GithubRepoResponse } from "../../utils/types";
+
+const GitHubCalendar = lazy(() => import("react-github-calendar"));
 
 const LANG_COLORS: Record<string, string> = {
   TypeScript: "#3178c6", JavaScript: "#f7df1e", Java: "#b07219",
@@ -22,22 +25,34 @@ interface Props {
 const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
   const colors = useColors();
   const { username, publicRepos, followers, totalStars, externalPRs } = githubStats;
-  const visibleRepos = githubRepos
-    .filter(r => r.isVisible)
-    .sort((a, b) => (Number(b.isPinned) - Number(a.isPinned)) || (a.sortOrder - b.sortOrder))
-    .slice(0, 6);
+  const { ref: calendarRef, inView: calendarInView } = useInView({
+    triggerOnce: true,
+    rootMargin: "200px 0px",
+  });
+
+  const visibleRepos = useMemo(
+    () =>
+      githubRepos
+        .filter(r => r.isVisible)
+        .sort((a, b) => (Number(b.isPinned) - Number(a.isPinned)) || (a.sortOrder - b.sortOrder))
+        .slice(0, 6),
+    [githubRepos]
+  );
   const repoGridColsClass =
     visibleRepos.length === 1 ? "sm:grid-cols-1" :
     visibleRepos.length === 2 ? "sm:grid-cols-2" :
     "sm:grid-cols-2 lg:grid-cols-3";
   const repoGridWidthClass = visibleRepos.length < 3 ? "max-w-4xl mx-auto" : "";
 
-  const stats = [
-    { icon: <FiBook />, label: "Public Repos", value: publicRepos },
-    { icon: <FiStar />, label: "Total Stars", value: totalStars },
-    { icon: <FiGitPullRequest />, label: "PRs Merged", value: externalPRs ?? "—" },
-    { icon: <FiUsers />, label: "Followers", value: followers },
-  ];
+  const stats = useMemo(
+    () => [
+      { icon: <FiBook />, label: "Public Repos", value: publicRepos },
+      { icon: <FiStar />, label: "Total Stars", value: totalStars },
+      { icon: <FiGitPullRequest />, label: "PRs Merged", value: externalPRs ?? "—" },
+      { icon: <FiUsers />, label: "Followers", value: followers },
+    ],
+    [publicRepos, totalStars, externalPRs, followers]
+  );
 
   return (
     <section id="open-source" className="py-8">
@@ -111,23 +126,27 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
                 View Profile <FiExternalLink size={12} />
               </a>
             </div>
-            <div className="overflow-x-auto flex justify-center">
-              <GitHubCalendar
-                username={username}
-                colorScheme="dark"
-                fontSize={12}
-                blockSize={13}
-                blockMargin={4}
-                theme={{
-                  dark: [
-                    `${colors.neutral700}50`,
-                    `${colors.primary500}35`,
-                    `${colors.primary500}60`,
-                    `${colors.primary500}90`,
-                    colors.primary400,
-                  ],
-                }}
-              />
+            <div ref={calendarRef} className="overflow-x-auto flex justify-center" style={{ minHeight: 160 }}>
+              {calendarInView && (
+                <Suspense fallback={null}>
+                  <GitHubCalendar
+                    username={username}
+                    colorScheme="dark"
+                    fontSize={12}
+                    blockSize={13}
+                    blockMargin={4}
+                    theme={{
+                      dark: [
+                        `${colors.neutral700}50`,
+                        `${colors.primary500}35`,
+                        `${colors.primary500}60`,
+                        `${colors.primary500}90`,
+                        colors.primary400,
+                      ],
+                    }}
+                  />
+                </Suspense>
+              )}
             </div>
           </div>
         </FadeInView>

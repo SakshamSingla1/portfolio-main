@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import compression from 'vite-plugin-compression'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    compression({ algorithm: 'brotliCompress', ext: '.br' }),
+  ],
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
@@ -11,7 +16,6 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
           if (id.includes('framer-motion')) return 'vendor-motion';
-          if (id.includes('radix-ui')) return 'vendor-radix';
           if (id.includes('dompurify')) return 'vendor-dompurify';
           if (id.includes('formik') || id.includes('yup')) return 'vendor-forms';
           if (id.includes('axios')) return 'vendor-http';

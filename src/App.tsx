@@ -2,14 +2,13 @@ import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DefaultColorThemeProvider } from "./contexts/DefaultColorThemeContext";
 import Index from "./components/pages/Index";
-import NotFound from "./components/pages/NotFound";
 import { HelmetProvider } from "react-helmet-async";
 
 const BlogsPage = lazy(() => import("./components/pages/BlogsPage"));
 const BlogPostPage = lazy(() => import("./components/pages/BlogPostPage"));
 const ExplorePage = lazy(() => import("./components/pages/ExplorePage"));
 const TestimonialSubmitPage = lazy(() => import("./components/pages/TestimonialSubmitPage"));
-const Sonner = lazy(() => import("./components/molecules/Sonner/Sonner").then((m) => ({ default: m.Toaster })));
+const NotFound = lazy(() => import("./components/pages/NotFound"));
 
 const CLOUDINARY_TRANSFORM_PATTERN = /(res\.cloudinary\.com\/[^/]+\/image\/upload\/)[^/]+\//;
 
@@ -31,9 +30,6 @@ const App = () => {
   return (
     <HelmetProvider>
       <DefaultColorThemeProvider>
-        <Suspense fallback={null}>
-          <Sonner />
-        </Suspense>
         <BrowserRouter>
           <Suspense fallback={null}>
             <Routes>
