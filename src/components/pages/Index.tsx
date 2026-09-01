@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { generateNavItems, getOptimizedImageUrl } from "../../utils/helper";
 import { Status } from "../../utils/types";
 import type { ProfileMaster } from "../../utils/types";
@@ -52,6 +52,15 @@ const Index = () => {
   const [loading, setLoading] = useState(!data);
   const [canonicalUrl, setCanonicalUrl] = useState("");
 
+  // Mirrors `data` without being a reactive dependency of the mount-time
+  // fetch effect below: that effect must run exactly once on mount and
+  // itself calls setData, so depending on `data` directly would re-trigger
+  // it every time the fetch completes. Reading the current value through a
+  // ref (updated on every render) keeps the freshness check accurate while
+  // keeping the effect's own dependency array free of the value it mutates.
+  const dataRef = useRef(data);
+  dataRef.current = data;
+
   const totalExperience = useMemo(() => {
     if (!data?.experiences?.length) return "0";
     const totalMonths = data.experiences.reduce((acc, exp) => {
@@ -74,7 +83,7 @@ const Index = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        if (data) {
+        if (dataRef.current) {
           // Cached data already rendered (stale-while-revalidate) — only skip
           // the network call itself when that cache is still within the TTL.
           const fetchedAt = Number(localStorage.getItem(PROFILE_CACHE_TIMESTAMP_KEY));
@@ -100,7 +109,12 @@ const Index = () => {
       }
     };
     fetchProfile();
-  }, []);
+    // Intentionally mount-once in practice: `dataRef` is read instead of
+    // `data` so this effect's own `setData` call doesn't retrigger it, and
+    // `profileService` / `setDefaultTheme` are referentially stable
+    // (memoized service hook / useState setter), so this still only runs
+    // once on mount despite the non-empty dependency array.
+  }, [profileService, setDefaultTheme]);
 
   useEffect(() => {
     setCanonicalUrl(window.location.href);

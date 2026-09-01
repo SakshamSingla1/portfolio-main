@@ -218,7 +218,7 @@ const BlogsPage = () => {
         }
       }
     });
-  }, []);
+  }, [profileService, username]);
 
   useEffect(() => {
     const t = setTimeout(() => { setDebouncedSearch(search); setPage(0); }, 350);
@@ -235,7 +235,7 @@ const BlogsPage = () => {
         setTags(res.data?.data ?? []);
       }
     });
-  }, [username]);
+  }, [username, blogService]);
 
   const fetchPosts = useCallback(async () => {
     if (!username) return;
@@ -257,7 +257,7 @@ const BlogsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [username, page, debouncedSearch, activeTagId]);
+  }, [username, page, debouncedSearch, activeTagId, blogService]);
 
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 

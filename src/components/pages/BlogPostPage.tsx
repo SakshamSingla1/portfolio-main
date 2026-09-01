@@ -90,7 +90,7 @@ const BlogPostPage = () => {
         }
       }
     });
-  }, []);
+  }, [profileService, username]);
 
   useEffect(() => {
     if (!username || !slug) return;
@@ -103,7 +103,7 @@ const BlogPostPage = () => {
       }
     }).catch(() => setNotFound(true))
       .finally(() => setLoading(false));
-  }, [username, slug]);
+  }, [username, slug, blogService]);
 
   const handleShare = async () => {
     try {

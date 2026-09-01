@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { API_METHOD } from "../utils/constants";
 import { request } from ".";
 import { replaceUrlParams } from "../utils/helper";
@@ -42,17 +43,23 @@ export interface BlogListParams {
   [key: string]: unknown;
 }
 
+// Memoized (empty deps) so the returned object/functions are referentially
+// stable across renders — none of them close over props/state, so it's
+// safe to build once and keep the result usable in dependency arrays
+// without triggering re-runs every render.
 export const usePublicBlogService = () => {
-  const getPosts = (username: string, params?: BlogListParams) =>
-    request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.LIST, { username }), null, null, params ? { params } : null);
+  return useMemo(() => {
+    const getPosts = (username: string, params?: BlogListParams) =>
+      request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.LIST, { username }), null, null, params ? { params } : null);
 
-  const getTags = (username: string) =>
-    request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.TAGS, { username }), null, null);
+    const getTags = (username: string) =>
+      request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.TAGS, { username }), null, null);
 
-  const getPost = (username: string, slug: string) =>
-    request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.DETAIL, { username, slug }), null, null);
+    const getPost = (username: string, slug: string) =>
+      request(API_METHOD.GET, replaceUrlParams(BLOG_URLS.DETAIL, { username, slug }), null, null);
 
-  return { getPosts, getTags, getPost };
+    return { getPosts, getTags, getPost };
+  }, []);
 };
 
 export default usePublicBlogService;
