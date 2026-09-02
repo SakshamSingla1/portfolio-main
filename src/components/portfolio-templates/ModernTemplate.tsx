@@ -51,7 +51,7 @@ const ModernTemplate = ({
         <Suspense fallback={null}>
           {visibleSections.about && (
             <ErrorBoundary fallback={null} key="about">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <AboutSection
                   profile={profile}
                   totalExp={{ value: displayExperience, label: displayExperience === "Fresher" ? "" : "Years of Experience" }}
@@ -63,7 +63,7 @@ const ModernTemplate = ({
 
           {visibleSections.services && (
             <ErrorBoundary fallback={null} key="services">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <ServicesSection services={data.services} />
               </div>
             </ErrorBoundary>
@@ -71,7 +71,7 @@ const ModernTemplate = ({
 
           {visibleSections.skills && (
             <ErrorBoundary fallback={null} key="skills">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <SkillsSection skills={data.skills} />
               </div>
             </ErrorBoundary>
@@ -79,7 +79,7 @@ const ModernTemplate = ({
 
           {visibleSections.experience && (
             <ErrorBoundary fallback={null} key="experience">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <ExperienceSection experiences={data.experiences} />
               </div>
             </ErrorBoundary>
@@ -87,7 +87,7 @@ const ModernTemplate = ({
 
           {visibleSections.projects && (
             <ErrorBoundary fallback={null} key="projects">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <ProjectsSection projects={data.projects} />
               </div>
             </ErrorBoundary>
@@ -95,7 +95,7 @@ const ModernTemplate = ({
 
           {visibleSections.achievements && (
             <ErrorBoundary fallback={null} key="achievements">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <AchievementsSection achievements={activeAchievements} />
               </div>
             </ErrorBoundary>
@@ -103,7 +103,7 @@ const ModernTemplate = ({
 
           {visibleSections.certifications && (
             <ErrorBoundary fallback={null} key="certifications">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <CertificationsSection certifications={activeCertifications} />
               </div>
             </ErrorBoundary>
@@ -111,7 +111,7 @@ const ModernTemplate = ({
 
           {visibleSections.education && (
             <ErrorBoundary fallback={null} key="education">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <EducationSection educations={data.educations} />
               </div>
             </ErrorBoundary>
@@ -119,7 +119,7 @@ const ModernTemplate = ({
 
           {visibleSections.testimonials && (
             <ErrorBoundary fallback={null} key="testimonials">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <TestimonialsSection testimonials={activeTestimonials} />
               </div>
             </ErrorBoundary>
@@ -127,7 +127,7 @@ const ModernTemplate = ({
 
           {visibleSections.languages && (
             <ErrorBoundary fallback={null} key="languages">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <LanguagesSection languages={data.languages} />
               </div>
             </ErrorBoundary>
@@ -135,7 +135,7 @@ const ModernTemplate = ({
 
           {visibleSections.publications && (
             <ErrorBoundary fallback={null} key="publications">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <PublicationsSection publications={data.publications} />
               </div>
             </ErrorBoundary>
@@ -143,14 +143,14 @@ const ModernTemplate = ({
 
           {visibleSections.github && data.githubStats && (
             <ErrorBoundary fallback={null} key="open-source">
-              <div className="px-4 py-20" style={{ background: nextBand() }}>
+              <div className="mb-15" style={{ background: nextBand() }}>
                 <GitHubSection githubStats={data.githubStats} githubRepos={data.githubRepos ?? []} />
               </div>
             </ErrorBoundary>
           )}
 
           <ErrorBoundary fallback={null} key="contact">
-            <div className="px-4 py-24 mb-16" style={{ background: nextBand() }}>
+            <div className="mb-16" style={{ background: nextBand() }}>
               <ContactSection profile={profile} />
             </div>
           </ErrorBoundary>

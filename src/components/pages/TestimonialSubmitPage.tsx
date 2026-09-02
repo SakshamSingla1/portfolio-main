@@ -105,10 +105,10 @@ const TestimonialSubmitPage = () => {
         width: "100%",
         padding: "11px 14px",
         fontSize: "14px",
-        border: `1.5px solid ${colors.neutral200}`,
+        border: `1.5px solid ${colors.neutral700}50`,
         borderRadius: "10px",
-        background: "#ffffff",
-        color: colors.neutral800,
+        background: `${colors.neutral800}70`,
+        color: colors.neutral100,
         boxSizing: "border-box",
         outline: "none",
         fontFamily: "inherit",
@@ -118,7 +118,7 @@ const TestimonialSubmitPage = () => {
     const labelStyle: React.CSSProperties = {
         fontSize: "13px",
         fontWeight: 600,
-        color: colors.neutral700,
+        color: colors.neutral300,
         display: "block",
         marginBottom: "6px",
     };
@@ -127,7 +127,7 @@ const TestimonialSubmitPage = () => {
         <div
             style={{
                 minHeight: "100vh",
-                background: `radial-gradient(ellipse 80% 60% at 50% -10%, ${colors.primary100}, transparent), ${colors.neutral50}`,
+                background: `radial-gradient(ellipse 80% 60% at 50% -10%, ${colors.primary500}14, transparent), ${colors.neutral900}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -142,9 +142,9 @@ const TestimonialSubmitPage = () => {
             <style>{`
                 .ts-field:focus {
                     border-color: ${colors.primary400} !important;
-                    box-shadow: 0 0 0 3px ${colors.primary100};
+                    box-shadow: 0 0 0 3px ${colors.primary500}25;
                 }
-                .ts-field::placeholder { color: ${colors.neutral400}; }
+                .ts-field::placeholder { color: ${colors.neutral500}; }
                 .ts-submit-btn:hover:not(:disabled) { filter: brightness(1.06); }
                 .ts-submit-btn:active:not(:disabled) { transform: scale(0.98); }
                 @keyframes ts-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
@@ -157,9 +157,12 @@ const TestimonialSubmitPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                    background: "#ffffff",
+                    background: `linear-gradient(145deg, ${colors.neutral800}70, ${colors.neutral900}90)`,
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
                     borderRadius: "20px",
-                    boxShadow: `0 20px 60px -12px ${colors.neutral900}1a, 0 4px 16px rgba(0,0,0,0.06)`,
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    boxShadow: `0 1px 0 0 rgba(255,255,255,0.05) inset, 0 30px 60px -20px ${colors.primary500}25, 0 20px 60px -12px rgba(0,0,0,0.6)`,
                     width: "100%",
                     maxWidth: "540px",
                     overflow: "hidden",
@@ -170,26 +173,26 @@ const TestimonialSubmitPage = () => {
                 <div style={{ padding: "34px 32px" }}>
                     {pageState === "loading" && (
                         <div>
-                            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: colors.neutral100, marginBottom: "20px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
-                            <div style={{ width: "60%", height: "20px", borderRadius: "6px", background: colors.neutral100, marginBottom: "10px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
-                            <div style={{ width: "85%", height: "14px", borderRadius: "6px", background: colors.neutral100, marginBottom: "28px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
-                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: colors.neutral100, marginBottom: "14px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
-                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: colors.neutral100, animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: `${colors.neutral700}60`, marginBottom: "20px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "60%", height: "20px", borderRadius: "6px", background: `${colors.neutral700}60`, marginBottom: "10px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "85%", height: "14px", borderRadius: "6px", background: `${colors.neutral700}60`, marginBottom: "28px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: `${colors.neutral700}60`, marginBottom: "14px", animation: "ts-pulse 1.4s ease-in-out infinite" }} />
+                            <div style={{ width: "100%", height: "44px", borderRadius: "10px", background: `${colors.neutral700}60`, animation: "ts-pulse 1.4s ease-in-out infinite" }} />
                         </div>
                     )}
 
                     {pageState === "error" && (
                         <div style={{ textAlign: "center", padding: "20px 0" }}>
                             <div style={{
-                                width: "64px", height: "64px", borderRadius: "50%", background: colors.error50,
+                                width: "64px", height: "64px", borderRadius: "50%", background: `${colors.error500}15`, border: `1px solid ${colors.error500}30`,
                                 display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px",
                             }}>
-                                <FiAlertCircle size={30} color={colors.error500} />
+                                <FiAlertCircle size={30} color={colors.error400} />
                             </div>
-                            <h2 style={{ fontSize: "18px", fontWeight: 700, color: colors.neutral900, marginBottom: "8px" }}>
+                            <h2 style={{ fontSize: "18px", fontWeight: 700, color: colors.neutral100, marginBottom: "8px" }}>
                                 Link Unavailable
                             </h2>
-                            <p style={{ fontSize: "14px", color: colors.neutral500, margin: 0 }}>{errorMessage}</p>
+                            <p style={{ fontSize: "14px", color: colors.neutral400, margin: 0 }}>{errorMessage}</p>
                         </div>
                     )}
 
@@ -206,11 +209,11 @@ const TestimonialSubmitPage = () => {
                                     {getInitials(linkDetails.ownerName)}
                                 </div>
                                 <div>
-                                    <h1 style={{ fontSize: "19px", fontWeight: 800, color: colors.neutral900, margin: 0, letterSpacing: "-0.01em" }}>
+                                    <h1 style={{ fontSize: "19px", fontWeight: 800, color: colors.neutral100, margin: 0, letterSpacing: "-0.01em" }}>
                                         Write a Testimonial
                                     </h1>
-                                    <p style={{ fontSize: "13px", color: colors.neutral500, margin: "2px 0 0" }}>
-                                        for <strong style={{ color: colors.primary600 }}>{linkDetails.ownerName}</strong>
+                                    <p style={{ fontSize: "13px", color: colors.neutral400, margin: "2px 0 0" }}>
+                                        for <strong style={{ color: colors.primary400 }}>{linkDetails.ownerName}</strong>
                                     </p>
                                 </div>
                             </div>
@@ -218,11 +221,11 @@ const TestimonialSubmitPage = () => {
                             {linkDetails.requesterName && (
                                 <div style={{
                                     display: "flex", alignItems: "center", gap: "8px",
-                                    background: colors.primary50, border: `1px solid ${colors.primary100}`,
+                                    background: `${colors.primary500}10`, border: `1px solid ${colors.primary500}25`,
                                     borderRadius: "10px", padding: "10px 14px", marginBottom: "22px",
                                 }}>
-                                    <FiMessageSquare size={14} color={colors.primary600} style={{ flexShrink: 0 }} />
-                                    <p style={{ fontSize: "13px", color: colors.primary700, margin: 0 }}>
+                                    <FiMessageSquare size={14} color={colors.primary400} style={{ flexShrink: 0 }} />
+                                    <p style={{ fontSize: "13px", color: colors.primary300, margin: 0 }}>
                                         Hi <strong>{linkDetails.requesterName}</strong>, thanks for taking the time — your feedback means a lot!
                                     </p>
                                 </div>
@@ -234,7 +237,7 @@ const TestimonialSubmitPage = () => {
                                         <label style={labelStyle}>Your Name *</label>
                                         <input
                                             className="ts-field"
-                                            style={{ ...inputStyle, borderColor: errors.name ? colors.error400 : colors.neutral200 }}
+                                            style={{ ...inputStyle, borderColor: errors.name ? colors.error400 : `${colors.neutral700}50` }}
                                             type="text"
                                             placeholder="Jane Smith"
                                             value={form.name}
@@ -289,7 +292,7 @@ const TestimonialSubmitPage = () => {
                                     </div>
                                     <textarea
                                         className="ts-field"
-                                        style={{ ...inputStyle, minHeight: "130px", resize: "vertical", borderColor: errors.message ? colors.error400 : colors.neutral200 }}
+                                        style={{ ...inputStyle, minHeight: "130px", resize: "vertical", borderColor: errors.message ? colors.error400 : `${colors.neutral700}50` }}
                                         placeholder="Share what it was like working with them…"
                                         value={form.message}
                                         maxLength={MESSAGE_MAX_LENGTH}
@@ -341,18 +344,18 @@ const TestimonialSubmitPage = () => {
                                     animate={{ scale: 1 }}
                                     transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
                                     style={{
-                                        width: "72px", height: "72px", borderRadius: "50%", background: colors.success50,
+                                        width: "72px", height: "72px", borderRadius: "50%", background: `${colors.success500}15`, border: `1px solid ${colors.success500}30`,
                                         display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px",
                                     }}
                                 >
-                                    <FiCheckCircle size={36} color={colors.success600} />
+                                    <FiCheckCircle size={36} color={colors.success400} />
                                 </motion.div>
-                                <h2 style={{ fontSize: "20px", fontWeight: 800, color: colors.neutral900, marginBottom: "10px" }}>
+                                <h2 style={{ fontSize: "20px", fontWeight: 800, color: colors.neutral100, marginBottom: "10px" }}>
                                     Thank you!
                                 </h2>
-                                <p style={{ fontSize: "14px", color: colors.neutral500, margin: 0, lineHeight: 1.6 }}>
+                                <p style={{ fontSize: "14px", color: colors.neutral400, margin: 0, lineHeight: 1.6 }}>
                                     Your testimonial has been submitted.<br />
-                                    <strong style={{ color: colors.neutral700 }}>{linkDetails.ownerName}</strong> will review it shortly.
+                                    <strong style={{ color: colors.neutral200 }}>{linkDetails.ownerName}</strong> will review it shortly.
                                 </p>
                             </motion.div>
                         )}

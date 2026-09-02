@@ -34,10 +34,11 @@ const TestimonialsSection = ({ testimonials }: Props) => {
   const current = testimonials[active];
 
   return (
-    <section id="testimonials" className="section-container pt-0!">
-      <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
+    <section id="testimonials" className="section-padding relative">
+      <div className="max-w-7xl mx-auto">
+        <SectionHeading title="Testimonials" subtitle="Kind words from people I've worked with" />
 
-      <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
         <div
           className="relative overflow-hidden backdrop-blur-xl"
           onMouseEnter={() => setIsPaused(true)}
@@ -278,6 +279,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             </motion.button>
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

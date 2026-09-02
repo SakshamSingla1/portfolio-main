@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { request } from "../../services";
-import { useColors } from "../../utils/theme";
+import { useColors, gradients } from "../../utils/theme";
 import { motion } from "framer-motion";
 import { FiSearch, FiMapPin, FiUser } from "react-icons/fi";
 import SafeImage from "../atoms/SafeImage/SafeImage";
@@ -18,6 +18,7 @@ interface DiscoverProfile {
 
 const ExplorePage = () => {
   const colors = useColors();
+  const g = gradients(colors);
   const [profiles, setProfiles] = useState<DiscoverProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -113,7 +114,13 @@ const ExplorePage = () => {
           <button
             type="submit"
             className="rounded-xl px-6 py-2.5 font-semibold text-sm"
-            style={{ background: colors.primary500, color: "#fff", border: "none", cursor: "pointer" }}
+            style={{
+              background: g.ctaGradient,
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+              boxShadow: `0 0 24px ${colors.primary500}22`,
+            }}
           >
             Search
           </button>

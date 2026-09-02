@@ -55,7 +55,7 @@ const GitHubSection = ({ githubStats, githubRepos = [] }: Props) => {
   );
 
   return (
-    <section id="open-source" className="py-8">
+    <section id="open-source" className="section-padding relative">
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           title="GitHub"
