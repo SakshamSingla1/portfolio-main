@@ -205,8 +205,8 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                       }}
                     >
                       <motion.span
-                        animate={{ scale: [1, 2.2, 1], opacity: [0.8, 0, 0.8] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        animate={isInView ? { scale: [1, 2.2, 1], opacity: [0.8, 0, 0.8] } : { scale: 1, opacity: 0.8 }}
+                        transition={isInView ? { duration: 2, repeat: Infinity } : { duration: 0.2 }}
                         style={{
                           position: "absolute",
                           inset: 0,
@@ -284,6 +284,7 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 <TypewriterText
                   words={[profile.title]}
                   colors={colors}
+                  isInView={isInView}
                 />
               </motion.div>
             )}
@@ -434,8 +435,8 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
                 height: "50%",
                 background: `linear-gradient(to bottom, transparent, ${colors.primary400})`,
               }}
-              animate={{ y: ["0%", "200%"] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              animate={isInView ? { y: ["0%", "200%"] } : { y: "0%" }}
+              transition={isInView ? { duration: 1.5, repeat: Infinity, ease: "linear" } : { duration: 0.2 }}
             />
           </div>
         </motion.button>

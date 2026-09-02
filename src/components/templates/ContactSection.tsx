@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { lazy, Suspense, useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import type { ProfileRequest } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -23,6 +23,8 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
   const g = gradients(colors);
   const contactService = useContactUsService();
   const [sent, setSent] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { amount: 0.1 });
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().min(2).max(50).required("Name is required"),
@@ -88,7 +90,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
   ];
 
   return (
-    <section id="contact" className="section-padding relative overflow-hidden">
+    <section id="contact" className="section-padding relative overflow-hidden" ref={sectionRef}>
       <Suspense fallback={null}>
         <Toaster />
       </Suspense>
@@ -243,8 +245,8 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                 <br />
                 <motion.span
                   style={{ display: "inline-block", width: 8, height: 14, verticalAlign: "middle", background: colors.primary400, marginTop: 4 }}
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
+                  animate={isInView ? { opacity: [1, 0, 1] } : { opacity: 1 }}
+                  transition={isInView ? { duration: 1, repeat: Infinity } : { duration: 0.2 }}
                 />
               </div>
             </div>
@@ -425,7 +427,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     transition: "background 0.4s ease, box-shadow 0.3s ease",
                   }}
                 >
-                  {!formik.isSubmitting && !sent && (
+                  {!formik.isSubmitting && !sent && isInView && (
                     <motion.div
                       style={{
                         position: "absolute",

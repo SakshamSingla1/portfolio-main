@@ -1,11 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import type { ExperienceResponse } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
 import { formatDate, toTitleCase, getOptimizedImageUrl } from "../../utils/helper";
 import { useColors } from "../../utils/theme";
 import { FiBriefcase, FiMapPin } from "react-icons/fi";
-import React from "react";
+import React, { useRef } from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import SafeImage from "../atoms/SafeImage/SafeImage";
@@ -31,9 +31,10 @@ interface ExperienceCardProps {
   idx: number;
   colors: Colors;
   isMobile: boolean;
+  sectionInView: boolean;
 }
 
-const ExperienceCard = React.memo(({ exp, idx, colors, isMobile }: ExperienceCardProps) => {
+const ExperienceCard = React.memo(({ exp, idx, colors, isMobile, sectionInView }: ExperienceCardProps) => {
   const [isHovered, setIsHovered] = React.useState(false);
   const chipColor = getEmploymentChipColor(exp.employmentStatus, colors);
 
@@ -49,15 +50,15 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile }: ExperienceCar
           <div className="relative w-10 h-10 shrink-0">
             <motion.div
               className="absolute inset-0 rounded-lg pointer-events-none"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-              transition={{ repeat: Infinity, duration: 2.5, delay: idx * 0.4 }}
+              animate={sectionInView ? { scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] } : { scale: 1, opacity: 0.3 }}
+              transition={sectionInView ? { repeat: Infinity, duration: 2.5, delay: idx * 0.4 } : { duration: 0.2 }}
               style={{ border: `2px solid ${colors.primary500}60` }}
             />
             {isHovered && (
               <motion.div
                 className="absolute inset-0 rounded-lg pointer-events-none"
-                animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
+                animate={sectionInView ? { scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] } : { scale: 1, opacity: 0.5 }}
+                transition={sectionInView ? { repeat: Infinity, duration: 1.5 } : { duration: 0.2 }}
                 style={{ border: `2px solid ${colors.primary400}` }}
               />
             )}
@@ -236,9 +237,11 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile }: ExperienceCar
 const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
   const colors = useColors();
   const isMobile = useIsMobile();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { amount: 0.1 });
 
   return (
-    <section id="experience" className="section-padding relative">
+    <section id="experience" className="section-padding relative" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           title="Experience"
@@ -267,8 +270,8 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
               {/* Comet: bright head + long fading tail */}
               <motion.div
                 className="absolute left-5 md:left-7 w-[2px] pointer-events-none"
-                animate={{ top: ["-15%", "110%"] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 1.75 }}
+                animate={sectionInView ? { top: ["-15%", "110%"] } : { top: "-15%" }}
+                transition={sectionInView ? { duration: 3.5, repeat: Infinity, ease: "linear", delay: 1.75 } : { duration: 0.2 }}
               >
                 {/* tail */}
                 <div
@@ -301,6 +304,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => {
                 idx={idx}
                 colors={colors}
                 isMobile={isMobile}
+                sectionInView={sectionInView}
               />
             ))}
           </div>

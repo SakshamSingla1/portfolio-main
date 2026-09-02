@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import type { Education } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
 import FadeInView from "../molecules/FadeInView/FadeInView";
@@ -6,7 +6,7 @@ import { FiMapPin, FiCheck } from "react-icons/fi";
 import { getEducationLabel, normalizePercentage } from "../../utils/helper";
 import { HiOutlineAcademicCap } from "react-icons/hi";
 import { useColors } from "../../utils/theme";
-import React from "react";
+import React, { useRef } from "react";
 import ReadMoreText from "../atoms/ReadMoreText/ReadMoreText";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
@@ -17,6 +17,8 @@ interface EducationSectionProps {
 const EducationSection = ({ educations }: EducationSectionProps) => {
   const colors = useColors();
   const isMobile = useIsMobile();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { amount: 0.1 });
 
   const [hoveredId, setHoveredId] = React.useState<string | null>(null);
 
@@ -29,7 +31,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
   }, [educations]);
 
   return (
-    <section id="education" className="section-padding relative">
+    <section id="education" className="section-padding relative" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <SectionHeading title="Education" subtitle="Academic background and qualifications" />
 
@@ -54,8 +56,8 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
               {/* Comet: bright head + long fading tail */}
               <motion.div
                 className="absolute left-4 md:left-6 w-[2px] pointer-events-none"
-                animate={{ top: ["-15%", "110%"] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+                animate={sectionInView ? { top: ["-15%", "110%"] } : { top: "-15%" }}
+                transition={sectionInView ? { duration: 3.5, repeat: Infinity, ease: "linear" } : { duration: 0.2 }}
               >
                 {/* tail */}
                 <div
@@ -97,15 +99,15 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                       <div className="relative w-10 h-10 shrink-0">
                         <motion.div
                           className="absolute inset-0 rounded-full pointer-events-none"
-                          animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-                          transition={{ repeat: Infinity, duration: 2.5, delay: idx * 0.4 }}
+                          animate={sectionInView ? { scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] } : { scale: 1, opacity: 0.3 }}
+                          transition={sectionInView ? { repeat: Infinity, duration: 2.5, delay: idx * 0.4 } : { duration: 0.2 }}
                           style={{ border: `2px solid ${colors.accent500}60` }}
                         />
                         {isHovered && (
                           <motion.div
                             className="absolute inset-0 rounded-full pointer-events-none"
-                            animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
+                            animate={sectionInView ? { scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] } : { scale: 1, opacity: 0.5 }}
+                            transition={sectionInView ? { repeat: Infinity, duration: 1.5 } : { duration: 0.2 }}
                             style={{ border: `2px solid ${colors.accent400}` }}
                           />
                         )}

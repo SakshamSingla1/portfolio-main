@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import { useColors } from "../../../utils/theme";
 import type { SkillResponse } from "../../../utils/types";
 import { getOptimizedImageUrl } from "../../../utils/helper";
@@ -10,11 +11,12 @@ interface SkillsAutoScrollBarProps {
 
 export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
   const colors = useColors();
+  const { ref, inView } = useInView({ threshold: 0.1 });
 
   const repeatedSkills = [...skills, ...skills, ...skills, ...skills];
 
   return (
-    <div className="relative w-full overflow-hidden py-6 mb-8">
+    <div ref={ref} className="relative w-full overflow-hidden py-6 mb-8">
       <div
         className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32"
         style={{
@@ -31,14 +33,12 @@ export const SkillsAutoScrollBar = ({ skills }: SkillsAutoScrollBarProps) => {
 
       <motion.div
         className="flex w-max gap-4 px-4"
-        animate={{
-          x: ["0%", "-50%"],
-        }}
-        transition={{
-          duration: 40,
-          ease: "linear",
-          repeat: Infinity,
-        }}
+        animate={inView ? { x: ["0%", "-50%"] } : { x: "0%" }}
+        transition={
+          inView
+            ? { duration: 40, ease: "linear", repeat: Infinity }
+            : { duration: 0.3 }
+        }
       >
         {repeatedSkills.map((skill, index) => (
           <motion.div

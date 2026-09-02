@@ -8,9 +8,12 @@ interface Props {
   deletingSpeed?: number;
   pauseDuration?: number;
   colors: Colors;
+  /** Whether the parent section is currently in the viewport. Defaults to
+   * true so callers that don't track visibility keep the previous behavior. */
+  isInView?: boolean;
 }
 
-export const TypewriterText = ({ words, typingSpeed = 80, deletingSpeed = 40, pauseDuration = 2000, colors }: Props) => {
+export const TypewriterText = ({ words, typingSpeed = 80, deletingSpeed = 40, pauseDuration = 2000, colors, isInView = true }: Props) => {
   const [text, setText] = useState("");
   const [wordIdx, setWordIdx] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -41,8 +44,8 @@ export const TypewriterText = ({ words, typingSpeed = 80, deletingSpeed = 40, pa
     <span className="font-mono">
       {text}
       <motion.span
-        animate={{ opacity: [1, 0] }}
-        transition={{ repeat: Infinity, duration: 0.6 }}
+        animate={isInView ? { opacity: [1, 0] } : { opacity: 1 }}
+        transition={isInView ? { repeat: Infinity, duration: 0.6 } : { duration: 0.2 }}
         className="inline-block w-0.5 h-[1em] ml-0.5 align-middle"
         style={{ backgroundColor: colors.primary500 }}
       />
