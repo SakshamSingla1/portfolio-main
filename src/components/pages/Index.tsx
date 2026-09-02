@@ -58,6 +58,24 @@ const Index = () => {
   const { setDefaultTheme } = useDefaultColorTheme();
 
   const [data, setData] = useState<ProfileMaster | null>(() => {
+    // Server-injected via edge middleware (see /middleware.ts) so the page's
+    // own data doesn't require a visible client-side fetch at all — the
+    // request that filled this in already happened server-to-server before
+    // the HTML reached the browser. Written directly to the same cache the
+    // fetch path uses, so the effect below sees it as already-fresh and
+    // skips the network call too, not just this initial render.
+    const injected = window.__INITIAL_PROFILE_DATA__;
+    if (injected && typeof injected === "object" && "profile" in injected) {
+      try {
+        localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(injected));
+        localStorage.setItem(PROFILE_CACHE_TIMESTAMP_KEY, String(Date.now()));
+      } catch {
+        // localStorage unavailable (private mode, quota, etc) — injected data
+        // still renders fine this load, just won't warm the cache for later.
+      }
+      return injected;
+    }
+
     try {
       const cached = localStorage.getItem(PROFILE_CACHE_KEY);
       if (!cached) return null;
@@ -112,7 +130,14 @@ const Index = () => {
           // the network call itself when that cache is still within the TTL.
           const fetchedAt = Number(localStorage.getItem(PROFILE_CACHE_TIMESTAMP_KEY));
           const isFresh = Number.isFinite(fetchedAt) && fetchedAt > 0 && Date.now() - fetchedAt < PROFILE_CACHE_TTL_MS;
-          if (isFresh) return;
+          if (isFresh) {
+            // Applies on the server-injected-data path too (see the useState
+            // initializer above): that path only sets `data`, since calling
+            // this context setter during another component's render phase
+            // isn't safe — doing it here, from an effect, is.
+            setDefaultTheme(dataRef.current.colorTheme ?? null);
+            return;
+          }
         } else {
           setLoading(true);
         }

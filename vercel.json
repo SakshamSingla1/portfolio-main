@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/api/v1/public/:path*", "destination": "https://api.portfoliosbuilder.com/api/v1/public/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
