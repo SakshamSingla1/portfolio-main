@@ -10,7 +10,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useContactUsService } from "../../services/useContactUsService";
 import { HTTP_STATUS } from "../../utils/constants";
-import { toast } from "sonner";
 
 const Toaster = lazy(() => import("../molecules/Sonner/Sonner").then((m) => ({ default: m.Toaster })));
 
@@ -44,6 +43,10 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
     initialValues: { name: "", email: "", phone: "", message: "" },
     validationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      // Dynamically imported (not a top-level `import ... from "sonner"`) so the
+      // whole sonner chunk stays out of the initial page load's modulepreload
+      // graph — only fetched when someone actually submits the form.
+      const { toast } = await import("sonner");
       try {
         const res = await contactService.create({ ...values, phone: values.phone || "", profileId: profile.id });
         if (res?.status === HTTP_STATUS.OK || res?.status === HTTP_STATUS.CREATED) {

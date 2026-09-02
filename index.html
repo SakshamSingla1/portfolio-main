@@ -19,6 +19,12 @@
 
   <link rel="preconnect" href="https://api.portfoliosbuilder.com">
   <link rel="preconnect" href="https://res.cloudinary.com">
+
+  <!-- Preload the two fonts used for headings/body text so the browser fetches
+       them immediately in parallel with the CSS, instead of only discovering
+       them once the CSS finishes downloading and parsing (@font-face). -->
+  <link rel="preload" href="/fonts/space-grotesk-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/inter-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 
 <body>
