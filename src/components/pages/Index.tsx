@@ -15,11 +15,19 @@ import type { VisibleSections } from "../portfolio-templates/types";
 const ClassicTemplate = lazy(() => import("../portfolio-templates/ClassicTemplate"));
 const ModernTemplate = lazy(() => import("../portfolio-templates/ModernTemplate"));
 const MinimalTemplate = lazy(() => import("../portfolio-templates/MinimalTemplate"));
+const BoldTemplate = lazy(() => import("../portfolio-templates/BoldTemplate"));
+const TerminalTemplate = lazy(() => import("../portfolio-templates/TerminalTemplate"));
+const ElegantTemplate = lazy(() => import("../portfolio-templates/ElegantTemplate"));
+const CreativeTemplate = lazy(() => import("../portfolio-templates/CreativeTemplate"));
 
 const TEMPLATE_MAP = {
   CLASSIC: ClassicTemplate,
   MODERN: ModernTemplate,
   MINIMAL: MinimalTemplate,
+  BOLD: BoldTemplate,
+  TERMINAL: TerminalTemplate,
+  ELEGANT: ElegantTemplate,
+  CREATIVE: CreativeTemplate,
 } as const;
 
 const PROFILE_CACHE_KEY = "portfolio_data";
