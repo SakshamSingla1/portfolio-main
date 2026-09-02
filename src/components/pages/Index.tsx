@@ -30,6 +30,22 @@ const TEMPLATE_MAP = {
   CREATIVE: CreativeTemplate,
 } as const;
 
+// Must match each template's own hero's getOptimizedImageUrl width exactly —
+// otherwise the preload below fetches a Cloudinary variant the page never
+// actually uses (wasted bytes) while the real one it renders gets no
+// preload/priority benefit at all, since the URLs (and cache keys) differ.
+// `null` means that hero never renders the profile image at all (Minimal),
+// so preloading it would be pure waste.
+const HERO_IMAGE_WIDTH: Record<keyof typeof TEMPLATE_MAP, number | null> = {
+  CLASSIC: 800,
+  MODERN: 400,
+  MINIMAL: null,
+  BOLD: 800,
+  TERMINAL: 200,
+  ELEGANT: 300,
+  CREATIVE: 500,
+};
+
 const PROFILE_CACHE_KEY = "portfolio_data";
 const PROFILE_CACHE_TIMESTAMP_KEY = "portfolio_data_fetched_at";
 // Cached profile data younger than this is considered fresh enough to skip
@@ -247,7 +263,9 @@ const Index = () => {
     github: !!data.githubStats,
   };
 
-  const TemplateComponent = TEMPLATE_MAP[(data.templateKey as keyof typeof TEMPLATE_MAP) ?? "CLASSIC"] ?? ClassicTemplate;
+  const activeTemplateKey = (data.templateKey as keyof typeof TEMPLATE_MAP) ?? "CLASSIC";
+  const TemplateComponent = TEMPLATE_MAP[activeTemplateKey] ?? ClassicTemplate;
+  const heroImageWidth = HERO_IMAGE_WIDTH[activeTemplateKey] ?? HERO_IMAGE_WIDTH.CLASSIC;
 
   return (
     <>
@@ -278,11 +296,11 @@ const Index = () => {
           </>
         )}
 
-        {data?.profile?.profileImageUrl && (
+        {data?.profile?.profileImageUrl && heroImageWidth !== null && (
           <link
             rel="preload"
             as="image"
-            href={getOptimizedImageUrl(data.profile.profileImageUrl, { width: 800 })}
+            href={getOptimizedImageUrl(data.profile.profileImageUrl, { width: heroImageWidth })}
             fetchPriority="high"
           />
         )}
