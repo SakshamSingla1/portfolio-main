@@ -124,13 +124,14 @@ const BoldHero = ({ profile, socialLinks }: Props) => {
             Portfolio
           </motion.p>
 
-          <motion.h1
-            variants={stagger.item}
+          {/* Plain (non-animated) so the LCP text paints immediately instead of
+              waiting on JS + the stagger entrance animation to reach opacity:1. */}
+          <h1
             className="font-display font-black uppercase text-7xl sm:text-8xl xl:text-9xl leading-[0.85] tracking-tight mb-7"
             style={{ color: colors.neutral100 }}
           >
             {profile.fullName}
-          </motion.h1>
+          </h1>
 
           {profile.title && (
             <motion.div variants={stagger.item} className="mb-7">

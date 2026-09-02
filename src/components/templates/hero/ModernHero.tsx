@@ -79,13 +79,14 @@ const ModernHero = ({ profile, socialLinks, skills = [] }: Props) => {
           Hello, I'm
         </motion.p>
 
-        <motion.h1
-          variants={stagger.item}
+        {/* Plain (non-animated) so the LCP text paints immediately instead of
+            waiting on JS + the stagger entrance animation to reach opacity:1. */}
+        <h1
           className="font-display text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-black mb-4 leading-[1.02]"
           style={{ color: "#fff" }}
         >
           {profile.fullName}
-        </motion.h1>
+        </h1>
 
         {profile.title && (
           <motion.div variants={stagger.item} className="text-lg md:text-2xl mb-5 h-9" style={{ color: "rgba(255,255,255,0.85)" }}>

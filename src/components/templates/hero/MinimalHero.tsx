@@ -38,13 +38,14 @@ const MinimalHero = ({ profile, socialLinks }: Props) => {
           {profile.title || "Portfolio"}
         </motion.p>
 
-        <motion.h1
-          variants={item}
+        {/* Plain (non-animated) so the LCP text paints immediately instead of
+            waiting on JS + the stagger entrance animation to reach opacity:1. */}
+        <h1
           className="font-display text-5xl sm:text-6xl md:text-7xl xl:text-[104px] font-light mb-6 leading-[1.05] tracking-tight"
           style={{ color: colors.neutral100 }}
         >
           {profile.fullName}
-        </motion.h1>
+        </h1>
 
         {profile.location && (
           <motion.p variants={item} className="text-sm mb-10" style={{ color: colors.neutral500 }}>

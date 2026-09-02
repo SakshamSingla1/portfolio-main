@@ -49,13 +49,14 @@ const ElegantHero = ({ profile, socialLinks }: Props) => {
           </motion.div>
         )}
 
-        <motion.h1
-          variants={item}
+        {/* Plain (non-animated) so the LCP text paints immediately instead of
+            waiting on JS + the stagger entrance animation to reach opacity:1. */}
+        <h1
           className="font-display text-4xl sm:text-5xl font-medium mb-6 leading-[1.15]"
           style={{ color: colors.neutral100 }}
         >
           {profile.fullName}
-        </motion.h1>
+        </h1>
 
         <motion.div variants={item} className="mb-6" style={{ width: 56, height: 2, background: colors.accent400 }} />
 

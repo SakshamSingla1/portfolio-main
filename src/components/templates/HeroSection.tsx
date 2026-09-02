@@ -250,8 +250,9 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               Hello, I'm
             </motion.p>
 
-            <motion.h1
-              variants={stagger.item}
+            {/* Plain (non-animated) so the LCP text paints immediately instead of
+                waiting on JS + the stagger entrance animation to reach opacity:1. */}
+            <h1
               className="font-display
                 text-4xl
                 sm:text-5xl
@@ -273,7 +274,7 @@ const HeroSection = ({ profile, socialLinks, skills = [] }: Props) => {
               >
                 {profile.fullName}
               </span>
-            </motion.h1>
+            </h1>
 
             {profile.title && (
               <motion.div

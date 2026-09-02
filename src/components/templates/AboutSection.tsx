@@ -50,11 +50,17 @@ const AboutSection = ({ profile, totalExp, totalProjects }: AboutSectionProps) =
                 style={{ border: `1px solid ${colors.neutral700}30`, background: colors.neutral900 }}
               >
                 <SafeImage
-                  src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 1000 })}
+                  src={getOptimizedImageUrl(profile.aboutMeImageUrl, { width: 700 })}
                   alt="About me"
                   className="w-full h-auto block group-hover:scale-105 transition-transform duration-700"
                   fallbackClassName="w-full"
                   iconSize={32}
+                  // Explicit width/height (a typical portrait 3:4 ratio) so the browser
+                  // reserves the right aspect ratio before the image loads, instead of
+                  // shifting layout once it arrives — this photo's actual crop varies
+                  // per profile, but a fixed ratio hint is far better than none.
+                  width={700}
+                  height={933}
                   style={{ minHeight: 320 }}
                   loading="lazy"
                 />

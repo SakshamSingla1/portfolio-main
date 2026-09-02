@@ -72,7 +72,9 @@ const TerminalHero = ({ profile, socialLinks, skills = [] }: Props) => {
             animate={isInView ? "visible" : "hidden"}
             className="px-5 py-6 sm:px-8 sm:py-8 font-mono text-sm sm:text-base"
           >
-            <motion.div variants={stagger.item} className="flex items-start gap-3 mb-5">
+            {/* Plain (non-animated) so the LCP text/avatar paints immediately
+                instead of waiting on JS + the stagger entrance animation. */}
+            <div className="flex items-start gap-3 mb-5">
               {profile.profileImageUrl ? (
                 <div
                   className="shrink-0 overflow-hidden"
@@ -105,7 +107,7 @@ const TerminalHero = ({ profile, socialLinks, skills = [] }: Props) => {
                   {profile.fullName}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {profile.title && (
               <motion.div variants={stagger.item} className="mb-5">

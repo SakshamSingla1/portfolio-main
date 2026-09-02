@@ -81,8 +81,9 @@ const CreativeHero = ({ profile, socialLinks, skills = [] }: Props) => {
             </motion.div>
           )}
 
-          <motion.h1
-            variants={stagger.item}
+          {/* Plain (non-animated) so the LCP text paints immediately instead of
+              waiting on JS + the stagger entrance animation to reach opacity:1. */}
+          <h1
             className="font-display text-5xl sm:text-6xl md:text-7xl xl:text-[5.5rem] font-extrabold mb-5 leading-[1.05]"
             style={{ color: colors.neutral100 }}
           >
@@ -90,7 +91,7 @@ const CreativeHero = ({ profile, socialLinks, skills = [] }: Props) => {
             <span style={{ background: g.textGradient, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
               {lastWord}
             </span>
-          </motion.h1>
+          </h1>
 
           {profile.location && (
             <motion.div variants={stagger.item} className="flex items-center justify-center lg:justify-start gap-2 mb-8 text-sm" style={{ color: colors.neutral400 }}>
