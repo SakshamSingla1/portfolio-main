@@ -273,4 +273,8 @@ export const Status = {
 export interface NavItem {
     label: string;
     section: string;
+    // When present, clicking this item navigates to this route instead of
+    // scrolling to an in-page `section` anchor (e.g. the Blog nav item,
+    // which points at the separate /blogs route).
+    href?: string;
 }

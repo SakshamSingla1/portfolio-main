@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import type { ProfileRequest } from "../../utils/types";
 import SectionHeading from "../molecules/SectionHeading/SectionHeading";
@@ -24,6 +24,17 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
   const [sent, setSent] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { amount: 0.1 });
+  // Auto-revert is a long fallback safety net, not the primary way this
+  // clears — the confirmation is meant to stay visible (surviving a visitor
+  // glancing away for a few seconds) until they actually start composing a
+  // new message, at which point handleFieldChange below clears it early.
+  const sentTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (sentTimeoutRef.current) clearTimeout(sentTimeoutRef.current);
+    };
+  }, []);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().min(2).max(50).required("Name is required"),
@@ -52,8 +63,11 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
         if (res?.status === HTTP_STATUS.OK || res?.status === HTTP_STATUS.CREATED) {
           toast.success("Message sent!");
           setSent(true);
-          setTimeout(() => setSent(false), 4000);
           resetForm();
+          if (sentTimeoutRef.current) clearTimeout(sentTimeoutRef.current);
+          // Long fallback only — a visitor who starts typing again (see
+          // handleFieldChange) clears this well before it fires.
+          sentTimeoutRef.current = setTimeout(() => setSent(false), 15000);
         } else {
           toast.error(res?.data?.message || "Failed to send. Please try again.");
         }
@@ -67,6 +81,18 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
 
   const hasErr = (f: "name" | "email" | "phone" | "message") =>
     !!(formik.touched[f] && formik.errors[f]);
+
+  // Wraps formik's own change handler so that typing again after a
+  // successful send clears the "Message Sent!" state immediately — the
+  // visitor is visibly composing something new, so the stale confirmation
+  // (and its long fallback timer) no longer applies.
+  const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    formik.handleChange(e);
+    if (sent) {
+      setSent(false);
+      if (sentTimeoutRef.current) clearTimeout(sentTimeoutRef.current);
+    }
+  };
 
   const inputStyle = (f: "name" | "email" | "phone" | "message"): React.CSSProperties => ({
     background: `${colors.neutral800}60`,
@@ -293,7 +319,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                       type="text"
                       name="name"
                       value={formik.values.name}
-                      onChange={formik.handleChange}
+                      onChange={handleFieldChange}
                       placeholder="Your full name"
                       className="placeholder:opacity-30 transition-all duration-200"
                       style={inputStyle("name")}
@@ -321,7 +347,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                       type="email"
                       name="email"
                       value={formik.values.email}
-                      onChange={formik.handleChange}
+                      onChange={handleFieldChange}
                       placeholder="you@example.com"
                       className="placeholder:opacity-30 transition-all duration-200"
                       style={inputStyle("email")}
@@ -349,7 +375,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     type="tel"
                     name="phone"
                     value={formik.values.phone}
-                    onChange={formik.handleChange}
+                    onChange={handleFieldChange}
                     placeholder="+1 (555) 000-0000"
                     className="placeholder:opacity-30 transition-all duration-200"
                     style={inputStyle("phone")}
@@ -377,7 +403,7 @@ const ContactSection = ({ profile }: ContactSectionProps) => {
                     name="message"
                     rows={5}
                     value={formik.values.message}
-                    onChange={formik.handleChange}
+                    onChange={handleFieldChange}
                     placeholder="Tell me about your project, idea, or opportunity…"
                     className="placeholder:opacity-30 resize-none transition-all duration-200"
                     style={inputStyle("message")}

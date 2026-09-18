@@ -302,7 +302,7 @@ const BlogsPage = () => {
         >
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/")}
               className="flex items-center gap-2 text-sm font-medium transition-colors duration-200"
               style={{ color: colors.neutral400 }}
               onMouseEnter={(e) => (e.currentTarget.style.color = colors.primary400)}

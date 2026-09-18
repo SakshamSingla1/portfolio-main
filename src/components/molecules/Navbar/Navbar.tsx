@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X, ArrowUpRight, Download } from "lucide-react";
 import { useColors, gradients } from "../../../utils/theme";
@@ -18,6 +19,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
   const colors = useColors();
   const g = gradients(colors);
   const publicResumeService = usePublicResumeService();
+  const navigate = useNavigate();
 
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
@@ -56,6 +58,17 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
     if (!el) return;
     const y = el.getBoundingClientRect().top + window.scrollY - 100;
     window.scrollTo({ top: y, behavior: "smooth" });
+  };
+
+  // Most nav items scroll to an in-page section, but a few (e.g. Blog) point
+  // at a separate route entirely — those carry an `href` and get a real
+  // navigation instead of an anchor scroll.
+  const goToItem = (item: NavItem) => {
+    if (item.href) {
+      navigate(item.href);
+      return;
+    }
+    scrollTo(item.section);
   };
 
   const handleResume = () => {
@@ -177,7 +190,7 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
             {items.map((item) => (
               <button
                 key={item.section}
-                onClick={() => scrollTo(item.section)}
+                onClick={() => goToItem(item)}
                 onMouseEnter={() => setHoveredItem(item.section)}
                 onMouseLeave={() => setHoveredItem(null)}
                 className="relative shrink-0 text-sm lg:text-base px-4 py-2 lg:px-5 lg:py-2.5 rounded-full transition-colors duration-200"
@@ -277,7 +290,11 @@ const Navbar = ({ items, profileName = "Portfolio", logoUrl, userName }: Props) 
                   transition={{ delay: i * 0.04, duration: 0.25 }}
                   onClick={() => {
                     setMobileOpen(false);
-                    setTimeout(() => scrollTo(item.section), 200);
+                    if (item.href) {
+                      navigate(item.href);
+                    } else {
+                      setTimeout(() => scrollTo(item.section), 200);
+                    }
                   }}
                   className="flex items-center justify-between w-full py-3 px-4 text-sm rounded-xl transition-all duration-200"
                   style={

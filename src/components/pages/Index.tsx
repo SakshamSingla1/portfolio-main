@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { generateNavItems, getOptimizedImageUrl } from "../../utils/helper";
 import { Status } from "../../utils/types";
 import type { ProfileMaster } from "../../utils/types";
@@ -6,6 +7,7 @@ import { useColors } from "../../utils/theme";
 import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 
 import useProfileMasterService from "../../services/useProfileMasterService";
+import { usePublicBlogService } from "../../services/usePublicBlogService";
 import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { Helmet } from "react-helmet-async";
@@ -55,6 +57,7 @@ const PROFILE_CACHE_TTL_MS = 5 * 60 * 1000;
 const Index = () => {
   const colors = useColors();
   const profileService = useProfileMasterService();
+  const blogService = usePublicBlogService();
   const { setDefaultTheme } = useDefaultColorTheme();
 
   const [data, setData] = useState<ProfileMaster | null>(() => {
@@ -93,6 +96,12 @@ const Index = () => {
   });
   const [loading, setLoading] = useState(!data);
   const [canonicalUrl, setCanonicalUrl] = useState("");
+  // Whether this profile has any published blog posts — unknown (false)
+  // until the check below resolves. Resolved via a separate, lightweight
+  // API call (not part of the main profile payload) so it never blocks or
+  // delays the rest of the page; the Blog nav item simply appears once
+  // this turns true, the same way other data-driven nav items appear.
+  const [hasBlogPosts, setHasBlogPosts] = useState(false);
 
   // Mirrors `data` without being a reactive dependency of the mount-time
   // fetch effect below: that effect must run exactly once on mount and
@@ -169,6 +178,32 @@ const Index = () => {
     setCanonicalUrl(window.location.href);
   }, []);
 
+  // Fetches just the first page at the smallest possible size purely to
+  // learn whether any published posts exist — cheap, async, and never
+  // blocks the main render. Errors are swallowed: worst case the Blog nav
+  // item simply doesn't appear, which matches how every other conditional
+  // nav item degrades when its underlying data is unavailable.
+  useEffect(() => {
+    const userName = data?.profile?.userName;
+    if (!userName) return;
+    let cancelled = false;
+    blogService
+      .getPosts(userName, { page: 0, size: 1 })
+      .then((res) => {
+        if (cancelled) return;
+        if (res?.status === HTTP_STATUS.OK) {
+          const content = res.data?.data?.content ?? [];
+          setHasBlogPosts(content.length > 0);
+        }
+      })
+      .catch(() => {
+        // Network/API failure — leave hasBlogPosts as-is (no Blog nav item).
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [data?.profile?.userName, blogService]);
+
   // Fire view tracking once per session after profile data is available
   useEffect(() => {
     if (data?.profile?.id) {
@@ -176,7 +211,7 @@ const Index = () => {
     }
   }, [data?.profile?.id]);
 
-  const navItems = useMemo(() => generateNavItems(data), [data]);
+  const navItems = useMemo(() => generateNavItems(data, hasBlogPosts), [data, hasBlogPosts]);
 
   const seoData = useMemo(() => {
     const fullName = data?.profile?.fullName || "Portfolio";
@@ -259,6 +294,13 @@ const Index = () => {
           <p className="text-sm tracking-wide" style={{ color: colors.neutral500 }}>
             Profile not found
           </p>
+          <Link
+            to="/"
+            className="inline-block text-sm underline"
+            style={{ color: colors.primary400 }}
+          >
+            Return to Home
+          </Link>
         </div>
       </div>
     );

@@ -33,7 +33,7 @@ export const getEducationLabel = (degree: string) => {
   return DEGREE_OPTIONS.find(option => option.value === degree)?.label || degree;
 }
 
-export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null => {
+export const generateNavItems = (data: ProfileMaster | null, hasBlogPosts?: boolean): NavItem[] | null => {
   const items: NavItem[] = [{ label: "Home", section: "hero" }];
   if (data?.profile?.aboutMe) items.push({ label: "About", section: "about-me" });
   if (data?.skills?.length) items.push({ label: "Skills", section: "skills" });
@@ -57,6 +57,11 @@ export const generateNavItems = (data: ProfileMaster | null): NavItem[] | null =
     items.push({ label: "Testimonials", section: "testimonials" });
   if (data?.githubStats)
     items.push({ label: "GitHub", section: "open-source" });
+  // Resolved asynchronously (a separate API call, not part of `data`) — this
+  // arrives as `false` until the check resolves, so the item simply appears
+  // once confirmed rather than blocking/delaying the rest of the nav.
+  if (hasBlogPosts)
+    items.push({ label: "Blog", section: "blog", href: "/blogs" });
   items.push({ label: "Contact", section: "contact" });
   return items;
 };
