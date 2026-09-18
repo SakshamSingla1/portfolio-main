@@ -92,7 +92,7 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile, sectionInView }
 
       {isMobile && (
         <div className="mb-2 text-xs font-mono" style={{ color: colors.primary400 }}>
-          {formatDate(exp.startDate)}{exp.endDate ? ` — ${formatDate(exp.endDate)}` : ""}
+          {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
         </div>
       )}
 
@@ -106,7 +106,7 @@ const ExperienceCard = React.memo(({ exp, idx, colors, isMobile, sectionInView }
               border: `1px solid ${colors.primary500}20`,
             }}
           >
-            {formatDate(exp.startDate)}{exp.endDate ? ` — ${formatDate(exp.endDate)}` : ""}
+            {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
           </span>
         </div>
       )}

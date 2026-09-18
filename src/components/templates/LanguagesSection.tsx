@@ -20,12 +20,19 @@ const PROFICIENCY_CONFIG: Record<string, { label: string; width: string; color: 
 const LanguagesSection = ({ languages }: LanguagesSectionProps) => {
   const colors = useColors();
 
+  // Admin's sortOrder is the intended display order — apply it here rather
+  // than rendering raw API/insertion order.
+  const sortedLanguages = React.useMemo(
+    () => [...languages].sort((a, b) => a.sortOrder - b.sortOrder),
+    [languages]
+  );
+
   const gridColsClass =
-    languages.length === 1 ? "sm:grid-cols-1" :
-    languages.length === 2 ? "sm:grid-cols-2" :
-    languages.length === 3 ? "sm:grid-cols-2 md:grid-cols-3" :
+    sortedLanguages.length === 1 ? "sm:grid-cols-1" :
+    sortedLanguages.length === 2 ? "sm:grid-cols-2" :
+    sortedLanguages.length === 3 ? "sm:grid-cols-2 md:grid-cols-3" :
     "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
-  const gridWidthClass = languages.length < 4 ? "max-w-4xl mx-auto" : "";
+  const gridWidthClass = sortedLanguages.length < 4 ? "max-w-4xl mx-auto" : "";
 
   return (
     <section id="languages" className="section-padding relative">
@@ -33,7 +40,7 @@ const LanguagesSection = ({ languages }: LanguagesSectionProps) => {
         <SectionHeading title="Languages" subtitle="Communication across cultures" />
 
         <div className={`grid ${gridColsClass} gap-4 ${gridWidthClass}`}>
-          {languages.map((lang, idx) => {
+          {sortedLanguages.map((lang, idx) => {
             const config = PROFICIENCY_CONFIG[lang.proficiency] ?? PROFICIENCY_CONFIG.BASIC;
 
             return (

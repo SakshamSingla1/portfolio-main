@@ -21,6 +21,23 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
   const colors = useColors();
   const s = shadows(colors);
 
+  // Admin's "Order" field on each certification is the intended display
+  // order — sort by it here rather than rendering raw API/insertion order,
+  // falling back to that original order when it's missing or non-numeric.
+  const sortedCertifications = React.useMemo(() => {
+    return certifications
+      .map((cert, i) => ({ cert, i }))
+      .sort((a, b) => {
+        const orderA = Number(a.cert.order);
+        const orderB = Number(b.cert.order);
+        if (Number.isNaN(orderA) && Number.isNaN(orderB)) return a.i - b.i;
+        if (Number.isNaN(orderA)) return 1;
+        if (Number.isNaN(orderB)) return -1;
+        return orderA - orderB || a.i - b.i;
+      })
+      .map(({ cert }) => cert);
+  }, [certifications]);
+
   const getExpiryStatus = (expiryDate?: string): ExpiryStatus | null => {
     if (!expiryDate) return null;
     const expiry = new Date(expiryDate);
@@ -49,7 +66,7 @@ const CertificationsSection = ({ certifications }: CertificationsSectionProps) =
         <SectionHeading title="Certifications" subtitle="Professional certifications and credentials" />
 
         <div className="space-y-4 max-w-4xl mx-auto">
-          {certifications.map((cert, idx) => (
+          {sortedCertifications.map((cert, idx) => (
             <FadeInView key={cert.id} delay={idx * 0.1}>
               <motion.div
                 whileHover={{ x: 4, y: -3, boxShadow: s.card }}

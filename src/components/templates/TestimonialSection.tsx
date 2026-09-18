@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
@@ -21,17 +21,34 @@ const TestimonialsSection = ({ testimonials }: Props) => {
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Admin's "Order" field on each testimonial is the intended display order —
+  // sort by it here rather than rendering raw API/insertion order, falling
+  // back to that original order when it's missing or non-numeric.
+  const sortedTestimonials = useMemo(() => {
+    return testimonials
+      .map((t, i) => ({ t, i }))
+      .sort((a, b) => {
+        const orderA = Number(a.t.order);
+        const orderB = Number(b.t.order);
+        if (Number.isNaN(orderA) && Number.isNaN(orderB)) return a.i - b.i;
+        if (Number.isNaN(orderA)) return 1;
+        if (Number.isNaN(orderB)) return -1;
+        return orderA - orderB || a.i - b.i;
+      })
+      .map(({ t }) => t);
+  }, [testimonials]);
+
   useEffect(() => {
-    if (!testimonials.length || isPaused) return;
+    if (!sortedTestimonials.length || isPaused) return;
     const timer = setInterval(() => {
-      setActive((a) => (a + 1) % testimonials.length);
+      setActive((a) => (a + 1) % sortedTestimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [testimonials.length, isPaused]);
+  }, [sortedTestimonials.length, isPaused]);
 
-  if (!testimonials.length) return null;
+  if (!sortedTestimonials.length) return null;
 
-  const current = testimonials[active];
+  const current = sortedTestimonials[active];
 
   return (
     <section id="testimonials" className="section-padding relative">
@@ -58,7 +75,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             className="absolute pointer-events-none"
             style={{
               top: "-40%",
-              left: `${(active / Math.max(testimonials.length - 1, 1)) * 80}%`,
+              left: `${(active / Math.max(sortedTestimonials.length - 1, 1)) * 80}%`,
               transform: "translateX(-50%)",
               width: "60%",
               height: "200%",
@@ -72,7 +89,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             className="absolute top-4 right-5 font-mono text-xs select-none"
             style={{ color: colors.neutral600, zIndex: 1 }}
           >
-            {active + 1} / {testimonials.length}
+            {active + 1} / {sortedTestimonials.length}
           </div>
 
           <div className="absolute -top-2 -right-2 opacity-15" style={{ zIndex: 1 }}>
@@ -112,7 +129,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               style={{ position: "relative", zIndex: 1 }}
               role="group"
               aria-live="polite"
-              aria-label={`Testimonial ${active + 1} of ${testimonials.length}, from ${current.name}`}
+              aria-label={`Testimonial ${active + 1} of ${sortedTestimonials.length}, from ${current.name}`}
             >
               <div
                 className="text-lg md:text-xl leading-relaxed mb-8 italic font-light flex items-center"
@@ -200,13 +217,13 @@ const TestimonialsSection = ({ testimonials }: Props) => {
             </motion.div>
           </AnimatePresence>
 
-          {testimonials.length > 1 && (
+          {sortedTestimonials.length > 1 && (
             <div
               className="flex items-center justify-between mt-8 pt-5"
               style={{ borderTop: `1px solid ${colors.neutral700}20`, position: "relative", zIndex: 1 }}
             >
               <div className="flex gap-2">
-                {testimonials.map((_, idx) => (
+                {sortedTestimonials.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActive(idx)}
@@ -226,7 +243,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
               <div className="flex gap-1.5">
                 <button
                   onClick={() =>
-                    setActive((a) => (a - 1 + testimonials.length) % testimonials.length)
+                    setActive((a) => (a - 1 + sortedTestimonials.length) % sortedTestimonials.length)
                   }
                   aria-label="Previous testimonial"
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
@@ -239,7 +256,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
                 </button>
 
                 <button
-                  onClick={() => setActive((a) => (a + 1) % testimonials.length)}
+                  onClick={() => setActive((a) => (a + 1) % sortedTestimonials.length)}
                   aria-label="Next testimonial"
                   className="p-1.5 rounded-lg transition-all hover:scale-110"
                   style={{
@@ -255,7 +272,7 @@ const TestimonialsSection = ({ testimonials }: Props) => {
         </div>
 
         <div className="flex items-center justify-center flex-wrap gap-2 sm:gap-3 mt-6">
-          {testimonials.map((t, i) => (
+          {sortedTestimonials.map((t, i) => (
             <motion.button
               key={i}
               onClick={() => setActive(i)}

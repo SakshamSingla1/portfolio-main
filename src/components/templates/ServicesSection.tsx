@@ -60,11 +60,23 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
   const colors = useColors();
   const s = shadows(colors);
 
+  // The admin "active" toggle and sortOrder aren't applied by the caller —
+  // filter out disabled services here and sort by the admin-chosen order so
+  // switching a service off (without deleting it) actually hides it live.
+  const visibleServices = React.useMemo(() => {
+    return services
+      .filter((svc) => svc.isActive !== false)
+      .slice()
+      .sort((a, b) => a.sortOrder - b.sortOrder);
+  }, [services]);
+
   const gridColsClass =
-    services.length === 1 ? "sm:grid-cols-1" :
-    services.length === 2 ? "sm:grid-cols-2" :
+    visibleServices.length === 1 ? "sm:grid-cols-1" :
+    visibleServices.length === 2 ? "sm:grid-cols-2" :
     "sm:grid-cols-2 lg:grid-cols-3";
-  const gridWidthClass = services.length < 3 ? "max-w-4xl mx-auto" : "";
+  const gridWidthClass = visibleServices.length < 3 ? "max-w-4xl mx-auto" : "";
+
+  if (visibleServices.length === 0) return null;
 
   return (
     <section id="services" className="section-padding relative">
@@ -72,7 +84,7 @@ const ServicesSection = ({ services }: ServicesSectionProps) => {
         <SectionHeading title="Services" subtitle="What I can do for you" />
 
         <div className={`grid ${gridColsClass} gap-6 ${gridWidthClass}`}>
-          {services.map((service, idx) => (
+          {visibleServices.map((service, idx) => (
             <FadeInView key={service.id} delay={idx * 0.08}>
               <motion.div
                 whileHover={{ y: -6, boxShadow: s.card }}

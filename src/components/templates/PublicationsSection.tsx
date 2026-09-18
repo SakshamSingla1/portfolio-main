@@ -32,8 +32,13 @@ const PublicationsSection = ({ publications }: PublicationsSectionProps) => {
     const colors = useColors();
     const [hoveredId, setHoveredId] = useState<number | null>(null);
 
+    // Admin's sortOrder is the intended display order within each type group —
+    // apply it here rather than rendering raw API/insertion order.
     const grouped = TYPE_ORDER.reduce<Record<string, PublicationResponse[]>>((acc, type) => {
-        const items = publications.filter((p) => p.type === type);
+        const items = publications
+            .filter((p) => p.type === type)
+            .slice()
+            .sort((a, b) => a.sortOrder - b.sortOrder);
         if (items.length > 0) acc[type] = items;
         return acc;
     }, {});

@@ -144,7 +144,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                       className="mb-2 text-xs font-mono"
                       style={{ color: colors.primary400 }}
                     >
-                      {edu.startYear} — {edu.endYear}
+                      {edu.startYear} — {edu.endYear || "Present"}
                     </div>
                   )}
 
@@ -221,7 +221,7 @@ const EducationSection = ({ educations }: EducationSectionProps) => {
                           style={{ color: colors.neutral400 }}
                         >
                           <div>
-                            {edu.startYear} — {edu.endYear}
+                            {edu.startYear} — {edu.endYear || "Present"}
                           </div>
 
                           {edu.location && (

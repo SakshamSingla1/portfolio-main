@@ -22,6 +22,23 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
   const colors = useColors();
   const s = shadows(colors);
 
+  // Admin's "Order" field on each achievement is the intended display order —
+  // sort by it here rather than rendering raw API/insertion order, falling
+  // back to that original order when it's missing or non-numeric.
+  const sortedAchievements = React.useMemo(() => {
+    return achievements
+      .map((ach, i) => ({ ach, i }))
+      .sort((a, b) => {
+        const orderA = Number(a.ach.order);
+        const orderB = Number(b.ach.order);
+        if (Number.isNaN(orderA) && Number.isNaN(orderB)) return a.i - b.i;
+        if (Number.isNaN(orderA)) return 1;
+        if (Number.isNaN(orderB)) return -1;
+        return orderA - orderB || a.i - b.i;
+      })
+      .map(({ ach }) => ach);
+  }, [achievements]);
+
   const gridColsClass =
     achievements.length === 1 ? "" :
     achievements.length === 2 ? "md:grid-cols-2" :
@@ -34,7 +51,7 @@ const AchievementsSection = ({ achievements }: AchievementsSectionProps) => {
         <SectionHeading title="Achievements" subtitle="Recognition and accomplishments" />
 
         <div className={`grid ${gridColsClass} gap-6 ${gridWidthClass}`}>
-          {achievements.map((ach, idx) => {
+          {sortedAchievements.map((ach, idx) => {
             const medal = idx < 3 ? medalConfig[idx] : null;
             const hoverBorderColor = medal ? medal.color : colors.primary500;
 
