@@ -8,6 +8,7 @@ const BlogsPage = lazy(() => import("./components/pages/BlogsPage"));
 const BlogPostPage = lazy(() => import("./components/pages/BlogPostPage"));
 const ExplorePage = lazy(() => import("./components/pages/ExplorePage"));
 const TestimonialSubmitPage = lazy(() => import("./components/pages/TestimonialSubmitPage"));
+const ContactThreadPage = lazy(() => import("./components/pages/ContactThreadPage"));
 const NotFound = lazy(() => import("./components/pages/NotFound"));
 
 const CLOUDINARY_TRANSFORM_PATTERN = /(res\.cloudinary\.com\/[^/]+\/image\/upload\/)[^/]+\//;
@@ -38,6 +39,7 @@ const App = () => {
               <Route path="/blogs/:slug" element={<BlogPostPage />} />
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/testimonial/:token" element={<TestimonialSubmitPage />} />
+              <Route path="/contact-thread/:token" element={<ContactThreadPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
