@@ -6,13 +6,14 @@ import type { ProfileMaster } from "../../utils/types";
 import { useColors } from "../../utils/theme";
 import { useDefaultColorTheme } from "../../hooks/useDefaultColorTheme";
 
-import useProfileMasterService from "../../services/useProfileMasterService";
+import useProfileMasterService, { storeProfileAccessToken } from "../../services/useProfileMasterService";
 import { usePublicBlogService } from "../../services/usePublicBlogService";
 import { trackPortfolioView } from "../../services/useTrackingService";
 import { HTTP_STATUS } from "../../utils/constants";
 import { Helmet } from "react-helmet-async";
 import { Suspense, lazy } from "react";
 import type { VisibleSections } from "../portfolio-templates/types";
+import PortfolioAccessGate from "../molecules/PortfolioAccessGate/PortfolioAccessGate";
 
 const ClassicTemplate = lazy(() => import("../portfolio-templates/ClassicTemplate"));
 const ModernTemplate = lazy(() => import("../portfolio-templates/ModernTemplate"));
@@ -95,6 +96,7 @@ const Index = () => {
     }
   });
   const [loading, setLoading] = useState(!data);
+  const [accessRequired, setAccessRequired] = useState(false);
   const [canonicalUrl, setCanonicalUrl] = useState("");
   // Whether this profile has any published blog posts — unknown (false)
   // until the check below resolves. Resolved via a separate, lightweight
@@ -159,6 +161,10 @@ const Index = () => {
           localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(newData));
           localStorage.setItem(PROFILE_CACHE_TIMESTAMP_KEY, String(Date.now()));
           setDefaultTheme(newData?.colorTheme ?? null);
+        } else if (res?.status === HTTP_STATUS.UNAUTHORIZED && res?.data?.errorCode === "PROFILE_ACCESS_REQUIRED") {
+          // PRIVATE profile, no (valid) access token yet -- show the gate instead of
+          // falling through to the "profile not found" branch below.
+          setAccessRequired(true);
         }
       } catch (error) {
         console.error("Failed to fetch profile:", error);
@@ -173,6 +179,33 @@ const Index = () => {
     // (memoized service hook / useState setter), so this still only runs
     // once on mount despite the non-empty dependency array.
   }, [profileService, setDefaultTheme]);
+
+  // Called from the access gate after a correct code: stores the token, then performs one
+  // fresh fetch (bypassing the mount effect's cache-freshness logic above, since this is a
+  // deliberate one-off retry, not the general page-load path). Returns whether it succeeded,
+  // so the gate can show an inline error on a wrong code instead of just retrying forever.
+  const handleUnlockPortfolio = async (accessCode: string): Promise<boolean> => {
+    const verifyRes = await profileService.verifyAccess(accessCode);
+    const token = verifyRes?.data?.data?.accessToken;
+    if (verifyRes?.status !== HTTP_STATUS.OK || !token) {
+      return false;
+    }
+    storeProfileAccessToken(token);
+
+    const res = await profileService.get();
+    if (res?.status === HTTP_STATUS.OK) {
+      const newData = res.data.data;
+      setData(newData);
+      localStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(newData));
+      localStorage.setItem(PROFILE_CACHE_TIMESTAMP_KEY, String(Date.now()));
+      setDefaultTheme(newData?.colorTheme ?? null);
+      setAccessRequired(false);
+      return true;
+    }
+    // Token was valid at verify time but the fetch right after still failed (shouldn't
+    // normally happen) -- stay on the gate rather than claiming success.
+    return false;
+  };
 
   useEffect(() => {
     setCanonicalUrl(window.location.href);
@@ -279,6 +312,10 @@ const Index = () => {
         </div>
       </div>
     );
+  }
+
+  if (accessRequired) {
+    return <PortfolioAccessGate onSubmit={handleUnlockPortfolio} />;
   }
 
   if (!data?.profile) {
