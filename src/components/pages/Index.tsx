@@ -14,6 +14,7 @@ import { Helmet } from "react-helmet-async";
 import { Suspense, lazy } from "react";
 import type { VisibleSections } from "../portfolio-templates/types";
 import PortfolioAccessGate from "../molecules/PortfolioAccessGate/PortfolioAccessGate";
+import EngagementPanel from "../molecules/EngagementPanel/EngagementPanel";
 
 const ClassicTemplate = lazy(() => import("../portfolio-templates/ClassicTemplate"));
 const ModernTemplate = lazy(() => import("../portfolio-templates/ModernTemplate"));
@@ -430,6 +431,8 @@ const Index = () => {
           activeCertifications={activeCertifications}
         />
       </Suspense>
+
+      <EngagementPanel profileId={profile.id} />
     </>
   );
 };
